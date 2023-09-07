@@ -1,9 +1,9 @@
 import mapboxgl from "mapbox-gl";
 import { useSelectedFeatures } from "~/stores/selected-features-store";
+import type { DataSource, FeatureId } from "utils/types";
 
-type Source = "alder-districts";
 
-function createLayers(source: Source): mapboxgl.AnyLayer[] {
+function createLayers(source: DataSource): mapboxgl.AnyLayer[] {
     return [
         {
             source,
@@ -36,12 +36,12 @@ function createLayers(source: Source): mapboxgl.AnyLayer[] {
     ]
 }
 
-function useSource(map: mapboxgl.Map, source: Source) {
+function useSource(map: mapboxgl.Map, source: DataSource) {
     const selectedFeatures = useSelectedFeatures();
 
     const layers = createLayers(source);
 
-    watch(() => selectedFeatures.items, (selectedFeatureIds) => {
+    function setFeatureStateIsSelected(selectedFeatureIds: FeatureId[]) {
         map.querySourceFeatures(source).forEach(
             ({ id: featureId }) => {
                 map.setFeatureState(
@@ -50,7 +50,9 @@ function useSource(map: mapboxgl.Map, source: Source) {
                 );
             }
         );
-    });
+    }
+
+    watch(() => selectedFeatures.items, setFeatureStateIsSelected);
 
     onMounted(() => {
         layers.forEach((layer) => {
@@ -66,6 +68,8 @@ function useSource(map: mapboxgl.Map, source: Source) {
         });
 
         selectedFeatures.clear();
+
+        setFeatureStateIsSelected(selectedFeatures.items);
 
         map.off("click", source, selectedFeatures.handleMapClick);
     });

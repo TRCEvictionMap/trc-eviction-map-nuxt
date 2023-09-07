@@ -21,12 +21,11 @@ const useSelectedFeatures = defineStore("selected-features", () => {
     function handleMapClick(ev: MapboxMouseEvent<true>) {
         if (ev.features && ev.features.length > 0) {
             const [{ id: justClicked }] = ev.features;
-            const indexOfJustClicked = _items.value.indexOf(justClicked);
-            if (indexOfJustClicked > -1) {
-                _items.value.splice(indexOfJustClicked, 1);
+            if (_items.value.includes(justClicked)) {
+                _items.value = _items.value.filter((id) => id !== justClicked);
             }
             else {
-                _items.value.push(justClicked);
+                _items.value = _items.value.concat(justClicked);
             }
         }
     }

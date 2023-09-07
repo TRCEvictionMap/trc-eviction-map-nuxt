@@ -31,8 +31,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <main class="relative">
-        <div id="the-map" class="min-h-screen"></div>
+    <main class="relative flex flex-col">
+        <div id="the-map" class="min-h-screen min-w-full"></div>
         <slot></slot>
     </main>
 </template>
