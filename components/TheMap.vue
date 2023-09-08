@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import mapboxgl from "mapbox-gl";
 import alderDistrictsJson from "../data/alder-districts.json";
+import { AlderDistricts } from "utils/types";
 
 const map = ref<mapboxgl.Map>();
 
@@ -22,7 +23,7 @@ onMounted(() => {
 
         _map.addSource("alder-districts", {
             type: "geojson",
-            data: alderDistrictsJson as any,
+            data: alderDistrictsJson as AlderDistricts,
         });
 
     });

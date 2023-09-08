@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DataSource } from 'utils/types';
+import { SourceId } from 'utils/types';
 
 
 const router = useRouter();
@@ -9,15 +9,7 @@ const map = ref<mapboxgl.Map>();
 
 provide("map", map);
 
-function toggleLayers() {
-    router.replace({
-        query: {
-            source: route.query.source === "alder-districts" ? undefined : "alder-districts",
-        },
-    });
-}
-
-const sources: DataSource[] = [
+const sources: SourceId[] = [
     "alder-districts",
 ];
 

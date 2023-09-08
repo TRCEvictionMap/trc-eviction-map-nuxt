@@ -1,11 +1,11 @@
 
-type DataSource = "alder-districts";
+type SourceId = "alder-districts";
 
 type AlderDistricts = GeoJSON.FeatureCollection<any, {
     count: number;
     month: string;
     district_no: number;
-}>;
+}[]>;
 
 type FeatureId = GeoJSON.Feature["id"];
 
@@ -15,4 +15,4 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
     } & mapboxgl.EventData
     : mapboxgl.MapMouseEvent & mapboxgl.EventData;
 
-export type { AlderDistricts, DataSource, FeatureId, MapboxMouseEvent };
+export type { AlderDistricts, SourceId, FeatureId, MapboxMouseEvent };

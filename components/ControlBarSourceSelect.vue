@@ -6,9 +6,9 @@ import {
     ListboxOption,
     ListboxOptions
 } from "@headlessui/vue";
-import type { DataSource } from "utils/types";
+import type { SourceId } from "utils/types";
 
-const sources: DataSource[] = [
+const sources: SourceId[] = [
     "alder-districts",
 ];
 

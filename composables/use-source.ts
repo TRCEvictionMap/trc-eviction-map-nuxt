@@ -1,13 +1,13 @@
 import mapboxgl from "mapbox-gl";
 import { useSelectedFeatures } from "~/stores/selected-features-store";
-import type { DataSource, FeatureId } from "utils/types";
+import type { SourceId, FeatureId } from "utils/types";
 
 
-function createLayers(source: DataSource): mapboxgl.AnyLayer[] {
+function createLayers(sourceId: SourceId): mapboxgl.AnyLayer[] {
     return [
         {
-            source,
-            id: source,
+            source: sourceId,
+            id: sourceId,
             type: "fill",
             paint: {
                 "fill-color": "limegreen",
@@ -15,8 +15,8 @@ function createLayers(source: DataSource): mapboxgl.AnyLayer[] {
             },
         },
         {
-            source,
-            id: `${source}-borders`,
+            source: sourceId,
+            id: `${sourceId}-borders`,
             type: "line",
             paint: {
                 "line-color": [
@@ -36,17 +36,24 @@ function createLayers(source: DataSource): mapboxgl.AnyLayer[] {
     ]
 }
 
-function useSource(map: mapboxgl.Map, source: DataSource) {
+function useSource(map: mapboxgl.Map, source: SourceId) {
+
+    map.on("sourcedata", (ev) => {
+        if (ev.sourceId === source && ev.isSourceLoaded) {
+            setFeatureStateIsSelected(selectedFeatures.items);
+        }
+    });
+
     const selectedFeatures = useSelectedFeatures();
 
     const layers = createLayers(source);
 
-    function setFeatureStateIsSelected(selectedFeatureIds: FeatureId[]) {
+    function setFeatureStateIsSelected(selectedFeatureIds: string[]) {
         map.querySourceFeatures(source).forEach(
             ({ id: featureId }) => {
                 map.setFeatureState(
                     { source, id: featureId },
-                    { isSelected: selectedFeatureIds.includes(featureId) }
+                    { isSelected: selectedFeatureIds.includes(featureId?.toString() ?? "") }
                 );
             }
         );

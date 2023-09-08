@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { DataSource } from "utils/types";
+import type { SourceId } from "utils/types";
 
 const props = defineProps<{
-    source: DataSource
+    source: SourceId
 }>();
 
 const map = await useMap();
