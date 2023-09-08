@@ -1,28 +1,24 @@
 <script setup lang="ts">
-import { SourceId } from 'utils/types';
-
-
-const router = useRouter();
-const route = useRoute();
+import { useMapControls } from '~/stores/map-controls-store';
+import { useSelectedFeatures } from '~/stores/selected-features-store';
 
 const map = ref<mapboxgl.Map>();
 
 provide("map", map);
 
-const sources: SourceId[] = [
-    "alder-districts",
-];
+const router = useRouter();
+const mapControls = useMapControls();
+const selectedFeatures = useSelectedFeatures();
 
-onMounted(() => {
-    const { source, features } = route.query;
-
-    if (!source) {
-        router.replace({
-            query: {
-                source: "alder-districts",
-            },
-        });
-    }
+watchEffect(() => {
+    router.replace({
+        query: {
+            source: mapControls.currentSource,
+            features: selectedFeatures.items.length
+                ? selectedFeatures.items.join(",")
+                : undefined,
+        },
+    });
 });
 
 </script>
@@ -31,8 +27,8 @@ onMounted(() => {
     <TheMap>
         <ControlBar />
         <ClientOnly>
-            <template v-for="source in sources">
-                <MapLayer v-if="$route.query.source === source" :source="source" />
+            <template v-for="source in mapControls.sourceOptions">
+                <MapLayer v-if="source === mapControls.currentSource" :source="source" />
             </template>
         </ClientOnly>
     </TheMap>

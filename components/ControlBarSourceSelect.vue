@@ -6,23 +6,21 @@ import {
     ListboxOption,
     ListboxOptions
 } from "@headlessui/vue";
+import { useMapControls } from "~/stores/map-controls-store";
 import type { SourceId } from "utils/types";
 
-const sources: SourceId[] = [
-    "alder-districts",
-];
-
+const mapControls = useMapControls();
 </script>
 
 <template>
-  <Listbox v-model="$route.query.source">
+  <Listbox v-model="mapControls.currentSource">
     <ListboxLabel>
         Source
     </ListboxLabel>
-    <ListboxButton>{{ $route.query.source }}</ListboxButton>
+    <ListboxButton>{{ mapControls.currentSource }}</ListboxButton>
     <ListboxOptions>
       <ListboxOption
-        v-for="source in sources"
+        v-for="source in mapControls.sourceOptions"
         :key="source"
         :value="source"
       >

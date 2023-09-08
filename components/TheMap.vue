@@ -24,6 +24,11 @@ onMounted(() => {
         _map.addSource("alder-districts", {
             type: "geojson",
             data: alderDistrictsJson as AlderDistricts,
+       });
+
+        _map.addSource("zip-codes", {
+            type: "geojson",
+            data: alderDistrictsJson as AlderDistricts,
         });
 
     });

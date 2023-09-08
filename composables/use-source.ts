@@ -1,7 +1,6 @@
 import mapboxgl from "mapbox-gl";
 import { useSelectedFeatures } from "~/stores/selected-features-store";
-import type { SourceId, FeatureId } from "utils/types";
-
+import type { SourceId } from "utils/types";
 
 function createLayers(sourceId: SourceId): mapboxgl.AnyLayer[] {
     return [
@@ -40,7 +39,7 @@ function useSource(map: mapboxgl.Map, source: SourceId) {
 
     map.on("sourcedata", (ev) => {
         if (ev.sourceId === source && ev.isSourceLoaded) {
-            setFeatureStateIsSelected(selectedFeatures.items);
+            updateFeatureState(selectedFeatures.items);
         }
     });
 
@@ -48,7 +47,7 @@ function useSource(map: mapboxgl.Map, source: SourceId) {
 
     const layers = createLayers(source);
 
-    function setFeatureStateIsSelected(selectedFeatureIds: string[]) {
+    function updateFeatureState(selectedFeatureIds: string[]) {
         map.querySourceFeatures(source).forEach(
             ({ id: featureId }) => {
                 map.setFeatureState(
@@ -59,7 +58,7 @@ function useSource(map: mapboxgl.Map, source: SourceId) {
         );
     }
 
-    watch(() => selectedFeatures.items, setFeatureStateIsSelected);
+    watch(() => selectedFeatures.items, updateFeatureState);
 
     onMounted(() => {
         layers.forEach((layer) => {
@@ -76,7 +75,7 @@ function useSource(map: mapboxgl.Map, source: SourceId) {
 
         selectedFeatures.clear();
 
-        setFeatureStateIsSelected(selectedFeatures.items);
+        updateFeatureState(selectedFeatures.items);
 
         map.off("click", source, selectedFeatures.handleMapClick);
     });

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { FeatureId, MapboxMouseEvent } from "~/utils/types";
+import type { MapboxMouseEvent } from "~/utils/types";
 
 const useSelectedFeatures = defineStore("selected-features", () => {
     const route = useRoute();
@@ -19,8 +19,6 @@ const useSelectedFeatures = defineStore("selected-features", () => {
         },
         []
     ));
-
-    useUpdateQuery(items, "features");
 
     function clear() {
         _items.value = [];
