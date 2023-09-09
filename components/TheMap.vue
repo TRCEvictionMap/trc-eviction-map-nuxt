@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import mapboxgl from "mapbox-gl";
 import alderDistrictsJson from "../data/alder-districts.json";
+import zipcodesJson from "../data/zip-codes.json";
 import { AlderDistricts } from "utils/types";
 
 const map = ref<mapboxgl.Map>();
@@ -28,7 +29,7 @@ onMounted(() => {
 
         _map.addSource("zip-codes", {
             type: "geojson",
-            data: alderDistrictsJson as AlderDistricts,
+            data: zipcodesJson as any,
         });
 
     });
