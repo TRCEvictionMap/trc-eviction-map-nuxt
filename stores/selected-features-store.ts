@@ -24,11 +24,15 @@ const useSelectedFeatures = defineStore("selected-features", () => {
         _items.value = [];
     }
 
+    function deselect(featureId: string) {
+        _items.value = _items.value.filter((id) => id !== featureId);
+    }
+
     function handleMapClick(ev: MapboxMouseEvent<true>) {
         if (ev.features && ev.features.length > 0) {
             const justClicked = ev.features[0].id?.toString() ?? ""
             if (_items.value.includes(justClicked)) {
-                _items.value = _items.value.filter((id) => id !== justClicked);
+                deselect(justClicked);
             }
             else {
                 _items.value = _items.value.concat(`${justClicked}`);
@@ -38,6 +42,7 @@ const useSelectedFeatures = defineStore("selected-features", () => {
 
     return {
         items,
+        deselect,
         clear,
         handleMapClick,
     };
