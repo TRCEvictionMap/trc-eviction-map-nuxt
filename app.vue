@@ -27,9 +27,8 @@ watchEffect(() => {
     <TheMap>
         <ClientOnly>
            <ControlBar />
-            <template v-for="source in mapControls.sourceOptions">
-                <MapLayer v-if="source === mapControls.currentSource" :source="source" />
-            </template>
+           <DetailCardGroup />
+           <MapLayers />
         </ClientOnly>
     </TheMap>
 </template>
