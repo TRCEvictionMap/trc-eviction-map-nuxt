@@ -4,6 +4,7 @@ import { SourceId } from "utils/types";
 const useMapControls = defineStore("map-controls", () => {
     const sourceOptions: SourceId[] = [
         "alder-districts",
+        "block-groups",
         "zip-codes",
     ];
 

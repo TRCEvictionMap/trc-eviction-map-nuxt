@@ -2,6 +2,7 @@
 import mapboxgl from "mapbox-gl";
 import alderDistrictsJson from "../data/alder-districts.json";
 import zipcodesJson from "../data/zip-codes.json";
+import blockGroupsJson from "../data/block-groups.json";
 import { AlderDistricts } from "utils/types";
 
 const map = ref<mapboxgl.Map>();
@@ -30,6 +31,11 @@ onMounted(() => {
         _map.addSource("zip-codes", {
             type: "geojson",
             data: zipcodesJson as any,
+        });
+
+        _map.addSource("block-groups", {
+            type: "geojson",
+            data: blockGroupsJson as any,
         });
 
     });

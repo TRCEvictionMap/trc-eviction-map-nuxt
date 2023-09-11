@@ -1,5 +1,5 @@
 
-type SourceId = "alder-districts" | "zip-codes";
+type SourceId = "alder-districts" | "zip-codes" | "block-groups";
 
 type AlderDistricts = GeoJSON.FeatureCollection<any, {
     count: number;

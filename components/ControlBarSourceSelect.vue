@@ -1,15 +1,23 @@
 <script setup lang="ts">
+import { SourceId } from "utils/types";
 import { useMapControls } from "~/stores/map-controls-store";
 
 const mapControls = useMapControls();
 
-const options = computed(() =>
-    mapControls.sourceOptions.map((sourceId) => ({
-        key: sourceId,
-        value: sourceId,
-        text: sourceId.split("-").map((x) => x[0].toUpperCase() + x.slice(1)).join(" "),
-    }))
-);
+const options: { value: SourceId, text?: string }[] = [
+    {
+        value: "alder-districts",
+        text: "Alder Districts"
+    },
+    {
+        value: "block-groups",
+        text: "Block Groups",
+    },
+    {
+        value: "zip-codes",
+        text: "ZIP Codes"
+    },
+];
 </script>
 
 <template>
