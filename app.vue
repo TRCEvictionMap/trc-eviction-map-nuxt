@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useMapMeta } from '~/stores/map-meta-store';
 import { useMapControls } from '~/stores/map-controls-store';
 import { useSelectedFeatures } from '~/stores/selected-features-store';
 
@@ -8,6 +9,7 @@ provide("map", map);
 
 const router = useRouter();
 const mapControls = useMapControls();
+const mapMeta = useMapMeta();
 const selectedFeatures = useSelectedFeatures();
 
 watchEffect(() => {
@@ -17,6 +19,10 @@ watchEffect(() => {
             features: selectedFeatures.items.length
                 ? selectedFeatures.items.join(",")
                 : undefined,
+            center: mapMeta.lngLat
+                ? mapMeta.lngLat.join(",")
+                : undefined,
+            zoom: mapMeta.zoom,
         },
     });
 });

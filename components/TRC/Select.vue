@@ -29,8 +29,8 @@ export interface TRCSelectOptionSlotProps {
 
 const props = defineProps<{
     options: O[];
-    label: string;
     modelValue: string | number;
+    label?: string;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
@@ -54,7 +54,7 @@ const buttonText = computed(() =>
     <div class="w-48">
         <Listbox v-model="model">
             <div class="flex flex-col">
-                <ListboxLabel class="text-xs font-bold text-slate-600">
+                <ListboxLabel v-if="label" class="text-xs font-bold text-slate-600">
                     {{ label }}
                 </ListboxLabel>
                 <ListboxButton class="px-2 py-1 border rounded text-start">

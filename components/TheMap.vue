@@ -4,6 +4,7 @@ import alderDistrictsJson from "../data/alder-districts.json";
 import zipcodesJson from "../data/zip-codes.json";
 import blockGroupsJson from "../data/block-groups.json";
 import { AlderDistricts } from "utils/types";
+import { useMapMeta } from "~/stores/map-meta-store";
 
 const map = ref<mapboxgl.Map>();
 
@@ -11,13 +12,24 @@ provide("map", map);
 
 onMounted(() => {
     const config = useRuntimeConfig();
+    const mapMeta = useMapMeta();
 
+    map.value?.setCenter([23,23])
     map.value = new mapboxgl.Map({
+        container: "the-map",
         accessToken: config.public.mapboxAccessToken,
         style: config.public.mapboxStyleUrl,
-        container: "the-map",
-        center: [-89.390, 43.07],
-        zoom: 11,
+        center: mapMeta.lngLat,
+        zoom: mapMeta.zoom,
+    });
+
+    map.value.on("moveend", (ev) => {
+        const { lng, lat } = ev.target.getCenter();
+        mapMeta.lngLat = [lng, lat];
+    });
+
+    map.value.on("zoomend", (ev) => {
+        mapMeta.zoom = ev.target.getZoom();
     });
 
     map.value.on("load", () => {

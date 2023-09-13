@@ -13,13 +13,9 @@ const options: { value: SourceId, text?: string }[] = [
         value: "block-groups",
         text: "Block Groups",
     },
-    {
-        value: "zip-codes",
-        text: "ZIP Codes"
-    },
 ];
 </script>
 
 <template>
-    <TRCSelect label="Source" :options="options" v-model="mapControls.currentSource" />
+    <TRCSelect :options="options" v-model="mapControls.currentSource" />
 </template>
