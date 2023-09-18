@@ -15,8 +15,9 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            mapboxAccessToken: process.env.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN,
-            mapboxStyleUrl: process.env.NUXT_PUBLIC_MAPBOX_STYLE_URL,
+            mapboxAccessToken: "",
+            mapboxStyleUrlLight: "",
+            mapboxStyleUrlDark: "",
         },
     },
     app: {

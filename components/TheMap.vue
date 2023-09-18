@@ -19,7 +19,7 @@ onMounted(() => {
     map.value = new mapboxgl.Map({
         container: "the-map",
         accessToken: config.public.mapboxAccessToken,
-        style: config.public.mapboxStyleUrl,
+        style: config.public.mapboxStyleUrlLight,
         center: mapMeta.lngLat,
         zoom: mapMeta.zoom,
     });
