@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          echo "NUXT_PUBLIC_MAPBOX_STYLE_URL : $NUXT_PUBLIC_MAPBOX_STYLE_URL"
+          echo "NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT : $NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT"
           npm install && npm run generate
         env:
           NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT }}
