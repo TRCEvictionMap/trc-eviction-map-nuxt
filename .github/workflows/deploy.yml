@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
+      NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install and Generate
-        run: npm install && npm run generate
-        env:
-          NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
-          NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
+      - run: echo ${{ env.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
+      - run: npm install && npm run generate
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
