@@ -15,7 +15,7 @@ jobs:
           echo "NUXT_PUBLIC_MAPBOX_STYLE_URL : $NUXT_PUBLIC_MAPBOX_STYLE_URL"
           npm install && npm run generate
         env:
-          NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
+          NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT }}
           NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
       - uses: peaceiris/actions-gh-pages@v3
         with:
