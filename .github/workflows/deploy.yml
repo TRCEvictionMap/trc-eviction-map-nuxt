@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages on merge
   push:
     branches:
       - main
+env:
+  NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ vars.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
+  NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ vars.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
+  
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest

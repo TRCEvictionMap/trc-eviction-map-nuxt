@@ -20,6 +20,6 @@ export default defineNuxtConfig({
         },
     },
     app: {
-        baseURL: "/trc-eviction-map-nuxt/",
+        baseURL: process.env.BASE_URL ?? "/",
     },
 });
