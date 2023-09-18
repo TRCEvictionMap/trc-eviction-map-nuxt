@@ -3,10 +3,7 @@ name: Deploy to GitHub Pages on merge
   push:
     branches:
       - main
-env:
-  NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ vars.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
-  NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ vars.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
-  
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -14,7 +11,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v2
-      - run: npm install && npm run generate
+      - name: Install and Generate
+        run: npm install && npm run generate
+        env:
+          NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
+          NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
