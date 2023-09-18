@@ -6,28 +6,9 @@ const selectedFeatures = useSelectedFeatures();
 
 <template>
     <div class="absolute top-0 flex items-center min-h-screen">
-        <!-- <Transition name="drawer"> -->
-            <!-- <div
-                v-if="selectedFeatures.items.length > 0"
-                > -->
-                <!-- class="absolute space-y-2 p-4 bg-slate-700 rounded-r" -->
-                <!-- <div class="flex justify-end">
-                    <TRCButton @click="selectedFeatures.clear" class="px-2 border text-white">
-                        Clear
-                    </TRCButton>
-                </div> -->
-                <TransitionGroup name="items" class="flex space-x-1" tag="div">
-                    <DetailCard v-for="featureId in selectedFeatures.items" :key="featureId" :featureId="featureId" />
-                </TransitionGroup>
-                <!-- <TransitionGroup name="items" class="flex flex-col space-y-2" tag="div">
-                    <DetailCard
-                        v-for="i in 3"
-                        :key="i"
-                        :featureId="selectedFeatures.items[i - 1]"
-                    />
-                </TransitionGroup> -->
-            <!-- </div> -->
-        <!-- </Transition> -->
+        <TransitionGroup name="items" class="absolute flex space-x-1" tag="div">
+            <DetailCard v-for="featureId in selectedFeatures.items" :key="featureId" :featureId="featureId" />
+        </TransitionGroup>
     </div>
 </template>
 
