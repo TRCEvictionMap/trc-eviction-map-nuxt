@@ -7,7 +7,6 @@ name: Deploy to GitHub Pages on merge
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: github-pages
     permissions:
       contents: write
     steps:
@@ -16,8 +15,8 @@ jobs:
           echo "NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT : $NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT"
           npm install && npm run generate
         env:
-          NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT: ${{ secrets.NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT }}
-          NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
+          NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT: ${{ vars.NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT }}
+          NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ vars.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
