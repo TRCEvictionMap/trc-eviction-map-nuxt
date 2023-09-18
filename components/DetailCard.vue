@@ -3,16 +3,37 @@ import { useSelectedFeatures } from "~/stores/selected-features-store";
 
 const selectedFeatures = useSelectedFeatures();
 
-defineProps<{
-    featureId: string;
+const props = defineProps<{
+    featureId?: string;
 }>();
+
+function closeCard() {
+    if (props.featureId) {
+        selectedFeatures.deselect(props.featureId)
+    }
+}
 </script>
 
 <template>
     <div class="relative bg-white p-4 h-56 w-40 border shadow-xl rounded">
-        <TRCButton class="absolute top-1 right-1" @click="() => selectedFeatures.deselect(featureId)">
-            <IconXMark class="text-slate-500" />
-        </TRCButton>
-        {{ featureId }}
+        <Transition>
+            <div v-if="featureId">
+                <TRCButton class="absolute top-1 right-1" @click="closeCard">
+                    <IconXMark class="text-slate-500" />
+                </TRCButton>
+                {{ featureId }}
+                <div class="space-y-2">
+                    <DetailCardItem label="Eviction Filing Rate">
+                        ?
+                    </DetailCardItem>
+                    <DetailCardItem label="Eviction Filings">
+                        ?
+                    </DetailCardItem>
+                    <DetailCardItem label="Population">
+                        ?
+                    </DetailCardItem>
+                </div>
+            </div>
+        </Transition>
     </div>
 </template>

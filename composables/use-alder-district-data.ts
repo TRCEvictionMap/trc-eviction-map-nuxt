@@ -1,4 +1,4 @@
-import { AlderDistricts, FeatureId } from "utils/types";
+import { AlderDistricts, FeatureId } from "~/utils/types";
 
 const MONTHS = [
     "January",

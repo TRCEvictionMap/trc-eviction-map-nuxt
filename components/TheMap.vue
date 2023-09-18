@@ -5,6 +5,7 @@ import zipcodesJson from "../data/zip-codes.json";
 import blockGroupsJson from "../data/block-groups.json";
 import { AlderDistricts } from "utils/types";
 import { useMapMeta } from "~/stores/map-meta-store";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const map = ref<mapboxgl.Map>();
 
@@ -38,7 +39,7 @@ onMounted(() => {
         _map.addSource("alder-districts", {
             type: "geojson",
             data: alderDistrictsJson as AlderDistricts,
-       });
+        });
 
         _map.addSource("zip-codes", {
             type: "geojson",
@@ -56,8 +57,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <main class="relative flex flex-col">
-        <div id="the-map" class="min-h-screen min-w-full"></div>
+    <main class="flex flex-col">
+        <div id="the-map" class="min-h-screen"></div>
         <slot></slot>
     </main>
 </template>
