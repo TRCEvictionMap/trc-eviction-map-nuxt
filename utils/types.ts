@@ -1,6 +1,19 @@
 
 type SourceId = "alder-districts" | "zip-codes" | "block-groups";
 
+const SOURCE_OPTIONS: SourceId[] = [
+    "alder-districts",
+    "block-groups",
+    "zip-codes",
+];
+
+function isSourceId(data: unknown): data is SourceId {
+    if (typeof data === "string") {
+        return SOURCE_OPTIONS.includes(data as SourceId);
+    }
+    return false;
+}
+
 type AlderDistricts = GeoJSON.FeatureCollection<any, {
     count: number;
     month: string;
@@ -15,4 +28,5 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
     } & mapboxgl.EventData
     : mapboxgl.MapMouseEvent & mapboxgl.EventData;
 
+export { isSourceId };
 export type { AlderDistricts, SourceId, FeatureId, MapboxMouseEvent };

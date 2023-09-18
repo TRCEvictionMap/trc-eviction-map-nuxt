@@ -8,13 +8,7 @@ const useMapControls = defineStore("map-controls", () => {
         "zip-codes",
     ];
 
-    const route = useRoute();
-
-    const currentSource = ref<SourceId>(
-        sourceOptions.includes(route.query.source as SourceId)
-            ? route.query.source as SourceId
-            : "alder-districts"
-    );
+    const currentSource = ref<SourceId>("alder-districts");
 
     return {
         sourceOptions,
