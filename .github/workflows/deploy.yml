@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "$NUXT_PUBLIC_MAPBOX_STYLE_URL"
+        env:
+          NUXT_PUBLIC_MAPBOX_STYLE_URL: ${{ vars.NUXT_PUBLIC_MAPBOX_STYLE_URL }}
       - run: npm install && npm run generate
       - uses: peaceiris/actions-gh-pages@v3
         with:
