@@ -42,17 +42,17 @@ onMounted(() => {
 
         _map.addSource("alder-districts", {
             type: "geojson",
-            data: "/alder-districts.json"
+            data: config.app.baseURL + "alder-districts.json"
         });
 
         _map.addSource("zip-codes", {
             type: "geojson",
-            data: "/block-groups.json"
+            data: config.app.baseURL + "block-groups.json"
         });
 
         _map.addSource("block-groups", {
             type: "geojson",
-            data: "/zip-codes.json"
+            data: config.app.baseURL + "zip-codes.json"
         });
 
     });
