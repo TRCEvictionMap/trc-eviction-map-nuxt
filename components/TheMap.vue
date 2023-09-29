@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import mapboxgl from "mapbox-gl";
-import alderDistrictsJson from "../data/alder-districts.json";
-import zipcodesJson from "../data/zip-codes.json";
-import blockGroupsJson from "../data/block-groups.json";
-import { AlderDistricts } from "utils/types";
+import "mapbox-gl/dist/mapbox-gl.css";
+
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
-import "mapbox-gl/dist/mapbox-gl.css";
 
 const map = ref<mapboxgl.Map>();
 
@@ -45,17 +42,17 @@ onMounted(() => {
 
         _map.addSource("alder-districts", {
             type: "geojson",
-            data: alderDistrictsJson as AlderDistricts,
+            data: "/alder-districts.json"
         });
 
         _map.addSource("zip-codes", {
             type: "geojson",
-            data: zipcodesJson as any,
+            data: "/block-groups.json"
         });
 
         _map.addSource("block-groups", {
             type: "geojson",
-            data: blockGroupsJson as any,
+            data: "/zip-codes.json"
         });
 
     });
