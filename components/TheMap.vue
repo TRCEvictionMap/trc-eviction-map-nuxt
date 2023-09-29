@@ -47,12 +47,12 @@ onMounted(() => {
 
         _map.addSource("zip-codes", {
             type: "geojson",
-            data: config.app.baseURL + "block-groups.json"
+            data: config.app.baseURL + "zip-codes.json"
         });
 
         _map.addSource("block-groups", {
             type: "geojson",
-            data: config.app.baseURL + "zip-codes.json"
+            data: config.app.baseURL + "block-groups.json"
         });
 
     });
