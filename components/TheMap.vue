@@ -4,6 +4,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
+import { useSourceData } from "~/stores/source-data-store";
+import { SourceId } from "utils/types";
 
 const map = ref<mapboxgl.Map>();
 
@@ -13,6 +15,7 @@ onMounted(() => {
     const config = useRuntimeConfig();
     const mapMeta = useMapMeta();
     const mapControls = useMapControls();
+    const sourceData = useSourceData();
     
     const { _zoom, _lngLat, _source } = useInitialQueryParams();
 
@@ -52,9 +55,14 @@ onMounted(() => {
 
         _map.addSource("block-groups", {
             type: "geojson",
-            data: config.app.baseURL + "block-groups.json"
+            data: config.app.baseURL + "block-groups-evictions.json"
         });
+    });
 
+    map.value.on("sourcedata", (ev) => {
+        if (typeof sourceData.loadedSources[ev.sourceId as SourceId] === "boolean") {
+            sourceData.loadedSources[ev.sourceId as SourceId] = ev.isSourceLoaded;
+        }
     });
 });
 

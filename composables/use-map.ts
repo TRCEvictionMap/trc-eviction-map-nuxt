@@ -1,9 +1,12 @@
 import mapboxgl from "mapbox-gl";
+import { useMapControls } from "~/stores/map-controls-store";
 import type { Ref } from "vue";
+
+
 
 async function useMap(): Promise<mapboxgl.Map> {
     const map = inject<Ref<mapboxgl.Map>>("map");
-    
+
     if (map && map.value && map.value.loaded()) {
         return map.value;
     }
