@@ -5,17 +5,17 @@
 <template>
     <div class="absolute top-4 flex justify-center self-center z-10">
         <div class="
-            flex justify-between flex-shrink-0
+            flex justify-center items-center flex-shrink-0
             p-4
-            w-[700px]
             rounded border shadow-2xl
             bg-white
         ">
-            <h1>
-                Filters
-            </h1>
-            <div>
+            <!-- <h1>Header?</h1> -->
+            <div class="flex items-center space-x-4">
+                <span class="font-semibold">Evictions by</span>
                 <ControlBarSourceSelect />
+                <span  class="font-semibold">in</span>
+                <ControlBarYearSelect />
             </div>
         </div>
     </div>

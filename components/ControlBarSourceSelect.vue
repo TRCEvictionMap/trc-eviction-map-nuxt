@@ -6,12 +6,8 @@ const mapControls = useMapControls();
 
 const options: { value: SourceId, text?: string }[] = [
     {
-        value: "alder-districts",
-        text: "Alder Districts"
-    },
-    {
-        value: "block-groups",
-        text: "Block Groups",
+        value: "block-group",
+        text: "Census Block Group",
     },
 ];
 </script>

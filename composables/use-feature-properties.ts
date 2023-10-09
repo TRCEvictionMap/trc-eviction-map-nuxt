@@ -1,16 +1,16 @@
 import mapboxgl from "mapbox-gl";
+import { useMapControls } from "~/stores/map-controls-store";
 import { useSourceData } from "~/stores/source-data-store";
 import type { SourceId } from "~/utils/types";
 
 
 interface FeatureProperties {
-    feature_name: string;
+    geog_name: string;
     owner_count: number;
     renter_count: number;
-    evictions: {
-        n_filings: number;
-        filing_year: string;
-    }[]
+    filing_year: string;
+    n_filings: number;
+    filing_rate: number;
 }
 
 
@@ -19,28 +19,33 @@ function getFeatureProperties(
     sourceId: SourceId,
     featureId: string
 ) {
-    const feature = map.querySourceFeatures(sourceId).find(
-        (feature) => feature.id?.toString() === featureId
+    const controls = useMapControls();
+
+    const feature = map.querySourceFeatures(sourceId + "-evictions").find(
+        (feature) => feature.id?.toString() === `${controls.currentYear}${featureId}`
     );
-    
+
     if (feature) {
-        const { properties } = feature;
-        return {
-            ...properties,
-            evictions: JSON.parse(properties?.evictions),
-        } as FeatureProperties;
+        return feature.properties as FeatureProperties;
     }
 }
 
 async function useFeatureProperties(sourceId: SourceId, featureId: string) {
     const sourceData = useSourceData();
+    const controls = useMapControls();
+
     const map = await useMap();
 
     const properties = ref<FeatureProperties | undefined>(
         getFeatureProperties(map, sourceId, featureId)
     );
 
-    watch(() => sourceData.loadedSources[sourceId], (isLoaded) => {
+    watch(
+        [
+            () => sourceData.loadedSources[sourceId],
+            () => controls.currentYear,
+        ],
+        (isLoaded) => {
         if (isLoaded) {
             properties.value = getFeatureProperties(map, sourceId, featureId);
         }

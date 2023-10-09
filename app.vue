@@ -16,6 +16,7 @@ watchEffect(() => {
     router.replace({
         query: {
             source: mapControls.currentSource,
+            year: mapControls.currentYear,
             features: selectedFeatures.items.length
                 ? selectedFeatures.items.join(",")
                 : undefined,

@@ -43,20 +43,16 @@ onMounted(() => {
     map.value.on("load", () => {
         const _map = map.value!;
 
-        _map.addSource("alder-districts", {
+        _map.addSource("block-group-area", {
             type: "geojson",
-            data: config.app.baseURL + "alder-districts.json"
+            data: config.app.baseURL + "block-group-area.json"
         });
 
-        _map.addSource("zip-codes", {
+        _map.addSource("block-group-evictions", {
             type: "geojson",
-            data: config.app.baseURL + "zip-codes.json"
-        });
+            data: config.app.baseURL + "block-group-evictions.json"
+        })
 
-        _map.addSource("block-groups", {
-            type: "geojson",
-            data: config.app.baseURL + "block-groups-evictions.json"
-        });
     });
 
     map.value.on("sourcedata", (ev) => {

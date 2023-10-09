@@ -4,15 +4,18 @@ import { SourceId } from "utils/types";
 const useMapControls = defineStore("map-controls", () => {
     const sourceOptions: SourceId[] = [
         "alder-districts",
-        "block-groups",
+        "block-group",
         "zip-codes",
     ];
 
+
+    const currentYear = ref<string>("2023");
     const currentSource = ref<SourceId>("alder-districts");
 
     return {
         sourceOptions,
         currentSource,
+        currentYear,
     };
 });
 

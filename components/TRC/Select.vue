@@ -31,6 +31,7 @@ const props = defineProps<{
     options: O[];
     modelValue: string | number;
     label?: string;
+    withCheckmark?: boolean;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
@@ -78,7 +79,7 @@ const buttonText = computed(() =>
                                 'bg-emerald-100': props.active && !props.selected,
                             }"
                         >
-                            <div class="w-7">
+                            <div v-if="withCheckmark" class="w-7">
                                 <IconCheckmark v-if="props.selected" class="h-5" />
                             </div>
                             <div class="flex-1">
