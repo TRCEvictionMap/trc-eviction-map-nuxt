@@ -14,9 +14,6 @@ const feature = await useFeatureProperties(
     props.featureId
 );
 
-const YEAR_INDEX = 0;
-
-
 function closeCard() {
     if (props.featureId) {
         selectedFeatures.deselect(props.featureId)
@@ -28,7 +25,6 @@ function closeCard() {
     <div class="relative bg-white p-4 h-56 w-48 border shadow-xl rounded">
         <Transition>
             <div v-if="feature">
-                <!-- Hello -->
                 <TRCButton class="absolute top-1 right-1" @click="closeCard">
                     <IconXMark class="text-slate-500" />
                 </TRCButton>

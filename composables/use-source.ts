@@ -67,7 +67,7 @@ function useSource(map: mapboxgl.Map, source: SourceId) {
     const { areaSource, evictionsSource } = sourceIds(source);
 
     map.on("sourcedata", (ev) => {
-        if (ev.sourceId === source && ev.isSourceLoaded) {
+        if (ev.sourceId === areaSource && ev.isSourceLoaded) {
             updateFeatureState(selectedFeatures.items);
         }
     });

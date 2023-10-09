@@ -42,13 +42,13 @@ async function useFeatureProperties(sourceId: SourceId, featureId: string) {
 
     watch(
         [
-            () => sourceData.loadedSources[sourceId],
+            () => sourceData.loadedSources[sourceId + "-evictions"],
             () => controls.currentYear,
         ],
         (isLoaded) => {
-        if (isLoaded) {
-            properties.value = getFeatureProperties(map, sourceId, featureId);
-        }
+            if (isLoaded) {
+                properties.value = getFeatureProperties(map, sourceId, featureId);
+            }
     }, { immediate: true });
 
     return properties;

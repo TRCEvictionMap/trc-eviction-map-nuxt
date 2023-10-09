@@ -17,7 +17,7 @@ onMounted(() => {
     const mapControls = useMapControls();
     const sourceData = useSourceData();
     
-    const { _zoom, _lngLat, _source } = useInitialQueryParams();
+    const { _zoom, _lngLat, _source, _year } = useInitialQueryParams();
 
     map.value = new mapboxgl.Map({
         container: "the-map",
@@ -30,6 +30,7 @@ onMounted(() => {
     mapMeta.lngLat = _lngLat;
     mapMeta.zoom = _zoom;
     mapControls.currentSource = _source;
+    mapControls.currentYear = _year;
 
     map.value.on("moveend", (ev) => {
         const { lng, lat } = ev.target.getCenter();
@@ -51,14 +52,12 @@ onMounted(() => {
         _map.addSource("block-group-evictions", {
             type: "geojson",
             data: config.app.baseURL + "block-group-evictions.json"
-        })
+        });
 
     });
 
     map.value.on("sourcedata", (ev) => {
-        if (typeof sourceData.loadedSources[ev.sourceId as SourceId] === "boolean") {
-            sourceData.loadedSources[ev.sourceId as SourceId] = ev.isSourceLoaded;
-        }
+        sourceData.loadedSources[ev.sourceId] = ev.isSourceLoaded;
     });
 });
 

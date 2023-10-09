@@ -10,7 +10,7 @@ const useMapControls = defineStore("map-controls", () => {
 
 
     const currentYear = ref<string>("2023");
-    const currentSource = ref<SourceId>("alder-districts");
+    const currentSource = ref<SourceId>("block-group");
 
     return {
         sourceOptions,
