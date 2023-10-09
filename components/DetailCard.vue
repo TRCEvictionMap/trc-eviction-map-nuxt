@@ -32,13 +32,25 @@ function closeCard() {
                     <div class="text-sm font-bold">
                         {{ feature.geog_name }}
                     </div>
-                    <DetailCardItem label="Eviction Filing Rate">
-                        {{ feature.filing_rate }}
+                    <DetailCardItem>
+                        <template #label>
+                            Eviction Filing Rate
+                            <!-- <TRCTooltip focusable label="Eviction Filing Rate">
+                                Represents the number of eviction filings per 100 renter occupied households.
+                            </TRCTooltip> -->
+                        </template>
+                        {{ feature.filing_rate }}{{ feature.filing_rate > 0 ? "%" : "" }}
                     </DetailCardItem>
-                    <DetailCardItem label="Eviction Filings">
+                    <DetailCardItem>
+                        <template #label>
+                            Eviction Filings
+                        </template>
                         {{ feature.n_filings }}
                     </DetailCardItem>
-                    <DetailCardItem label="Households">
+                    <DetailCardItem>
+                        <template #label>
+                            Households
+                        </template>
                         <div class="text-sm text-slate-600">renter occupied {{ feature.renter_count }}</div>
                         <div class="text-sm text-slate-600">owner occupied {{ feature.owner_count }}</div>
                     </DetailCardItem>
