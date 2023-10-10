@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useSelectedFeatures } from "~/stores/selected-features-store";
+import { useFeatureState } from "~/stores/feature-state-store";
 
-const selectedFeatures = useSelectedFeatures();
+const featureState = useFeatureState();
 </script>
 
 <template>
     <div class="absolute top-0 flex items-center min-h-screen">
         <TransitionGroup name="items" class="absolute flex space-x-1" tag="div">
-            <DetailCard v-for="featureId in selectedFeatures.items" :key="featureId" :featureId="featureId" />
+            <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
         </TransitionGroup>
     </div>
 </template>

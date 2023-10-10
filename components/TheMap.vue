@@ -6,6 +6,7 @@ import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useSourceData } from "~/stores/source-data-store";
 import { SourceId } from "utils/types";
+import { useFeatureState } from "~/stores/feature-state-store";
 
 const map = ref<mapboxgl.Map>();
 

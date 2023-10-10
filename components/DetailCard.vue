@@ -1,30 +1,48 @@
 <script setup lang="ts">
+import { useFeatureState } from "~/stores/feature-state-store";
 import { useMapControls } from "~/stores/map-controls-store";
-import { useSelectedFeatures } from "~/stores/selected-features-store";
 
-const selectedFeatures = useSelectedFeatures();
-const controls = useMapControls()
+const featureState = useFeatureState();
+const controls = useMapControls();
 
-const props = defineProps<{
+const { featureId } = defineProps<{
     featureId: string;
 }>();
 
 const feature = await useFeatureProperties(
     controls.currentSource,
-    props.featureId
+    featureId
 );
 
 function closeCard() {
-    if (props.featureId) {
-        selectedFeatures.deselect(props.featureId)
+    if (featureId) {
+        featureState.setFeatureState(featureId, "isSelected", false);
+        featureState.setFeatureState(featureId, "isHovered", false);
     }
+}
+
+function onMouseover() {
+    featureState.setFeatureState(featureId, "isHovered", "card");
+}
+
+function onMouseleave() {
+    featureState.setFeatureState(featureId, "isHovered", false);
 }
 </script>
 
 <template>
-    <div class="relative bg-white p-4 h-56 w-48 border shadow-xl rounded">
+    <div
+        class="relative bg-white p-4 h-56 w-48 border shadow-xl rounded"
+        @mouseover="onMouseover"
+        @mouseleave="onMouseleave"
+    >
         <Transition>
-            <div v-if="feature">
+            <div
+                v-if="feature"
+                :class="{
+                    'bg-orange-200': featureId === featureState.hoveredFeature && featureState.hoveredFeatureKind === 'feature'
+                }"
+            >
                 <TRCButton class="absolute top-1 right-1" @click="closeCard">
                     <IconXMark class="text-slate-500" />
                 </TRCButton>
@@ -35,9 +53,6 @@ function closeCard() {
                     <DetailCardItem>
                         <template #label>
                             Eviction Filing Rate
-                            <!-- <TRCTooltip focusable label="Eviction Filing Rate">
-                                Represents the number of eviction filings per 100 renter occupied households.
-                            </TRCTooltip> -->
                         </template>
                         {{ feature.filing_rate }}{{ feature.filing_rate > 0 ? "%" : "" }}
                     </DetailCardItem>

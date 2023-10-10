@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useMapMeta } from '~/stores/map-meta-store';
-import { useMapControls } from '~/stores/map-controls-store';
-import { useSelectedFeatures } from '~/stores/selected-features-store';
+import { useMapMeta } from "~/stores/map-meta-store";
+import { useMapControls } from "~/stores/map-controls-store";
+
+import { useFeatureState } from "~/stores/feature-state-store";
 
 const map = ref<mapboxgl.Map>();
 
@@ -10,15 +11,15 @@ provide("map", map);
 const router = useRouter();
 const mapControls = useMapControls();
 const mapMeta = useMapMeta();
-const selectedFeatures = useSelectedFeatures();
+const featureState = useFeatureState();
 
 watchEffect(() => {
     router.replace({
         query: {
             source: mapControls.currentSource,
             year: mapControls.currentYear,
-            features: selectedFeatures.items.length
-                ? selectedFeatures.items.join(",")
+            features: featureState.selectedFeatures.length
+                ? featureState.selectedFeatures.join(",")
                 : undefined,
             center: mapMeta.lngLat
                 ? mapMeta.lngLat.join(",")

@@ -40,7 +40,7 @@ const useSelectedFeatures = defineStore("selected-features", () => {
             }
 
             if (_items.value.length > 3) {
-                _items.value.splice(0, _items.value.length - 3);
+                // _items.value.splice(0, _items.value.length - 3);
             }
         }
     }

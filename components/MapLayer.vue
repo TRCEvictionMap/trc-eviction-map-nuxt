@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useMapLayers } from "~/composables/use-map-layers";
 import type { SourceId } from "utils/types";
 
 const props = defineProps<{
@@ -7,8 +8,8 @@ const props = defineProps<{
 
 const map = await useMap();
 
-useSource(map, props.source);
+useMapLayers(map);
 
 </script>
 
-<template></template>
+<template></template>composables/use-map-layers
