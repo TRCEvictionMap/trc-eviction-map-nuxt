@@ -1,10 +1,9 @@
 
-type SourceId = "alder-districts" | "zip-codes" | "block-group";
+type SourceId = "alder-districts" | "block-group";
 
 const SOURCE_OPTIONS: SourceId[] = [
     "alder-districts",
     "block-group",
-    "zip-codes",
 ];
 
 function isSourceId(data: unknown): data is SourceId {
@@ -20,6 +19,18 @@ type AlderDistricts = GeoJSON.FeatureCollection<any, {
     district_no: number;
 }[]>;
 
+interface EvictionFeatureProperties {
+    id: string;
+    geog_name: string;
+    owner_count: number;
+    renter_count: number;
+    filing_year: number;
+    n_filings: number;
+    filing_rate: number;
+}
+
+type EvictionFeatureCollection = GeoJSON.FeatureCollection<any, EvictionFeatureProperties>;
+
 type FeatureId = GeoJSON.Feature["id"];
 
 type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures extends true
@@ -29,4 +40,4 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
     : mapboxgl.MapMouseEvent & mapboxgl.EventData;
 
 export { isSourceId };
-export type { AlderDistricts, SourceId, FeatureId, MapboxMouseEvent };
+export type { EvictionFeatureCollection, EvictionFeatureProperties, SourceId, FeatureId, MapboxMouseEvent };

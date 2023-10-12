@@ -4,10 +4,6 @@ import { useMapControls } from "~/stores/map-controls-store";
 
 import { useFeatureState } from "~/stores/feature-state-store";
 
-const map = ref<mapboxgl.Map>();
-
-provide("map", map);
-
 const router = useRouter();
 const mapControls = useMapControls();
 const mapMeta = useMapMeta();

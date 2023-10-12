@@ -2,12 +2,14 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
+import bgEvictions from "~/public/block-group-evictions.json";
+
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
-import { useSourceData } from "~/stores/source-data-store";
-import { SourceId } from "utils/types";
-import { useFeatureState } from "~/stores/feature-state-store";
+import { useFeatureProperties } from "~/stores/feature-properties-store";
+import type { EvictionFeatureCollection, EvictionFeatureProperties } from "utils/types";
 
+const featureProperties = useFeatureProperties();
 const map = ref<mapboxgl.Map>();
 
 provide("map", map);
@@ -16,7 +18,6 @@ onMounted(() => {
     const config = useRuntimeConfig();
     const mapMeta = useMapMeta();
     const mapControls = useMapControls();
-    const sourceData = useSourceData();
     
     const { _zoom, _lngLat, _source, _year } = useInitialQueryParams();
 
@@ -52,14 +53,17 @@ onMounted(() => {
 
         _map.addSource("block-group-evictions", {
             type: "geojson",
-            data: config.app.baseURL + "block-group-evictions.json"
+            data: bgEvictions as unknown as string,
         });
-
     });
 
-    map.value.on("sourcedata", (ev) => {
-        sourceData.loadedSources[ev.sourceId] = ev.isSourceLoaded;
-    });
+    featureProperties.data["block-group"] = (bgEvictions as unknown as EvictionFeatureCollection)
+        .features
+        .map((feature) => feature.properties);
+
+    // map.value.on("sourcedata", (ev) => {
+        // sourceData.loadedSources[ev.sourceId] = ev.isSourceLoaded;
+    // });
 });
 
 </script>

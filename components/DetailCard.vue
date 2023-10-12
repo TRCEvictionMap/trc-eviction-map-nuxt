@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useMapControls } from "~/stores/map-controls-store";
+import { useFeatureProperties } from "~/stores/feature-properties-store";
 
 const featureState = useFeatureState();
+const featureProperties = useFeatureProperties();
 const controls = useMapControls();
 
 const { featureId } = defineProps<{
     featureId: string;
 }>();
 
-const feature = await useFeatureProperties(
-    controls.currentSource,
-    featureId
+const feature = computed(
+    () => featureProperties.data[controls.currentSource].find(
+        (feature) => feature.id === `${controls.currentYear}${featureId}`
+    )
 );
 
 function closeCard() {
@@ -37,12 +40,7 @@ function onMouseleave() {
         @mouseleave="onMouseleave"
     >
         <Transition>
-            <div
-                v-if="feature"
-                :class="{
-                    'bg-orange-200': featureId === featureState.hoveredFeature && featureState.hoveredFeatureKind === 'feature'
-                }"
-            >
+            <div v-if="feature">
                 <TRCButton class="absolute top-1 right-1" @click="closeCard">
                     <IconXMark class="text-slate-500" />
                 </TRCButton>
@@ -52,7 +50,7 @@ function onMouseleave() {
                     </div>
                     <DetailCardItem>
                         <template #label>
-                            Eviction Filing Rate
+                            Eviction Filing Rate 
                         </template>
                         {{ feature.filing_rate }}{{ feature.filing_rate > 0 ? "%" : "" }}
                     </DetailCardItem>

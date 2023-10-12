@@ -10,11 +10,10 @@
             rounded border shadow-2xl
             bg-white
         ">
-            <!-- <h1>Header?</h1> -->
             <div class="flex items-center space-x-4">
                 <span class="font-semibold">Evictions by</span>
                 <ControlBarSourceSelect />
-                <span  class="font-semibold">in</span>
+                <span class="font-semibold">in</span>
                 <ControlBarYearSelect />
             </div>
         </div>

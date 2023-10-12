@@ -7,7 +7,7 @@ const options = [
     { value: "2023" },
     { value: "2022" },
     { value: "2021" },
-]
+];
 </script>
 
 <template>

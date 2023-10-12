@@ -79,13 +79,25 @@ function useMapLayers(map: mapboxgl.Map) {
         }
     });
 
-    function updateSelectedFeatures(selectedFeatureIds: string[]) {
-        map.querySourceFeatures(areaSourceId).forEach(({ id: featureId }) => {
-            map.setFeatureState(
-                { source: areaSourceId, id: featureId },
-                { isSelected: selectedFeatureIds.includes(featureId?.toString() ?? "") }
-            );
-        });
+    function setIsFeatureSelected(featureId: string, isSelected: boolean) {
+        map.setFeatureState(
+            { source: areaSourceId, id: featureId },
+            { isSelected },
+        );
+    }
+
+    function updateSelectedFeatures(current: string[], previous?: string[]) {
+        previous
+            ?.filter((featureId) => !current.includes(featureId))
+            .forEach((featureId) => {
+                setIsFeatureSelected(featureId, false);
+            });
+
+        current
+            .filter((featureId) => !previous?.includes(featureId))
+            .forEach((featureId) => {
+                setIsFeatureSelected(featureId, true);
+            });
     }
 
     watch(() => featureState.selectedFeatures, updateSelectedFeatures);
@@ -106,11 +118,11 @@ function useMapLayers(map: mapboxgl.Map) {
     });
 
     watch(() => controls.currentYear, setYearFilter, {
-        flush: "pre"
+        flush: "pre",
     });
 
     function setYearFilter() {
-        map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear])
+        map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear]);
     }
 
     function handleMapClick(ev: MapboxMouseEvent<true>) {
@@ -124,6 +136,17 @@ function useMapLayers(map: mapboxgl.Map) {
         }
     }
 
+    function handleMapMousemove(ev: MapboxMouseEvent<true>) {
+        if (ev.features && ev.features.length > 0) {
+            const hovered = ev.features[0].id?.toString() ?? "";
+            featureState.setFeatureState(hovered, "isHovered", "feature");
+        }
+    }
+
+    function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
+        featureState.clearHoveredFeature();
+    }
+
     onMounted(() => {
         layers.forEach((layer) => {
             map.addLayer(layer);
@@ -132,17 +155,21 @@ function useMapLayers(map: mapboxgl.Map) {
         setYearFilter();
 
         map.on("click", areaSourceId, handleMapClick);
+        map.on("mousemove", areaSourceId, handleMapMousemove);
+        map.on("mouseleave", areaSourceId, handleMapMouseleave);
     });
-
+    
     onBeforeUnmount(() => {
         layers.forEach((layer) => {
             map.removeLayer(layer.id);
         });
-
+        
         featureState.clearSelectedFeatures();
         featureState.clearHoveredFeature();
-
+        
         map.off("click", areaSourceId, handleMapClick);
+        map.off("mousemove", areaSourceId, handleMapMousemove);
+        map.off("mouseleave", areaSourceId, handleMapMouseleave);
     });
 }
 
