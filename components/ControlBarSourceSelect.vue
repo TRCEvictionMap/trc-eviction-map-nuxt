@@ -9,6 +9,10 @@ const options: { value: SourceId, text?: string }[] = [
         value: "block-group",
         text: "Census Block Group",
     },
+    {
+        value: "alder-district",
+        text: "Aldermanic Districts"
+    }
 ];
 </script>
 

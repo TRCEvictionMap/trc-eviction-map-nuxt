@@ -2,6 +2,7 @@ import mapboxgl from "mapbox-gl";
 import { useMapControls } from "~/stores/map-controls-store";
 import type { MapboxMouseEvent } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
+import { useSettings } from "~/stores/settings-store";
 
 function createLayers(): mapboxgl.AnyLayer[] {
     const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
@@ -62,12 +63,13 @@ function createLayers(): mapboxgl.AnyLayer[] {
                 "circle-opacity": 0.6
             }
         },
-    ]
+    ];
 }
 
 
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
+    const settings = useSettings();
     const featureState = useFeatureState();
     const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
 
@@ -147,6 +149,21 @@ function useMapLayers(map: mapboxgl.Map) {
         featureState.clearHoveredFeature();
     }
 
+    watch(() => settings.showAlderDistricts, (showAlderDistricts) => {
+        if (showAlderDistricts) {
+            map.addLayer({
+                source: "alder-district-area",
+                id: "alder-district-area",
+                type: "line",
+                paint: {
+                    "line-color": "black",
+                }
+            })
+        } else {
+            map.removeLayer("alder-district-area");
+        }
+    }, { immediate: true });
+
     onMounted(() => {
         layers.forEach((layer) => {
             map.addLayer(layer);
@@ -161,9 +178,11 @@ function useMapLayers(map: mapboxgl.Map) {
     
     onBeforeUnmount(() => {
         layers.forEach((layer) => {
-            map.removeLayer(layer.id);
+            map.removeLayer((layer as mapboxgl.AnyLayer).id);
         });
         
+        updateSelectedFeatures([], featureState.selectedFeatures);
+
         featureState.clearSelectedFeatures();
         featureState.clearHoveredFeature();
         

@@ -9,6 +9,8 @@ const mapControls = useMapControls();
 const mapMeta = useMapMeta();
 const featureState = useFeatureState();
 
+const konami = useKonamiCode();
+
 watchEffect(() => {
     router.replace({
         query: {
@@ -25,6 +27,13 @@ watchEffect(() => {
     });
 });
 
+onMounted(() => {
+    window.addEventListener("keydown", konami.recordKeyPress);
+});
+
+onUnmounted(() => {
+    window.removeEventListener("keydown", konami.recordKeyPress);
+});
 </script>
 
 <template>
@@ -35,4 +44,5 @@ watchEffect(() => {
            <MapLayers />
         </ClientOnly>
     </TheMap>
+    <SettingsDialog :open="konami.didKonami" @close="konami.reset" />
 </template>

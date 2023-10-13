@@ -1,8 +1,8 @@
 
-type SourceId = "alder-districts" | "block-group";
+type SourceId = "alder-district" | "block-group";
 
 const SOURCE_OPTIONS: SourceId[] = [
-    "alder-districts",
+    "alder-district",
     "block-group",
 ];
 

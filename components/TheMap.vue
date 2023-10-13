@@ -53,8 +53,14 @@ onMounted(() => {
 
         _map.addSource("block-group-evictions", {
             type: "geojson",
-            data: bgEvictions as unknown as string,
+            // data: bgEvictions as unknown as string,
+            data: config.app.baseURL + "block-group-evictions.json"
         });
+
+        _map.addSource("alder-district-area", {
+            type: "geojson",
+            data: config.app.baseURL + "alder-districts.json"
+        })
     });
 
     featureProperties.data["block-group"] = (bgEvictions as unknown as EvictionFeatureCollection)
