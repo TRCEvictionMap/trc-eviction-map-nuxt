@@ -13,8 +13,8 @@ const featureState = useFeatureState();
             name="items"
             class="absolute flex"
             :class="{
-                'flex-row space-x-1': !settings.verticalDetailCards,
-                'flex-col space-y-1': settings.verticalDetailCards,
+                'flex-row space-x-1': !settings.options.verticalDetailCards,
+                'flex-col space-y-1': settings.options.verticalDetailCards,
             }"
             tag="div"
         >

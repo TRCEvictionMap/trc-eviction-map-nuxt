@@ -30,17 +30,17 @@ const settings = useSettings();
                 <div>
                     <button
                         class="bg-slate-200 px-2 py-1 rounded"
-                        @click="settings.verticalDetailCards = !settings.verticalDetailCards"
+                        @click="settings.options.verticalDetailCards = !settings.options.verticalDetailCards"
                     >
-                        {{ settings.verticalDetailCards ? "Horizontal" : "Vertical" }} detail cards
+                        {{ settings.options.verticalDetailCards ? "Horizontal" : "Vertical" }} detail cards
                     </button>
                 </div>
                 <div>
                     <button
                         class="bg-slate-200 px-2 py-1 rounded"
-                        @click="settings.showAlderDistricts = !settings.showAlderDistricts"
+                        @click="settings.options.showAlderDistricts = !settings.options.showAlderDistricts"
                     >
-                        {{ settings.showAlderDistricts ? "Hide" : "Show" }} alder district outlines
+                        {{ settings.options.showAlderDistricts ? "Hide" : "Show" }} alder district outlines
                     </button>
                 </div>
             </div>

@@ -3,11 +3,13 @@ import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 
 import { useFeatureState } from "~/stores/feature-state-store";
+import { useSettings } from "~/stores/settings-store";
 
 const router = useRouter();
 const mapControls = useMapControls();
 const mapMeta = useMapMeta();
 const featureState = useFeatureState();
+const settings = useSettings();
 
 const konami = useKonamiCode();
 
@@ -27,6 +29,11 @@ watchEffect(() => {
     });
 });
 
+function onCloseSettingsMenu() {
+    konami.reset();
+    settings.showSettingsMenu = false;
+}
+
 onMounted(() => {
     window.addEventListener("keydown", konami.recordKeyPress);
 });
@@ -44,7 +51,7 @@ onUnmounted(() => {
             </template>
            <DetailCardGroup />
            <MapLayers />
-           <SettingsDialog :open="konami.didKonami" @close="konami.reset" />
+           <SettingsDialog :open="konami.didKonami || settings.showSettingsMenu" @close="onCloseSettingsMenu" />
         </TheMap>
     </ClientOnly>
 </template>

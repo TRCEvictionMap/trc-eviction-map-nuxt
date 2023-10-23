@@ -169,7 +169,7 @@ function useMapLayers(map: mapboxgl.Map) {
         featureState.clearHoveredFeature();
     }
 
-    watch(() => settings.showAlderDistricts, (showAlderDistricts) => {
+    watch(() => settings.options.showAlderDistricts, (showAlderDistricts) => {
         if (showAlderDistricts) {
             map.addLayer({
                 source: "alder-district-area",

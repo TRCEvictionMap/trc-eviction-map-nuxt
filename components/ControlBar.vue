@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue"
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import { useSettings } from "~/stores/settings-store";
+
+const settings = useSettings();
+
 </script>
 
 <template>
@@ -20,6 +24,10 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue"
                 <ControlBarSourceSelect />
                 <span class="font-semibold">in</span>
                 <ControlBarYearSelect />
+                <span>|</span>
+                <TRCButton @click="settings.showSettingsMenu = !settings.showSettingsMenu">
+                    <IconGear />
+                </TRCButton>
             </div>
 
 
