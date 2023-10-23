@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useMapControls } from "~/stores/map-controls-store";
 
+defineProps<{ label?: string }>();
+
 const controls = useMapControls();
 
 const options = [
@@ -11,5 +13,5 @@ const options = [
 </script>
 
 <template>
-    <TRCSelect :options="options" v-model="controls.currentYear" />
+    <TRCSelect :label="label" :options="options" v-model="controls.currentYear" />
 </template>

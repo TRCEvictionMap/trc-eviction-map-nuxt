@@ -37,12 +37,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <TheMap>
-        <ClientOnly>
-           <ControlBar />
+    <ClientOnly>
+        <TheMap>
+            <template #control-bar>
+                <ControlBar />
+            </template>
            <DetailCardGroup />
            <MapLayers />
-        </ClientOnly>
-    </TheMap>
-    <SettingsDialog :open="konami.didKonami" @close="konami.reset" />
+           <SettingsDialog :open="konami.didKonami" @close="konami.reset" />
+        </TheMap>
+    </ClientOnly>
 </template>

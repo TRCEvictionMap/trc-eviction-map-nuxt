@@ -24,7 +24,7 @@ interface EvictionFeatureProperties {
     geog_name: string;
     owner_count: number;
     renter_count: number;
-    filing_year: number;
+    filing_year: string;
     n_filings: number;
     filing_rate: number;
 }

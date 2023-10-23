@@ -2,6 +2,8 @@
 import { SourceId } from "utils/types";
 import { useMapControls } from "~/stores/map-controls-store";
 
+defineProps<{ label?: string }>();
+
 const mapControls = useMapControls();
 
 const options: { value: SourceId, text?: string }[] = [
@@ -17,5 +19,5 @@ const options: { value: SourceId, text?: string }[] = [
 </script>
 
 <template>
-    <TRCSelect :options="options" v-model="mapControls.currentSource" />
+    <TRCSelect :label="label" :options="options" v-model="mapControls.currentSource" />
 </template>

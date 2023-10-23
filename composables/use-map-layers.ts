@@ -1,8 +1,9 @@
 import mapboxgl from "mapbox-gl";
 import { useMapControls } from "~/stores/map-controls-store";
-import type { MapboxMouseEvent } from "~/utils/types";
+import type { MapboxMouseEvent, EvictionFeatureProperties } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
+import { useFeatureProperties } from "~/stores/feature-properties-store";
 
 function createLayers(): mapboxgl.AnyLayer[] {
     const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
@@ -13,10 +14,13 @@ function createLayers(): mapboxgl.AnyLayer[] {
             type: "fill",
             paint: {
                 "fill-color": [
-                    "case",
-                    ["boolean", ["feature-state", "isHovered"], false],
-                    "orange",
-                    "gold",
+                    "step",
+                    ["number", ["feature-state", "renter_rate"], 0],
+                    "orange", .2,
+                    "green", .4,
+                    "red", .6,
+                    "purple", .8,
+                    "chartreuse"
                 ],
                 "fill-outline-color": "black",
                 "fill-opacity": [
@@ -71,12 +75,16 @@ function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
     const settings = useSettings();
     const featureState = useFeatureState();
-    const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
+    const featureProperties = useFeatureProperties();
+    const { baseSourceId, areaSourceId, evictionsSourceId } = useCurrentSourceIds();
 
     const layers = createLayers();
 
+    const isLoaded = ref(false);
+
     map.on("sourcedata", (ev) => {
         if (ev.sourceId === areaSourceId && ev.isSourceLoaded) {
+            isLoaded.value = true;
             updateSelectedFeatures(featureState.selectedFeatures);
         }
     });
@@ -119,12 +127,24 @@ function useMapLayers(map: mapboxgl.Map) {
         }
     });
 
-    watch(() => controls.currentYear, setYearFilter, {
-        flush: "pre",
-    });
+    watch(() => controls.currentYear, setYearFilter);
 
     function setYearFilter() {
         map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear]);
+        featureProperties.data[baseSourceId].forEach(({ filing_year, n_filings, id, renter_count, owner_count }) => {
+            if (filing_year === controls.currentYear) {
+                map.setFeatureState(
+                    { source: areaSourceId, id: id.slice(4) },
+                    {
+                        n_filings,
+                        renter_count,
+                        owner_count,
+                        household_count: renter_count + owner_count,
+                        renter_rate: Math.round(renter_count / (renter_count + owner_count) * 100) / 100,
+                    }
+                );
+            }
+        });
     }
 
     function handleMapClick(ev: MapboxMouseEvent<true>) {
@@ -160,7 +180,9 @@ function useMapLayers(map: mapboxgl.Map) {
                 }
             })
         } else {
-            map.removeLayer("alder-district-area");
+            try {
+                map.removeLayer("alder-district-area");
+            } catch (error) {}
         }
     }, { immediate: true });
 
@@ -168,6 +190,8 @@ function useMapLayers(map: mapboxgl.Map) {
         layers.forEach((layer) => {
             map.addLayer(layer);
         });
+
+        // addChoropleth(featureProperties.data[baseSourceId])
 
         setYearFilter();
 

@@ -29,6 +29,14 @@ onMounted(() => {
         zoom: _zoom,
     });
 
+
+    map.value.addControl(
+        new mapboxgl.NavigationControl({
+            visualizePitch: true
+        }),
+        "bottom-right"
+    );
+
     mapMeta.lngLat = _lngLat;
     mapMeta.zoom = _zoom;
     mapControls.currentSource = _source;
@@ -67,16 +75,14 @@ onMounted(() => {
         .features
         .map((feature) => feature.properties);
 
-    // map.value.on("sourcedata", (ev) => {
-        // sourceData.loadedSources[ev.sourceId] = ev.isSourceLoaded;
-    // });
 });
 
 </script>
 
 <template>
-    <main class="flex flex-col">
-        <div id="the-map" class="min-h-screen"></div>
+    <main class="flex flex-col min-h-screen">
+        <slot name="control-bar"></slot>
+        <div id="the-map" class="relative min-h-screen"></div>
         <slot></slot>
     </main>
 </template>
