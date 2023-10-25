@@ -25,7 +25,7 @@ const settings = useSettings();
                 <span class="font-semibold">in</span>
                 <ControlBarYearSelect />
                 <span>|</span>
-                <TRCButton @click="settings.showSettingsMenu = !settings.showSettingsMenu">
+                <TRCButton @click="settings.showDialog = true">
                     <IconGear />
                 </TRCButton>
             </div>

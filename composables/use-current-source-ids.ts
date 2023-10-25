@@ -1,5 +1,5 @@
 import { useMapControls } from "~/stores/map-controls-store";
-import { SourceId } from "utils/types";
+import type { SourceId } from "utils/types";
 
 interface SourceIds {
     baseSourceId: SourceId;
@@ -10,19 +10,13 @@ interface SourceIds {
 function useCurrentSourceIds() {
     const controls = useMapControls();
 
-    const sourceIds = reactive({
-        areaSourceId: "",
-        evictionsSourceId: "",
-        baseSourceId: "" as SourceId,
-    });
+    const sourceIds = computed(() => ({
+        areaSourceId: controls.currentSource + "-area",
+        evictionsSourceId: controls.currentSource + "-evictions",
+        baseSourceId: controls.currentSource
+    }));
 
-    watch(() => controls.currentSource, (currentSource) => {
-        sourceIds.areaSourceId = currentSource + "-area";
-        sourceIds.evictionsSourceId = currentSource + "-evictions";
-        sourceIds.baseSourceId = currentSource;
-    }, { immediate: true });
-
-    return sourceIds as SourceIds;
+    return sourceIds.value as SourceIds;
 }
 
 export { useCurrentSourceIds };

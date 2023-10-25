@@ -29,6 +29,20 @@ interface EvictionFeatureProperties {
     filing_rate: number;
 }
 
+type AreaKind = "Block Group";
+
+interface AreaProps {
+    id: string;
+    kind: AreaKind;
+    owner_count: number;
+    renter_count: number;
+}
+
+interface PointProps {
+    id: string;
+    evictions: { filing_year: string; n_filings: number; filing_rate: number }[];
+}
+
 type EvictionFeatureCollection = GeoJSON.FeatureCollection<any, EvictionFeatureProperties>;
 
 type FeatureId = GeoJSON.Feature["id"];

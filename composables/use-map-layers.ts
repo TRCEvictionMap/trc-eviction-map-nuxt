@@ -1,6 +1,6 @@
 import mapboxgl from "mapbox-gl";
 import { useMapControls } from "~/stores/map-controls-store";
-import type { MapboxMouseEvent, EvictionFeatureProperties } from "~/utils/types";
+import type { MapboxMouseEvent } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
@@ -129,14 +129,15 @@ function useMapLayers(map: mapboxgl.Map) {
 
     watch(() => controls.currentYear, setYearFilter);
 
-    function setYearFilter() {
-        map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear]);
-        featureProperties.data[baseSourceId].forEach(({ filing_year, n_filings, id, renter_count, owner_count }) => {
-            if (filing_year === controls.currentYear) {
+    function setupChoroplethFeatureState() {
+        const visited: Record<string, boolean> = {};
+        featureProperties.data[baseSourceId].forEach(({ id, renter_count, owner_count }) => {
+            const _id = id.slice(4);
+            if (!visited[_id]) {
+                visited[_id] = true;
                 map.setFeatureState(
-                    { source: areaSourceId, id: id.slice(4) },
+                    { source: areaSourceId, id: _id },
                     {
-                        n_filings,
                         renter_count,
                         owner_count,
                         household_count: renter_count + owner_count,
@@ -145,6 +146,10 @@ function useMapLayers(map: mapboxgl.Map) {
                 );
             }
         });
+    }
+
+    function setYearFilter() {
+        map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear]);
     }
 
     function handleMapClick(ev: MapboxMouseEvent<true>) {
@@ -179,10 +184,9 @@ function useMapLayers(map: mapboxgl.Map) {
                     "line-color": "black",
                 }
             })
-        } else {
-            try {
-                map.removeLayer("alder-district-area");
-            } catch (error) {}
+        } 
+        else if (map.getLayer("alder-district-area")) {
+            map.removeLayer("alder-district-area");
         }
     }, { immediate: true });
 
@@ -191,9 +195,8 @@ function useMapLayers(map: mapboxgl.Map) {
             map.addLayer(layer);
         });
 
-        // addChoropleth(featureProperties.data[baseSourceId])
-
         setYearFilter();
+        setupChoroplethFeatureState();
 
         map.on("click", areaSourceId, handleMapClick);
         map.on("mousemove", areaSourceId, handleMapMousemove);

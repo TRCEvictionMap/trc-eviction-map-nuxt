@@ -31,7 +31,7 @@ watchEffect(() => {
 
 function onCloseSettingsMenu() {
     konami.reset();
-    settings.showSettingsMenu = false;
+    settings.showDialog = false;
 }
 
 onMounted(() => {
@@ -51,7 +51,7 @@ onUnmounted(() => {
             </template>
            <DetailCardGroup />
            <MapLayers />
-           <SettingsDialog :open="konami.didKonami || settings.showSettingsMenu" @close="onCloseSettingsMenu" />
+           <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
         </TheMap>
     </ClientOnly>
 </template>

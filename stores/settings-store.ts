@@ -14,7 +14,7 @@ function persistOptions(options: Options) {
 }
 
 const useSettings = defineStore("settings", () => {
-    const showSettingsMenu = ref(false);
+    const showDialog = ref(false);
 
     const options = reactive({} as Options);
 
@@ -34,10 +34,7 @@ const useSettings = defineStore("settings", () => {
 
     watch(options, persistOptions);
 
-    return {
-        showSettingsMenu,
-        options,
-    };
+    return { showDialog, options };
 });
 
 export { useSettings };
