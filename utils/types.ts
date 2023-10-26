@@ -19,15 +19,6 @@ type AlderDistricts = GeoJSON.FeatureCollection<any, {
     district_no: number;
 }[]>;
 
-interface EvictionFeatureProperties {
-    id: string;
-    geog_name: string;
-    owner_count: number;
-    renter_count: number;
-    filing_year: string;
-    n_filings: number;
-    filing_rate: number;
-}
 
 type Region = "Block Group";
 

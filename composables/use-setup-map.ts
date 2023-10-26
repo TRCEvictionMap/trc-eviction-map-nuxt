@@ -3,13 +3,16 @@ import { useMapMeta } from "~/stores/map-meta-store";
 
 import blockGroupJson from "~/public/block-group.json";
 import { useMapControls } from "~/stores/map-controls-store";
+import { useFeatureProperties } from "~/stores/feature-properties-store";
+import { EvictionFeatureCollection } from "utils/types";
 
 function useSetupMap() {
     const map = ref<mapboxgl.Map>();
 
     const config = useRuntimeConfig();
     const mapMeta = useMapMeta();
-    const mapControls = useMapControls();
+    const controls = useMapControls();
+    const featureProperties = useFeatureProperties();
 
     onMounted(() => {
         const { _lngLat, _source, _year, _zoom } = useInitialQueryParams();
@@ -31,8 +34,8 @@ function useSetupMap() {
 
         mapMeta.lngLat = _lngLat;
         mapMeta.zoom = _zoom;
-        mapControls.currentSource = _source;
-        mapControls.currentYear = _year;
+        controls.currentSource = _source;
+        controls.currentYear = _year;
 
         map.value.on("moveend", (ev) => {
             const { lng, lat } = ev.target.getCenter();
@@ -48,9 +51,22 @@ function useSetupMap() {
 
             _map.addSource("block-group", {
                 type: "geojson",
+                promoteId: "id",
                 data: blockGroupJson as unknown as string,
             });
         });
+
+        const years = featureProperties.loadData(
+            "block-group",
+            blockGroupJson as unknown as EvictionFeatureCollection
+        );
+
+        years
+            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+            .forEach((year) => {
+                controls.yearOptions.push({ value: year });
+            });
+
     });
 
     return map;

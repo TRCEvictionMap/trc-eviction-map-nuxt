@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import { useMapControls } from "~/stores/map-controls-store";
 import { useSettings } from "~/stores/settings-store";
 
 const settings = useSettings();
+const controls = useMapControls();
 
 </script>
 
@@ -20,10 +22,13 @@ const settings = useSettings();
         ">
 
             <div class="hidden sm:flex items-center space-x-4">
-                <span class="font-semibold">Evictions by</span>
-                <ControlBarSourceSelect />
+                <TRCSelect :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
+                <span class="font-semibold">and</span>
+                <TRCSelect  :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
+                <span class="font-semibold">by</span>
+                <TRCSelect :options="controls.sourceOptions" v-model="controls.currentSource" />
                 <span class="font-semibold">in</span>
-                <ControlBarYearSelect />
+                <TRCSelect :options="controls.yearOptions" v-model="controls.currentYear" />
                 <span>|</span>
                 <TRCButton @click="settings.showDialog = true">
                     <IconGear />
@@ -48,8 +53,14 @@ const settings = useSettings();
                             class="absolute z-10  max-w-sm bg-white rounded border p-4 transform "
                         >
                             <div>
-                                <ControlBarSourceSelect label="Geography" />
-                                <ControlBarYearSelect label="Year" />
+                                <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
+
+                                <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
+
+                                <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" />
+
+                                <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
+
                             </div>
                         </PopoverPanel>
                     </Transition>

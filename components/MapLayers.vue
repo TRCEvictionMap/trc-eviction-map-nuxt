@@ -6,6 +6,6 @@ const mapControls = useMapControls();
 
 <template>
     <template v-for="source in mapControls.sourceOptions">
-        <MapLayer v-if="source === mapControls.currentSource" :source="source" />
+        <MapLayer v-if="source.value === mapControls.currentSource" :source="source.value" />
     </template>
 </template>

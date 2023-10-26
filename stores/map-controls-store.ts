@@ -4,22 +4,47 @@ import { SourceId } from "utils/types";
 type EvictionMetric = "n_filings" | "filing_rate";
 type DemographicMetric = "renter_count" | "renter_rate" | "n_households";
 
+type Option<Value> = { text?: string; value: Value; };
+
 const useMapControls = defineStore("map-controls", () => {
-    const sourceOptions: SourceId[] = [
-        "alder-district",
-        "block-group",
-    ];
+    const yearOptions = ref<Option<string>[]>([]); 
 
-    const evictionMetricOptions: EvictionMetric[] = [
-        "filing_rate",
-        "n_filings",
-    ];
+    const sourceOptions = ref<Option<SourceId>[]>([
+        // {
+        //     text: "Aldermanic district",
+        //     value: "alder-district",
+        // },
+        {
+            text: "Census block group",
+            value: "block-group",
+        },
+    ]);
 
-    const demographicMetricOptions: DemographicMetric[] = [
-        "n_households",
-        "renter_count",
-        "renter_rate",
-    ]
+    const evictionMetricOptions = ref<Option<EvictionMetric>[]>([
+        {
+            text: "Eviction filings",
+            value: "n_filings",
+        },
+        {
+            text: "Eviction filing rate",
+            value: "filing_rate",
+        },
+    ]);
+
+    const demographicMetricOptions = ref<Option<DemographicMetric>[]>([
+        {
+            text: "Households",
+            value: "n_households",
+        },
+        {
+            text: "Renter-occupied households",
+            value: "renter_count",
+        },
+        {
+            text: "Percent renter-occupied",
+            value: "renter_rate",
+        },
+    ]);
 
     const currentYear = ref<string>("2023");
     const currentSource = ref<SourceId>("block-group");
@@ -27,6 +52,7 @@ const useMapControls = defineStore("map-controls", () => {
     const currentDemographicMetric = ref<DemographicMetric>("renter_rate");
 
     return {
+        yearOptions,
         sourceOptions,
         evictionMetricOptions,
         demographicMetricOptions,

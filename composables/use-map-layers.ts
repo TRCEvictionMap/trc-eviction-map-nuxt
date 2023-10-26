@@ -62,7 +62,7 @@ function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
 
     watch(() => controls.currentDemographicMetric, (metric) => {
-
+        
     });
 
     const layers = createLayers(controls.currentSource);    
