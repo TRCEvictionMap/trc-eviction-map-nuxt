@@ -29,21 +29,30 @@ interface EvictionFeatureProperties {
     filing_rate: number;
 }
 
-type AreaKind = "Block Group";
+type Region = "Block Group";
 
-interface AreaProps {
+interface DemographicFeatureProperties {
     id: string;
-    kind: AreaKind;
+    region: Region;
     owner_count: number;
     renter_count: number;
 }
 
-interface PointProps {
+type Year = "2021" | "2022" | "2023" | string;
+interface EvictionFeatureProperties {
     id: string;
-    evictions: { filing_year: string; n_filings: number; filing_rate: number }[];
+    region: Region;
+    evictions: Record<Year, {
+        n_filings: number;
+        filing_rate: number;
+    }>;
 }
 
-type EvictionFeatureCollection = GeoJSON.FeatureCollection<any, EvictionFeatureProperties>;
+
+type EvictionFeatureCollection = GeoJSON.FeatureCollection<
+    any,
+    EvictionFeatureProperties | DemographicFeatureProperties
+>;
 
 type FeatureId = GeoJSON.Feature["id"];
 

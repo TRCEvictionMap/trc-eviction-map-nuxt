@@ -1,11 +1,104 @@
 import mapboxgl from "mapbox-gl";
 import { useMapControls } from "~/stores/map-controls-store";
-import type { MapboxMouseEvent } from "~/utils/types";
+import type { MapboxMouseEvent, SourceId, EvictionFeatureCollection } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 
-function createLayers(): mapboxgl.AnyLayer[] {
+function layerIds(source: SourceId) {
+    return {
+        demographicMetrics: source + "-demographics",
+        evictionMetrics: source + "-evictions" 
+    }
+}
+
+function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
+    const { demographicMetrics, evictionMetrics } = layerIds(source);
+    return [
+        {
+            source,
+            id: demographicMetrics,
+            type: "fill",
+            paint: {
+                "fill-color": "#ddd",
+                "fill-opacity": 0.4,
+                "fill-outline-color": "black",
+            },
+            filter: ["==", "$type", "Polygon"]
+        },
+        {
+            source,
+            id: evictionMetrics,
+            type: "circle",
+            paint: {
+                "circle-color": "purple",
+                "circle-radius": [
+                    "let",
+                    "year",
+                    ["string", ["feature-state", "viewed_year"], "2023"],
+                    [
+                        "interpolate",
+                        ["linear"],
+                        ["number", ["get", "n_filings", ["get", ["var", "year"], ["get", "evictions", ["properties"]]]]],
+                        0, 2,
+                        1, 6,
+                        5, 12,
+                        10, 24
+                    ]
+                ],
+                "circle-opacity": 0.6
+            },
+            filter: [
+                "all",
+                ["==", "$type", "Point"],
+            ]
+        }
+    ];
+}
+
+function useMapLayers(map: mapboxgl.Map) {
+    const controls = useMapControls();
+
+    const layers = createLayers(controls.currentSource);
+
+    onMounted(() => {
+        layers.forEach((layer) => {
+            map.addLayer(layer);
+        });
+    });
+
+    onBeforeUnmount(() => {
+        layers.forEach((layer) => {
+            map.removeLayer(layer.id);
+        });
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function createLayersOld(): mapboxgl.AnyLayer[] {
     const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
     return [
         {
@@ -71,14 +164,14 @@ function createLayers(): mapboxgl.AnyLayer[] {
 }
 
 
-function useMapLayers(map: mapboxgl.Map) {
+function useMapLayersOld(map: mapboxgl.Map) {
     const controls = useMapControls();
     const settings = useSettings();
     const featureState = useFeatureState();
     const featureProperties = useFeatureProperties();
     const { baseSourceId, areaSourceId, evictionsSourceId } = useCurrentSourceIds();
 
-    const layers = createLayers();
+    const layers = createLayersOld();
 
     const isLoaded = ref(false);
 
@@ -219,4 +312,4 @@ function useMapLayers(map: mapboxgl.Map) {
     });
 }
 
-export { useMapLayers };
+export { useMapLayers, useMapLayersOld };
