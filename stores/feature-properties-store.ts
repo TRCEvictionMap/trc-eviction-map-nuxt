@@ -1,10 +1,15 @@
 import { defineStore } from "pinia";
-import type { EvictionFeatureProperties, SourceId } from "utils/types";
+import type { EvictionFeatureProperties, DemographicFeatureProperties, SourceId } from "utils/types";
+
+interface FeatureProperties {
+    demographics: DemographicFeatureProperties[];
+    evictions: EvictionFeatureProperties[];
+}
 
 const useFeatureProperties = defineStore("feature-properties", () => {
-    const data = ref<Record<SourceId, EvictionFeatureProperties[]>>({
-        "alder-district": [],
-        "block-group": [],
+    const data = ref<Record<SourceId, FeatureProperties>>({
+        "alder-district": { demographics: [], evictions: [] },
+        "block-group": { demographics: [], evictions: [] },
     });
 
     return { data };

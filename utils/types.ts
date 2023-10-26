@@ -34,8 +34,10 @@ type Region = "Block Group";
 interface DemographicFeatureProperties {
     id: string;
     region: Region;
+    n_households: number;
     owner_count: number;
     renter_count: number;
+    renter_rate: number;
 }
 
 type Year = "2021" | "2022" | "2023" | string;
@@ -63,4 +65,11 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
     : mapboxgl.MapMouseEvent & mapboxgl.EventData;
 
 export { isSourceId };
-export type { EvictionFeatureCollection, EvictionFeatureProperties, SourceId, FeatureId, MapboxMouseEvent };
+export type {
+    EvictionFeatureCollection,
+    EvictionFeatureProperties,
+    DemographicFeatureProperties,
+    SourceId,
+    FeatureId,
+    MapboxMouseEvent
+};

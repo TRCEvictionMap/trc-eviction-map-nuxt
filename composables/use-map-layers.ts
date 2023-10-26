@@ -37,29 +37,35 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
                     "year",
                     ["string", ["feature-state", "viewed_year"], "2023"],
                     [
-                        "interpolate",
-                        ["linear"],
-                        ["number", ["get", "n_filings", ["get", ["var", "year"], ["get", "evictions", ["properties"]]]]],
-                        0, 2,
-                        1, 6,
-                        5, 12,
-                        10, 24
+                        "let",
+                        "metric",
+                        ["string", ["feature-state", "viewed_metric"], "n_filings"],
+                        [
+                            "interpolate",
+                            ["linear"],
+                            ["number", ["get", ["var", "metric"], ["get", ["var", "year"], ["get", "evictions", ["properties"]]]]],
+                            0, 2,
+                            1, 6,
+                            5, 12,
+                            10, 24
+                        ]
                     ]
                 ],
                 "circle-opacity": 0.6
             },
-            filter: [
-                "all",
-                ["==", "$type", "Point"],
-            ]
-        }
+            filter: ["==", "$type", "Point"],
+        },
     ];
 }
 
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
 
-    const layers = createLayers(controls.currentSource);
+    watch(() => controls.currentDemographicMetric, (metric) => {
+
+    });
+
+    const layers = createLayers(controls.currentSource);    
 
     onMounted(() => {
         layers.forEach((layer) => {
@@ -223,22 +229,22 @@ function useMapLayersOld(map: mapboxgl.Map) {
     watch(() => controls.currentYear, setYearFilter);
 
     function setupChoroplethFeatureState() {
-        const visited: Record<string, boolean> = {};
-        featureProperties.data[baseSourceId].forEach(({ id, renter_count, owner_count }) => {
-            const _id = id.slice(4);
-            if (!visited[_id]) {
-                visited[_id] = true;
-                map.setFeatureState(
-                    { source: areaSourceId, id: _id },
-                    {
-                        renter_count,
-                        owner_count,
-                        household_count: renter_count + owner_count,
-                        renter_rate: Math.round(renter_count / (renter_count + owner_count) * 100) / 100,
-                    }
-                );
-            }
-        });
+        // const visited: Record<string, boolean> = {};
+        // featureProperties.data[baseSourceId].forEach(({ id, renter_count, owner_count }) => {
+        //     const _id = id.slice(4);
+        //     if (!visited[_id]) {
+        //         visited[_id] = true;
+        //         map.setFeatureState(
+        //             { source: areaSourceId, id: _id },
+        //             {
+        //                 renter_count,
+        //                 owner_count,
+        //                 household_count: renter_count + owner_count,
+        //                 renter_rate: Math.round(renter_count / (renter_count + owner_count) * 100) / 100,
+        //             }
+        //         );
+        //     }
+        // });
     }
 
     function setYearFilter() {
