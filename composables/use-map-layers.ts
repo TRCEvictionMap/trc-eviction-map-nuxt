@@ -1,5 +1,6 @@
 import mapboxgl from "mapbox-gl";
 import { useMapControls } from "~/stores/map-controls-store";
+import type { DemographicMetric, EvictionMetric } from "~/stores/map-controls-store";
 import type { MapboxMouseEvent, SourceId, EvictionFeatureCollection } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
@@ -7,17 +8,17 @@ import { useFeatureProperties } from "~/stores/feature-properties-store";
 
 function layerIds(source: SourceId) {
     return {
-        demographicMetrics: source + "-demographics",
-        evictionMetrics: source + "-evictions" 
+        demographicsLayerId: source + "-demographics",
+        evictionsLayerId: source + "-evictions" 
     }
 }
 
 function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
-    const { demographicMetrics, evictionMetrics } = layerIds(source);
+    const { demographicsLayerId, evictionsLayerId } = layerIds(source);
     return [
         {
             source,
-            id: demographicMetrics,
+            id: demographicsLayerId,
             type: "fill",
             paint: {
                 "fill-color": "#ddd",
@@ -28,29 +29,10 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
         },
         {
             source,
-            id: evictionMetrics,
+            id: evictionsLayerId,
             type: "circle",
             paint: {
                 "circle-color": "purple",
-                "circle-radius": [
-                    "let",
-                    "year",
-                    ["string", ["feature-state", "viewed_year"], "2023"],
-                    [
-                        "let",
-                        "metric",
-                        ["string", ["feature-state", "viewed_metric"], "n_filings"],
-                        [
-                            "interpolate",
-                            ["linear"],
-                            ["number", ["get", ["var", "metric"], ["get", ["var", "year"], ["get", "evictions", ["properties"]]]]],
-                            0, 2,
-                            1, 6,
-                            5, 12,
-                            10, 24
-                        ]
-                    ]
-                ],
                 "circle-opacity": 0.6
             },
             filter: ["==", "$type", "Point"],
@@ -60,23 +42,113 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
+    const featureState = useFeatureState();
+    const featureProperties = useFeatureProperties();
 
-    watch(() => controls.currentDemographicMetric, (metric) => {
-        
-    });
+    const { demographicsLayerId, evictionsLayerId } = layerIds(controls.currentSource);
 
-    const layers = createLayers(controls.currentSource);    
+    watch(
+        [
+            () => controls.currentEvictionMetric,
+            () => controls.currentYear,
+        ],
+        updateEvictionsPaintProperties,
+        { immediate: true }
+    );
+
+    watch(
+        [
+            () => controls.currentDemographicMetric,
+        ],
+        updateDemographicsPaintProperties,
+        { immediate: true }
+    );
+
+
+    const layers = createLayers(controls.currentSource);
+
+    function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
+        // if (map.getLayer(demographicsLayerId)) {
+        //     map.setPaintProperty(
+        //         demographicsLayerId,
+        //         "fill-color",
+        //         [
+        //             "step",
+        //             ["number", ["get", metric, ["properties"]]],
+        //             "orange", .2,
+        //             "green", .4,
+        //             "red", .6,
+        //             "purple", .8,
+        //             "chartreuse"
+        //         ]
+        //     )
+        // }
+    }
+
+    function updateEvictionsPaintProperties([metric, year]: [EvictionMetric, string]) {
+        if (map.getLayer(evictionsLayerId)) {
+            map.setPaintProperty(
+                evictionsLayerId,
+                "circle-radius",
+                [
+                    "interpolate",
+                    ["linear"],
+                    ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
+                    0, 2,
+                    1, 6,
+                    5, 12,
+                    10, 24
+                ]
+            )
+        }
+    }
+
+    function handleMapClick(ev: MapboxMouseEvent<true>) {
+        if (ev.features && ev.features.length > 0) {
+            const justClicked = ev.features[0].id?.toString() ?? "";
+            featureState.setFeatureState(
+                justClicked,
+                "isSelected",
+                !featureState.selectedFeatures.includes(justClicked)
+            );
+        }
+    }
+
+    function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
+
+    }
+
+    function handleMapMousemove(ev: MapboxMouseEvent<true>) {
+
+    }
 
     onMounted(() => {
         layers.forEach((layer) => {
             map.addLayer(layer);
         });
-    });
 
+        updateEvictionsPaintProperties([
+            controls.currentEvictionMetric,
+            controls.currentYear
+        ]);
+
+        updateDemographicsPaintProperties([
+            controls.currentDemographicMetric
+        ])
+
+        map.on("click", demographicsLayerId, handleMapClick);
+        map.on("mousemove", demographicsLayerId, handleMapMousemove);
+        map.on("mouseleave", demographicsLayerId, handleMapMouseleave);
+    });
+    
     onBeforeUnmount(() => {
         layers.forEach((layer) => {
             map.removeLayer(layer.id);
         });
+
+        map.off("click", demographicsLayerId, handleMapClick);
+        map.off("mousemove", demographicsLayerId, handleMapMousemove);
+        map.off("mouseleave", demographicsLayerId, handleMapMouseleave);
     });
 }
 

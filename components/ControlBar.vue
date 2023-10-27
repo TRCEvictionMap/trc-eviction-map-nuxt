@@ -20,21 +20,23 @@ const controls = useMapControls();
             rounded border shadow-2xl
             bg-white
         ">
-
             <div class="hidden sm:flex items-center space-x-4">
+                <!-- <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" /> -->
                 <TRCSelect :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
                 <span class="font-semibold">and</span>
-                <TRCSelect  :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
-                <span class="font-semibold">by</span>
+                <!-- <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" /> -->
+                <TRCSelect :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
+                <span class="font-semibold">for</span>
+                <!-- <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" /> -->
                 <TRCSelect :options="controls.sourceOptions" v-model="controls.currentSource" />
                 <span class="font-semibold">in</span>
+                <!-- <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" /> -->
                 <TRCSelect :options="controls.yearOptions" v-model="controls.currentYear" />
                 <span>|</span>
                 <TRCButton @click="settings.showDialog = true">
                     <IconGear />
                 </TRCButton>
             </div>
-
 
             <div class="sm:hidden flex flex-col w-full space-y-2">
                 <Popover class="relative">
@@ -54,13 +56,9 @@ const controls = useMapControls();
                         >
                             <div>
                                 <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
-
                                 <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
-
                                 <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" />
-
                                 <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
-
                             </div>
                         </PopoverPanel>
                     </Transition>

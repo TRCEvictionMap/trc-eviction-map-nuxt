@@ -11,11 +11,22 @@ const { featureId } = defineProps<{
     featureId: string;
 }>();
 
-const feature = computed(
-    () => featureProperties.data[controls.currentSource].find(
-        (feature) => feature.id === `${controls.currentYear}${featureId}`
-    )
-);
+const feature = computed(() => {
+    const properties = featureProperties.getFeatureProperties(
+        controls.currentSource,
+        featureId,
+    );
+
+    if (properties) {
+        const { evictions, id, ...props } = properties;
+
+        return {
+            ...props,
+            ...evictions[controls.currentYear],
+            id: id.replace(/\w_/, ""),
+        };
+    }
+});
 
 function closeCard() {
     if (featureId) {
@@ -46,7 +57,7 @@ function onMouseleave() {
                 </TRCButton>
                 <div class="space-y-2">
                     <div class="text-sm font-bold">
-                        {{ feature.geog_name }}
+                        {{ feature.region }} {{ feature.id }}
                     </div>
                     <DetailCardItem>
                         <template #label>

@@ -34,12 +34,14 @@ const useFeatureProperties = defineStore("feature-properties", () => {
         "block-group": {},
     });
 
-    function getFeatureProperties(source: SourceId, featureId: string): FeatureProperties {
-        const root = featureId.replace(/^\w_/, "");
-        return {
-            ...data.value[source][`e_${root}`],
-            ...data.value[source][`d_${root}`],
-        } as FeatureProperties;
+    function getFeatureProperties(source: SourceId, featureId: string): FeatureProperties | undefined {
+        if (typeof data.value[source][featureId] !== "undefined") {
+            const root = featureId.replace(/^\w_/, "");
+            return {
+                ...data.value[source][`e_${root}`],
+                ...data.value[source][`d_${root}`],
+            } as FeatureProperties;
+        }
     }
 
     function loadData(source: SourceId, featureCollection: EvictionFeatureCollection): string[] {

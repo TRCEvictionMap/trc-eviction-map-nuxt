@@ -15,7 +15,7 @@ const useMapControls = defineStore("map-controls", () => {
         //     value: "alder-district",
         // },
         {
-            text: "Census block group",
+            text: "Census block groups",
             value: "block-group",
         },
     ]);
@@ -64,3 +64,4 @@ const useMapControls = defineStore("map-controls", () => {
 });
 
 export { useMapControls };
+export type { EvictionMetric, DemographicMetric };
