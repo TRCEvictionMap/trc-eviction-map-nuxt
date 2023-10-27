@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { SourceId } from "utils/types";
 
 type EvictionMetric = "n_filings" | "filing_rate";
-type DemographicMetric = "renter_count" | "renter_rate" | "n_households";
+type DemographicMetric = "renter_count" | "renter_rate";
 
 type Option<Value> = { text?: string; value: Value; };
 
@@ -32,10 +32,6 @@ const useMapControls = defineStore("map-controls", () => {
     ]);
 
     const demographicMetricOptions = ref<Option<DemographicMetric>[]>([
-        {
-            text: "Households",
-            value: "n_households",
-        },
         {
             text: "Renter-occupied households",
             value: "renter_count",

@@ -29,11 +29,30 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
         },
         {
             source,
+            id: `${demographicsLayerId}-border`,
+            type: "line",
+            paint: {
+                "line-width": [
+                    "case",
+                    ["boolean", ["feature-state", "isSelected"], false],
+                    4,
+                    1,
+                ],
+                "line-color": [
+                    "case",
+                    ["boolean", ["feature-state", "isHovered"], false],
+                    "black",
+                    "gray"
+                ]
+            }
+        },
+        {
+            source,
             id: evictionsLayerId,
             type: "circle",
             paint: {
-                "circle-color": "purple",
-                "circle-opacity": 0.6
+                "circle-color": "hotpink",
+                "circle-opacity": 0.8
             },
             filter: ["==", "$type", "Point"],
         },
@@ -43,9 +62,14 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
     const featureState = useFeatureState();
-    const featureProperties = useFeatureProperties();
 
     const { demographicsLayerId, evictionsLayerId } = layerIds(controls.currentSource);
+
+    watch(
+        () => featureState.selectedFeatures,
+        updateSelectedFeatures,
+        { immediate: true }
+    );
 
     watch(
         [
@@ -64,25 +88,73 @@ function useMapLayers(map: mapboxgl.Map) {
         { immediate: true }
     );
 
+    watch(() => featureState.hoveredFeature, (current, prev) => {
+        if (prev) {
+            map.setFeatureState(
+                { source: controls.currentSource, id: prev },
+                { isHovered: false }
+            );
+        }
+        if (current) {
+            map.setFeatureState(
+                { source: controls.currentSource, id: current },
+                { isHovered: true }
+            );
+        }
+    });
 
     const layers = createLayers(controls.currentSource);
 
+    function updateIsSelected(featureId: string, isSelected: boolean) {
+        map.setFeatureState(
+            { source: controls.currentSource, id: featureId },
+            { isSelected },
+        );
+    }
+
+    function updateSelectedFeatures(current: string[], previous?: string[]) {
+        previous
+            ?.filter((featureId) => !current.includes(featureId))
+            .forEach((featureId) => {
+                updateIsSelected(featureId, false);
+            });
+
+        current
+            .filter((featureId) => !previous?.includes(featureId))
+            .forEach((featureId) => {
+                updateIsSelected(featureId, true);
+            });
+    }
+
+    const options: Record<DemographicMetric, (number | string)[]> = {
+        renter_count: [
+            "rgba(0, 0, 200, 0.1)", 100,
+            "rgba(0, 0, 200, 0.3)", 200,
+            "rgba(0, 0, 200, 0.5)", 300,
+            "rgba(0, 0, 200, 0.7)", 400,
+            "rgba(0, 0, 200, 0.9)"
+        ],
+        renter_rate: [
+            "rgba(0, 0, 200, 0.1)", 20,
+            "rgba(0, 0, 200, 0.3)", 40,
+            "rgba(0, 0, 200, 0.5)", 60,
+            "rgba(0, 0, 200, 0.7)", 80,
+            "rgba(0, 0, 200, 0.9)"
+        ],
+    }
+
     function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
-        // if (map.getLayer(demographicsLayerId)) {
-        //     map.setPaintProperty(
-        //         demographicsLayerId,
-        //         "fill-color",
-        //         [
-        //             "step",
-        //             ["number", ["get", metric, ["properties"]]],
-        //             "orange", .2,
-        //             "green", .4,
-        //             "red", .6,
-        //             "purple", .8,
-        //             "chartreuse"
-        //         ]
-        //     )
-        // }
+        if (map.getLayer(demographicsLayerId)) {
+            map.setPaintProperty(
+                demographicsLayerId,
+                "fill-color",
+                [
+                    "step",
+                    ["number", ["get", metric, ["properties"]]],
+                    ...options[metric]
+                ]
+            )
+        }
     }
 
     function updateEvictionsPaintProperties([metric, year]: [EvictionMetric, string]) {
@@ -115,11 +187,14 @@ function useMapLayers(map: mapboxgl.Map) {
     }
 
     function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
-
+        featureState.clearHoveredFeature();
     }
 
     function handleMapMousemove(ev: MapboxMouseEvent<true>) {
-
+        if (ev.features && ev.features.length > 0) {
+            const hovered = ev.features[0].id?.toString() ?? "";
+            featureState.setFeatureState(hovered, "isHovered", "feature");
+        }
     }
 
     onMounted(() => {
@@ -145,6 +220,11 @@ function useMapLayers(map: mapboxgl.Map) {
         layers.forEach((layer) => {
             map.removeLayer(layer.id);
         });
+
+        updateSelectedFeatures([], featureState.selectedFeatures);
+
+        featureState.clearSelectedFeatures();
+        featureState.clearHoveredFeature();
 
         map.off("click", demographicsLayerId, handleMapClick);
         map.off("mousemove", demographicsLayerId, handleMapMousemove);
