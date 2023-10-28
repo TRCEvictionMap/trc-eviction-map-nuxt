@@ -29,6 +29,7 @@ export interface TRCSelectOptionSlotProps {
 
 const props = defineProps<{
     options: O[];
+    optionsHeader?: string;
     modelValue: string | number;
     label?: string;
     withCheckmark?: boolean;
@@ -70,6 +71,7 @@ const buttonText = computed(() => {
             </div>
             <div class="relative">
                 <ListboxOptions class="absolute top-0 p-4 rounded bg-white shadow border space-y-2">
+                    
                     <ListboxOption
                         v-for="option in options"
                         :key="option.key ?? option.value"

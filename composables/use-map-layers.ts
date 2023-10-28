@@ -3,34 +3,39 @@ import { useMapControls } from "~/stores/map-controls-store";
 import type { DemographicMetric, EvictionMetric } from "~/stores/map-controls-store";
 import type { MapboxMouseEvent, SourceId, EvictionFeatureCollection } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
-import { useSettings } from "~/stores/settings-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 
-function layerIds(source: SourceId) {
-    return {
-        demographicsLayerId: source + "-demographics",
-        evictionsLayerId: source + "-evictions" 
-    }
-}
-
 function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
-    const { demographicsLayerId, evictionsLayerId } = layerIds(source);
+    const {
+        evictionsLayerId,
+        demographicsLayerId,
+        demographicsShadingLayerId,
+        demographicsBorderLayerId,
+    } = useLayerIds(source);
+
     return [
         {
             source,
             id: demographicsLayerId,
             type: "fill",
             paint: {
-                "fill-color": "#ddd",
-                "fill-opacity": 0.4,
-                "fill-outline-color": "black",
+                "fill-opacity": 0,
             },
             filter: ["==", "$type", "Polygon"]
         },
         {
             source,
-            id: `${demographicsLayerId}-border`,
+            id: demographicsShadingLayerId,
+            type: "fill",
+            paint: {
+                "fill-opacity": 0.5
+            }
+        },
+        {
+            source,
+            id: demographicsBorderLayerId,
             type: "line",
+            filter: ["==", "$type", "Polygon"],
             paint: {
                 "line-width": [
                     "case",
@@ -52,7 +57,9 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
             type: "circle",
             paint: {
                 "circle-color": "rgb(255, 75, 50)",
-                "circle-opacity": 0.8
+                "circle-opacity": 0.8,
+                "circle-stroke-color": "black",
+                "circle-stroke-width": 1
             },
             filter: ["==", "$type", "Point"],
         },
@@ -64,7 +71,7 @@ function useMapLayers(map: mapboxgl.Map) {
     const featureState = useFeatureState();
     const featureProperties = useFeatureProperties();
 
-    const { demographicsLayerId, evictionsLayerId } = layerIds(controls.currentSource);
+    const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
 
     watch(
         () => featureState.selectedFeatures,
@@ -138,6 +145,7 @@ function useMapLayers(map: mapboxgl.Map) {
 
 
         return {
+            none: [],
             renter_count: [
                 Math.round(maxRenterCount * 0.1), "rgba(0, 0, 200, 0.1)",
                 Math.round(maxRenterCount * 0.3), "rgba(0, 0, 200, 0.3)",
@@ -147,45 +155,58 @@ function useMapLayers(map: mapboxgl.Map) {
 
             ],
             renter_rate: [
-                10, "rgba(0, 0, 200, 0.1)",
-                30, "rgba(0, 0, 200, 0.3)",
-                50, "rgba(0, 0, 200, 0.5)",
-                70, "rgba(0, 0, 200, 0.7)",
-                90, "rgba(0, 0, 200, 0.9)",
+                10, "rgba(0, 0, 255, 0.1)",
+                30, "rgba(0, 0, 255, 0.3)",
+                50, "rgba(0, 0, 255, 0.5)",
+                70, "rgba(0, 0, 255, 0.7)",
+                90, "rgba(0, 0, 255, 0.9)",
             ],
         }
     });
 
     function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
-        if (map.getLayer(demographicsLayerId)) {
-            map.setPaintProperty(
-                demographicsLayerId,
-                "fill-color",
-                [
-                    "interpolate",
-                    ["linear"],
-                    ["number", ["get", metric, ["properties"]]],
-                    ...options.value[metric]
-                ],
-            );
+        if (map.getLayer(demographicsShadingLayerId)) {
+            if (metric !== "none") {
+                map.setLayoutProperty(demographicsShadingLayerId, "visibility", "visible");
+                map.setPaintProperty(
+                    demographicsShadingLayerId,
+                    "fill-color",
+                    [
+                        "interpolate",
+                        ["linear"],
+                        ["number", ["get", metric, ["properties"]]],
+                        ...options.value[metric]
+                    ],
+                );
+            }
+            else {
+                map.setLayoutProperty(demographicsShadingLayerId, "visibility", "none");
+            }
         }
     }
 
     function updateEvictionsPaintProperties([metric, year]: [EvictionMetric, string]) {
         if (map.getLayer(evictionsLayerId)) {
-            map.setPaintProperty(
-                evictionsLayerId,
-                "circle-radius",
-                [
-                    "interpolate",
-                    ["linear"],
-                    ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
-                    0, 2,
-                    1, 6,
-                    5, 12,
-                    10, 24
-                ]
-            );
+            if (metric !== "none") {
+                map.setLayoutProperty(evictionsLayerId, "visibility", "visible");
+                map.setPaintProperty(
+                    evictionsLayerId,
+                    "circle-radius",
+                    [
+                        "interpolate",
+                        ["linear"],
+                        ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
+                        0, 2,
+                        1, 4,
+                        5, 8,
+                        10, 16
+                    ]
+                );
+            }
+            else {
+                map.setLayoutProperty(evictionsLayerId, "visibility", "none");
+            }
+        
         }
     }
 
@@ -270,218 +291,218 @@ function useMapLayers(map: mapboxgl.Map) {
 
 
 
-function createLayersOld(): mapboxgl.AnyLayer[] {
-    const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
-    return [
-        {
-            source: areaSourceId,
-            id: areaSourceId,
-            type: "fill",
-            paint: {
-                "fill-color": [
-                    "step",
-                    ["number", ["feature-state", "renter_rate"], 0],
-                    "orange", .2,
-                    "green", .4,
-                    "red", .6,
-                    "purple", .8,
-                    "chartreuse"
-                ],
-                "fill-outline-color": "black",
-                "fill-opacity": [
-                    "case",
-                    ["boolean", ["feature-state", "isHovered"], false],
-                    0.4,
-                    0.2,
-                ],
-            },
-        },
-        {
-            source: areaSourceId,
-            id: `${areaSourceId}-borders`,
-            type: "line",
-            paint: {
-                "line-color": [
-                    "case",
-                    ["boolean", ["feature-state", "isSelected"], false],
-                    "goldenrod",
-                    "black",
-                ],
-                "line-width": [
-                    "case",
-                    ["boolean", ["feature-state", "isSelected"], false],
-                    2,
-                    0,
-                ],
-            },
-        },
-        {
-            source: evictionsSourceId,
-            id: evictionsSourceId,
-            type: "circle",
-            paint: {
-                "circle-radius": [
-                    "interpolate",
-                    ["linear"],
-                    ["number", ["get", "filing_rate"]],
-                    0, 2,
-                    1, 6,
-                    5, 12,
-                    10, 24
-                ],
-                "circle-opacity": 0.6
-            }
-        },
-    ];
-}
+// function createLayersOld(): mapboxgl.AnyLayer[] {
+//     const { areaSourceId, evictionsSourceId } = useCurrentSourceIds();
+//     return [
+//         {
+//             source: areaSourceId,
+//             id: areaSourceId,
+//             type: "fill",
+//             paint: {
+//                 "fill-color": [
+//                     "step",
+//                     ["number", ["feature-state", "renter_rate"], 0],
+//                     "orange", .2,
+//                     "green", .4,
+//                     "red", .6,
+//                     "purple", .8,
+//                     "chartreuse"
+//                 ],
+//                 "fill-outline-color": "black",
+//                 "fill-opacity": [
+//                     "case",
+//                     ["boolean", ["feature-state", "isHovered"], false],
+//                     0.4,
+//                     0.2,
+//                 ],
+//             },
+//         },
+//         {
+//             source: areaSourceId,
+//             id: `${areaSourceId}-borders`,
+//             type: "line",
+//             paint: {
+//                 "line-color": [
+//                     "case",
+//                     ["boolean", ["feature-state", "isSelected"], false],
+//                     "goldenrod",
+//                     "black",
+//                 ],
+//                 "line-width": [
+//                     "case",
+//                     ["boolean", ["feature-state", "isSelected"], false],
+//                     2,
+//                     0,
+//                 ],
+//             },
+//         },
+//         {
+//             source: evictionsSourceId,
+//             id: evictionsSourceId,
+//             type: "circle",
+//             paint: {
+//                 "circle-radius": [
+//                     "interpolate",
+//                     ["linear"],
+//                     ["number", ["get", "filing_rate"]],
+//                     0, 2,
+//                     1, 6,
+//                     5, 12,
+//                     10, 24
+//                 ],
+//                 "circle-opacity": 0.6
+//             }
+//         },
+//     ];
+// }
 
 
-function useMapLayersOld(map: mapboxgl.Map) {
-    const controls = useMapControls();
-    const settings = useSettings();
-    const featureState = useFeatureState();
-    const featureProperties = useFeatureProperties();
-    const { baseSourceId, areaSourceId, evictionsSourceId } = useCurrentSourceIds();
+// function useMapLayersOld(map: mapboxgl.Map) {
+//     const controls = useMapControls();
+//     const settings = useSettings();
+//     const featureState = useFeatureState();
+//     const featureProperties = useFeatureProperties();
+//     const { baseSourceId, areaSourceId, evictionsSourceId } = useCurrentSourceIds();
 
-    const layers = createLayersOld();
+//     const layers = createLayersOld();
 
-    const isLoaded = ref(false);
+//     const isLoaded = ref(false);
 
-    map.on("sourcedata", (ev) => {
-        if (ev.sourceId === areaSourceId && ev.isSourceLoaded) {
-            isLoaded.value = true;
-            updateSelectedFeatures(featureState.selectedFeatures);
-        }
-    });
+//     map.on("sourcedata", (ev) => {
+//         if (ev.sourceId === areaSourceId && ev.isSourceLoaded) {
+//             isLoaded.value = true;
+//             updateSelectedFeatures(featureState.selectedFeatures);
+//         }
+//     });
 
-    function setIsFeatureSelected(featureId: string, isSelected: boolean) {
-        map.setFeatureState(
-            { source: areaSourceId, id: featureId },
-            { isSelected },
-        );
-    }
+//     function setIsFeatureSelected(featureId: string, isSelected: boolean) {
+//         map.setFeatureState(
+//             { source: areaSourceId, id: featureId },
+//             { isSelected },
+//         );
+//     }
 
-    function updateSelectedFeatures(current: string[], previous?: string[]) {
-        previous
-            ?.filter((featureId) => !current.includes(featureId))
-            .forEach((featureId) => {
-                setIsFeatureSelected(featureId, false);
-            });
+//     function updateSelectedFeatures(current: string[], previous?: string[]) {
+//         previous
+//             ?.filter((featureId) => !current.includes(featureId))
+//             .forEach((featureId) => {
+//                 setIsFeatureSelected(featureId, false);
+//             });
 
-        current
-            .filter((featureId) => !previous?.includes(featureId))
-            .forEach((featureId) => {
-                setIsFeatureSelected(featureId, true);
-            });
-    }
+//         current
+//             .filter((featureId) => !previous?.includes(featureId))
+//             .forEach((featureId) => {
+//                 setIsFeatureSelected(featureId, true);
+//             });
+//     }
 
-    watch(() => featureState.selectedFeatures, updateSelectedFeatures);
+//     watch(() => featureState.selectedFeatures, updateSelectedFeatures);
 
-    watch(() => featureState.hoveredFeature, (current, prev) => {
-        if (prev) {
-            map.setFeatureState(
-                { source: areaSourceId, id: prev },
-                { isHovered: false }
-            );
-        }
-        if (current) {
-            map.setFeatureState(
-                { source: areaSourceId, id: current },
-                { isHovered: true }
-            );
-        }
-    });
+//     watch(() => featureState.hoveredFeature, (current, prev) => {
+//         if (prev) {
+//             map.setFeatureState(
+//                 { source: areaSourceId, id: prev },
+//                 { isHovered: false }
+//             );
+//         }
+//         if (current) {
+//             map.setFeatureState(
+//                 { source: areaSourceId, id: current },
+//                 { isHovered: true }
+//             );
+//         }
+//     });
 
-    watch(() => controls.currentYear, setYearFilter);
+//     watch(() => controls.currentYear, setYearFilter);
 
-    function setupChoroplethFeatureState() {
-        // const visited: Record<string, boolean> = {};
-        // featureProperties.data[baseSourceId].forEach(({ id, renter_count, owner_count }) => {
-        //     const _id = id.slice(4);
-        //     if (!visited[_id]) {
-        //         visited[_id] = true;
-        //         map.setFeatureState(
-        //             { source: areaSourceId, id: _id },
-        //             {
-        //                 renter_count,
-        //                 owner_count,
-        //                 household_count: renter_count + owner_count,
-        //                 renter_rate: Math.round(renter_count / (renter_count + owner_count) * 100) / 100,
-        //             }
-        //         );
-        //     }
-        // });
-    }
+//     function setupChoroplethFeatureState() {
+//         // const visited: Record<string, boolean> = {};
+//         // featureProperties.data[baseSourceId].forEach(({ id, renter_count, owner_count }) => {
+//         //     const _id = id.slice(4);
+//         //     if (!visited[_id]) {
+//         //         visited[_id] = true;
+//         //         map.setFeatureState(
+//         //             { source: areaSourceId, id: _id },
+//         //             {
+//         //                 renter_count,
+//         //                 owner_count,
+//         //                 household_count: renter_count + owner_count,
+//         //                 renter_rate: Math.round(renter_count / (renter_count + owner_count) * 100) / 100,
+//         //             }
+//         //         );
+//         //     }
+//         // });
+//     }
 
-    function setYearFilter() {
-        map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear]);
-    }
+//     function setYearFilter() {
+//         map.setFilter(evictionsSourceId, ["==", ["string", ["get", "filing_year"]], controls.currentYear]);
+//     }
 
-    function handleMapClick(ev: MapboxMouseEvent<true>) {
-        if (ev.features && ev.features.length > 0) {
-            const justClicked = ev.features[0].id?.toString() ?? "";
-            featureState.setFeatureState(
-                justClicked,
-                "isSelected",
-                !featureState.selectedFeatures.includes(justClicked)
-            );
-        }
-    }
+//     function handleMapClick(ev: MapboxMouseEvent<true>) {
+//         if (ev.features && ev.features.length > 0) {
+//             const justClicked = ev.features[0].id?.toString() ?? "";
+//             featureState.setFeatureState(
+//                 justClicked,
+//                 "isSelected",
+//                 !featureState.selectedFeatures.includes(justClicked)
+//             );
+//         }
+//     }
 
-    function handleMapMousemove(ev: MapboxMouseEvent<true>) {
-        if (ev.features && ev.features.length > 0) {
-            const hovered = ev.features[0].id?.toString() ?? "";
-            featureState.setFeatureState(hovered, "isHovered", "feature");
-        }
-    }
+//     function handleMapMousemove(ev: MapboxMouseEvent<true>) {
+//         if (ev.features && ev.features.length > 0) {
+//             const hovered = ev.features[0].id?.toString() ?? "";
+//             featureState.setFeatureState(hovered, "isHovered", "feature");
+//         }
+//     }
 
-    function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
-        featureState.clearHoveredFeature();
-    }
+//     function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
+//         featureState.clearHoveredFeature();
+//     }
 
-    watch(() => settings.options.showAlderDistricts, (showAlderDistricts) => {
-        if (showAlderDistricts) {
-            map.addLayer({
-                source: "alder-district-area",
-                id: "alder-district-area",
-                type: "line",
-                paint: {
-                    "line-color": "black",
-                }
-            })
-        } 
-        else if (map.getLayer("alder-district-area")) {
-            map.removeLayer("alder-district-area");
-        }
-    }, { immediate: true });
+//     watch(() => settings.options.showAlderDistricts, (showAlderDistricts) => {
+//         if (showAlderDistricts) {
+//             map.addLayer({
+//                 source: "alder-district-area",
+//                 id: "alder-district-area",
+//                 type: "line",
+//                 paint: {
+//                     "line-color": "black",
+//                 }
+//             })
+//         } 
+//         else if (map.getLayer("alder-district-area")) {
+//             map.removeLayer("alder-district-area");
+//         }
+//     }, { immediate: true });
 
-    onMounted(() => {
-        layers.forEach((layer) => {
-            map.addLayer(layer);
-        });
+//     onMounted(() => {
+//         layers.forEach((layer) => {
+//             map.addLayer(layer);
+//         });
 
-        setYearFilter();
-        setupChoroplethFeatureState();
+//         setYearFilter();
+//         setupChoroplethFeatureState();
 
-        map.on("click", areaSourceId, handleMapClick);
-        map.on("mousemove", areaSourceId, handleMapMousemove);
-        map.on("mouseleave", areaSourceId, handleMapMouseleave);
-    });
+//         map.on("click", areaSourceId, handleMapClick);
+//         map.on("mousemove", areaSourceId, handleMapMousemove);
+//         map.on("mouseleave", areaSourceId, handleMapMouseleave);
+//     });
     
-    onBeforeUnmount(() => {
-        layers.forEach((layer) => {
-            map.removeLayer((layer as mapboxgl.AnyLayer).id);
-        });
+//     onBeforeUnmount(() => {
+//         layers.forEach((layer) => {
+//             map.removeLayer((layer as mapboxgl.AnyLayer).id);
+//         });
         
-        updateSelectedFeatures([], featureState.selectedFeatures);
+//         updateSelectedFeatures([], featureState.selectedFeatures);
 
-        featureState.clearSelectedFeatures();
-        featureState.clearHoveredFeature();
+//         featureState.clearSelectedFeatures();
+//         featureState.clearHoveredFeature();
         
-        map.off("click", areaSourceId, handleMapClick);
-        map.off("mousemove", areaSourceId, handleMapMousemove);
-        map.off("mouseleave", areaSourceId, handleMapMouseleave);
-    });
-}
+//         map.off("click", areaSourceId, handleMapClick);
+//         map.off("mousemove", areaSourceId, handleMapMousemove);
+//         map.off("mouseleave", areaSourceId, handleMapMouseleave);
+//     });
+// }
 
-export { useMapLayers, useMapLayersOld };
+export { useMapLayers };

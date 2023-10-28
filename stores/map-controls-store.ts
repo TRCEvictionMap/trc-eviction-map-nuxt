@@ -1,8 +1,21 @@
 import { defineStore } from "pinia";
 import { SourceId } from "utils/types";
 
-type EvictionMetric = "n_filings" | "filing_rate";
-type DemographicMetric = "renter_count" | "renter_rate";
+type Metric<Items> = Items | "none"
+
+const EVICTION_METRICS = ["n_filings", "filing_rate", "none"] as const;
+const DEMOGRAPHIC_METRICS = ["renter_count", "renter_rate", "none"] as const;
+
+type EvictionMetric = typeof EVICTION_METRICS[number];
+type DemographicMetric = typeof DEMOGRAPHIC_METRICS[number];
+
+function isEvictionMetric(data: unknown): data is EvictionMetric {
+    return EVICTION_METRICS.includes(data as EvictionMetric);
+}
+
+function isDemographicMetric(data: unknown): data is DemographicMetric {
+    return DEMOGRAPHIC_METRICS.includes(data as DemographicMetric);
+}
 
 type Option<Value> = { text?: string; value: Value; };
 
@@ -10,17 +23,17 @@ const useMapControls = defineStore("map-controls", () => {
     const yearOptions = ref<Option<string>[]>([]); 
 
     const sourceOptions = ref<Option<SourceId>[]>([
-        // {
-        //     text: "Aldermanic district",
-        //     value: "alder-district",
-        // },
         {
-            text: "Census block groups",
+            text: "Census Block Group",
             value: "block-group",
         },
     ]);
 
     const evictionMetricOptions = ref<Option<EvictionMetric>[]>([
+        {
+            text: "None",
+            value: "none",
+        },
         {
             text: "Eviction filings",
             value: "n_filings",
@@ -32,6 +45,10 @@ const useMapControls = defineStore("map-controls", () => {
     ]);
 
     const demographicMetricOptions = ref<Option<DemographicMetric>[]>([
+        {
+            text: "None",
+            value: "none",
+        },
         {
             text: "Renter-occupied households",
             value: "renter_count",
@@ -59,5 +76,5 @@ const useMapControls = defineStore("map-controls", () => {
     };
 });
 
-export { useMapControls };
+export { useMapControls, isEvictionMetric, isDemographicMetric };
 export type { EvictionMetric, DemographicMetric };

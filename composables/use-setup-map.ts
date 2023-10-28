@@ -15,7 +15,7 @@ function useSetupMap() {
     const featureProperties = useFeatureProperties();
 
     onMounted(() => {
-        const { _lngLat, _source, _year, _zoom } = useInitialQueryParams();
+        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric } = useInitialQueryParams();
 
         map.value = new mapboxgl.Map({
             container: "the-map",
@@ -36,6 +36,8 @@ function useSetupMap() {
         mapMeta.zoom = _zoom;
         controls.currentSource = _source;
         controls.currentYear = _year;
+        controls.currentDemographicMetric = _d_metric;
+        controls.currentEvictionMetric = _e_metric;
 
         map.value.on("moveend", (ev) => {
             const { lng, lat } = ev.target.getCenter();

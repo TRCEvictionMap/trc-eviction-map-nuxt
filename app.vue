@@ -18,6 +18,8 @@ watchEffect(() => {
         query: {
             source: mapControls.currentSource,
             year: mapControls.currentYear,
+            e_metric: mapControls.currentEvictionMetric,
+            d_metric: mapControls.currentDemographicMetric,
             features: featureState.selectedFeatures.length
                 ? featureState.selectedFeatures.join(",")
                 : undefined,
@@ -51,6 +53,7 @@ onUnmounted(() => {
             </template>
            <DetailCardGroup />
            <MapLayers />
+           <MapLegend />
            <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
         </TheMap>
     </ClientOnly>
