@@ -51,7 +51,7 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
             id: evictionsLayerId,
             type: "circle",
             paint: {
-                "circle-color": "hotpink",
+                "circle-color": "rgb(255, 75, 50)",
                 "circle-opacity": 0.8
             },
             filter: ["==", "$type", "Point"],
@@ -62,6 +62,7 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
     const featureState = useFeatureState();
+    const featureProperties = useFeatureProperties();
 
     const { demographicsLayerId, evictionsLayerId } = layerIds(controls.currentSource);
 
@@ -126,22 +127,34 @@ function useMapLayers(map: mapboxgl.Map) {
             });
     }
 
-    const options: Record<DemographicMetric, (number | string)[]> = {
-        renter_count: [
-            "rgba(0, 0, 200, 0.1)", 100,
-            "rgba(0, 0, 200, 0.3)", 200,
-            "rgba(0, 0, 200, 0.5)", 300,
-            "rgba(0, 0, 200, 0.7)", 400,
-            "rgba(0, 0, 200, 0.9)"
-        ],
-        renter_rate: [
-            "rgba(0, 0, 200, 0.1)", 20,
-            "rgba(0, 0, 200, 0.3)", 40,
-            "rgba(0, 0, 200, 0.5)", 60,
-            "rgba(0, 0, 200, 0.7)", 80,
-            "rgba(0, 0, 200, 0.9)"
-        ],
-    }
+    const options = computed((): Record<DemographicMetric, (number | string)[]> => {
+        const maxRenterCount = featureProperties.featureIds[controls.currentSource].demographic.reduce(
+            (accum: number, featureId) => Math.max(
+                accum,
+                featureProperties.getFeatureProperties(controls.currentSource, featureId)?.renter_count ?? 0
+            ),
+            0
+        );
+
+
+        return {
+            renter_count: [
+                Math.round(maxRenterCount * 0.1), "rgba(0, 0, 200, 0.1)",
+                Math.round(maxRenterCount * 0.3), "rgba(0, 0, 200, 0.3)",
+                Math.round(maxRenterCount * 0.5), "rgba(0, 0, 200, 0.5)",
+                Math.round(maxRenterCount * 0.7), "rgba(0, 0, 200, 0.7)",
+                Math.round(maxRenterCount * 0.9), "rgba(0, 0, 200, 0.9)",
+
+            ],
+            renter_rate: [
+                10, "rgba(0, 0, 200, 0.1)",
+                30, "rgba(0, 0, 200, 0.3)",
+                50, "rgba(0, 0, 200, 0.5)",
+                70, "rgba(0, 0, 200, 0.7)",
+                90, "rgba(0, 0, 200, 0.9)",
+            ],
+        }
+    });
 
     function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
         if (map.getLayer(demographicsLayerId)) {
@@ -149,11 +162,12 @@ function useMapLayers(map: mapboxgl.Map) {
                 demographicsLayerId,
                 "fill-color",
                 [
-                    "step",
+                    "interpolate",
+                    ["linear"],
                     ["number", ["get", metric, ["properties"]]],
-                    ...options[metric]
-                ]
-            )
+                    ...options.value[metric]
+                ],
+            );
         }
     }
 
@@ -171,7 +185,7 @@ function useMapLayers(map: mapboxgl.Map) {
                     5, 12,
                     10, 24
                 ]
-            )
+            );
         }
     }
 

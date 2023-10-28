@@ -75,8 +75,8 @@ function onMouseleave() {
                         <template #label>
                             Households
                         </template>
-                        <div class="text-sm text-slate-600">renter occupied {{ feature.renter_count }}</div>
-                        <div class="text-sm text-slate-600">owner occupied {{ feature.owner_count }}</div>
+                        <div class="text-sm text-slate-600">Percent renter {{ feature.renter_rate }}</div>
+                        <div class="text-sm text-slate-600">Total renter {{ feature.renter_count }}</div>
                     </DetailCardItem>
                 </div>
             </div>

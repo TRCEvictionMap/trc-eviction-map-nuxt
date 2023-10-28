@@ -1,7 +1,7 @@
 import mapboxgl from "mapbox-gl";
 import { useMapMeta } from "~/stores/map-meta-store";
 
-import blockGroupJson from "~/public/block-group.json";
+import blockGroupJson from "~/geojson/block-group.json";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { EvictionFeatureCollection } from "utils/types";

@@ -28,11 +28,33 @@ function isDemographicFeatureProperties(data: unknown): data is EvictionFeatureP
     return false;
 }
 
+interface FeatureIdMap {
+    demographic: string[];
+    eviction: string[];
+}
+
 const useFeatureProperties = defineStore("feature-properties", () => {
     const data = ref<Record<SourceId, Record<string, DemographicFeatureProperties | EvictionFeatureProperties>>>({
         "alder-district": {},
         "block-group": {},
     });
+
+    const featureIds = computed(() =>
+        Object.keys(data.value).reduce(
+            (accum: Record<SourceId, FeatureIdMap>, source) => ({
+                ...accum,
+                [source]: Object.keys(data.value[source as SourceId]).reduce(
+                    (accum: FeatureIdMap, featureId) =>
+                        featureId.startsWith("d_")
+                            ? { ...accum, demographic: accum.demographic.concat(featureId) }
+                            : { ...accum, eviction: accum.eviction.concat(featureId) }
+                    ,
+                    { demographic: [], eviction: [] }
+                )
+            }),
+            {} as Record<SourceId, FeatureIdMap>
+        )
+    );
 
     function getFeatureProperties(source: SourceId, featureId: string): FeatureProperties | undefined {
         if (typeof data.value[source][featureId] !== "undefined") {
@@ -57,7 +79,7 @@ const useFeatureProperties = defineStore("feature-properties", () => {
         return years;
     }
 
-    return { data, loadData, getFeatureProperties };
+    return { data, featureIds, loadData, getFeatureProperties };
 });
 
 export { useFeatureProperties, isEvictionFeatureProperties, isDemographicFeatureProperties };
