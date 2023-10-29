@@ -153,7 +153,9 @@ function useMapLayers(map: mapboxgl.Map) {
             filing_rate: Object.entries(interpolatedValues.filingRateValues).flatMap(
                 ([step, size]) => [Number.parseFloat(step), size]
             ),
-            n_filings: []
+            n_filings: Object.entries(interpolatedValues.filingCountValues).flatMap(
+                ([step, size]) => [Number.parseFloat(step), size]
+            ),
         })
     )
 
@@ -189,11 +191,7 @@ function useMapLayers(map: mapboxgl.Map) {
                         "interpolate",
                         ["linear"],
                         ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
-                        interpolatedEvictionValues.value[metric]
-                        // 0, 2,
-                        // 1, 4,
-                        // 5, 8,
-                        // 10, 16
+                        ...interpolatedEvictionValues.value[metric]
                     ]
                 );
             }

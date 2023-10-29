@@ -1,7 +1,7 @@
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useMapControls } from "~/stores/map-controls-store";
 
-const STEPS = [0.1, 0.3, 0.5, 0.7, 0.9];
+const STEPS = [0.1, 0.5, 0.9];
 
 function useInterpolatedValues() {
     const featureProperties = useFeatureProperties();
@@ -60,13 +60,13 @@ function useInterpolatedValues() {
         {}
     ));
 
-    const filingCountValues = computed(() => STEPS.reduce(
+    const filingCountValues: Record<string, number> = STEPS.reduce(
         (accum: Record<string, number>, step) => ({
             ...accum,
             [Math.round(maxCounts.value.maxFilingCount * step)]: Math.round(16 * step)
         }),
         {}
-    ));
+    );
 
     const filingRateValues: Record<string, number> = STEPS.reduce(
         (accum: Record<string, number>, step) => ({
