@@ -1,6 +1,0 @@
-
-function useInterpolateLayers() {
-
-}
-
-export { useInterpolateLayers };

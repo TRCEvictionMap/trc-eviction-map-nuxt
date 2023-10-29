@@ -70,6 +70,7 @@ function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
     const featureState = useFeatureState();
     const featureProperties = useFeatureProperties();
+    const interpolatedValues = useInterpolatedValues();
 
     const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
 
@@ -134,35 +135,27 @@ function useMapLayers(map: mapboxgl.Map) {
             });
     }
 
-    const options = computed((): Record<DemographicMetric, (number | string)[]> => {
-        const maxRenterCount = featureProperties.featureIds[controls.currentSource].demographic.reduce(
-            (accum: number, featureId) => Math.max(
-                accum,
-                featureProperties.getFeatureProperties(controls.currentSource, featureId)?.renter_count ?? 0
-            ),
-            0
-        );
-
-
-        return {
+    const interpolatedDemographicValues = computed(
+        (): Record<DemographicMetric, (number | string)[]> => ({
             none: [],
-            renter_count: [
-                Math.round(maxRenterCount * 0.1), "rgba(0, 0, 200, 0.1)",
-                Math.round(maxRenterCount * 0.3), "rgba(0, 0, 200, 0.3)",
-                Math.round(maxRenterCount * 0.5), "rgba(0, 0, 200, 0.5)",
-                Math.round(maxRenterCount * 0.7), "rgba(0, 0, 200, 0.7)",
-                Math.round(maxRenterCount * 0.9), "rgba(0, 0, 200, 0.9)",
+            renter_count: Object.entries(interpolatedValues.renterCountValues).flatMap(
+                ([step, color]) => [Number.parseFloat(step), color]
+            ),
+            renter_rate: Object.entries(interpolatedValues.renterRateValues).flatMap(
+                ([step, color]) => [Number.parseFloat(step), color]
+            ),
+        })
+    );
 
-            ],
-            renter_rate: [
-                10, "rgba(0, 0, 255, 0.1)",
-                30, "rgba(0, 0, 255, 0.3)",
-                50, "rgba(0, 0, 255, 0.5)",
-                70, "rgba(0, 0, 255, 0.7)",
-                90, "rgba(0, 0, 255, 0.9)",
-            ],
-        }
-    });
+    const interpolatedEvictionValues = computed(
+        (): Record<EvictionMetric, (number | string)[]> => ({
+            none: [],
+            filing_rate: Object.entries(interpolatedValues.filingRateValues).flatMap(
+                ([step, size]) => [Number.parseFloat(step), size]
+            ),
+            n_filings: []
+        })
+    )
 
     function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
         if (map.getLayer(demographicsShadingLayerId)) {
@@ -175,7 +168,7 @@ function useMapLayers(map: mapboxgl.Map) {
                         "interpolate",
                         ["linear"],
                         ["number", ["get", metric, ["properties"]]],
-                        ...options.value[metric]
+                        ...interpolatedDemographicValues.value[metric]
                     ],
                 );
             }
@@ -196,10 +189,11 @@ function useMapLayers(map: mapboxgl.Map) {
                         "interpolate",
                         ["linear"],
                         ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
-                        0, 2,
-                        1, 4,
-                        5, 8,
-                        10, 16
+                        interpolatedEvictionValues.value[metric]
+                        // 0, 2,
+                        // 1, 4,
+                        // 5, 8,
+                        // 10, 16
                     ]
                 );
             }
