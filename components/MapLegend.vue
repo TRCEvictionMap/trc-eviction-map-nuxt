@@ -36,7 +36,8 @@ const evictionStopSizes = computed(() =>
     <div class="absolute bottom-4 self-center shadow-xl border rounded p-4 bg-white">
 
         <div class="flex space-x-4">
-            <div v-if="controls.currentDemographicMetric !== 'none'">
+
+            <div v-if="controls.currentDemographicMetric !== 'none'" class="w-52 space-y-2">
                 <h2 class="font-semibold text-sm">
                     {{ demographicMetricName }}
                 </h2>
@@ -69,8 +70,13 @@ const evictionStopSizes = computed(() =>
                     </div>
                 </div>
             </div>
-            <div class="border border-slate-300"></div>
-            <div v-if="controls.currentEvictionMetric !== 'none'">
+
+            <div
+                v-if="controls.currentEvictionMetric !== 'none' && controls.currentDemographicMetric !== 'none'"
+                class="border-r border-slate-300"
+            ></div>
+
+            <div v-if="controls.currentEvictionMetric !== 'none'" class="w-36 space-y-2">
                 <h2 class="font-semibold text-sm">
                     {{ evictionMetric }}
                 </h2>
@@ -118,48 +124,6 @@ const evictionStopSizes = computed(() =>
                             </span>
                         </div>
                     </div>
-              
-
-
-                    <!-- <div class="relative h-8 text-sm flex">
-                        <div class="border-b border-b-slate-300 w-full absolute top-4"></div>
-                        <div class="absolute top-4 left-[10%] bg-transparent">
-                            <div
-                                class="-translate-x-[50%] rounded-full bg-[rgb(255,75,50)] border border-black box-content"
-                                :style="{
-                                    height: `${evictionStopSizes[0]}px`,
-                                    width: `${evictionStopSizes[0]}px`
-                                }"
-                            ></div>
-                            <div class="-translate-x-[50%] text-center">
-                                {{ evictionStops[0] }}
-                            </div>
-                        </div>
-                        <div class="absolute left-[50%]">
-                            <div
-                                class="-translate-x-[50%] rounded-full bg-[rgb(255,75,50)] border border-black box-content"
-                                :style="{
-                                    height: `${evictionStopSizes[1]}px`,
-                                    width: `${evictionStopSizes[1]}px`
-                                }"
-                            ></div>
-                            <div class="-translate-x-[50%] text-center">
-                                {{ evictionStops[1] }}
-                            </div>
-                        </div>
-                        <div class="absolute left-[90%]">
-                            <div
-                                class="-translate-x-[50%] rounded-full bg-[rgb(255,75,50)] border border-black box-content"
-                                :style="{
-                                    height: `${evictionStopSizes[2]}px`,
-                                    width: `${evictionStopSizes[2]}px`
-                                }"
-                            ></div>
-                            <div class="-translate-x-[50%] text-center">
-                                {{ evictionStops[2] }}
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
