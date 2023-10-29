@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import { SourceId } from "utils/types";
 
-type Metric<Items> = Items | "none"
-
 const EVICTION_METRICS = ["n_filings", "filing_rate", "none"] as const;
 const DEMOGRAPHIC_METRICS = ["renter_count", "renter_rate", "none"] as const;
 
@@ -35,11 +33,11 @@ const useMapControls = defineStore("map-controls", () => {
             value: "none",
         },
         {
-            text: "Eviction filings",
+            text: "Eviction Filings",
             value: "n_filings",
         },
         {
-            text: "Eviction filing rate",
+            text: "Eviction Filing Rate",
             value: "filing_rate",
         },
     ]);
@@ -50,11 +48,11 @@ const useMapControls = defineStore("map-controls", () => {
             value: "none",
         },
         {
-            text: "Renter-occupied households",
+            text: "Renter Occupied Households",
             value: "renter_count",
         },
         {
-            text: "Percent renter-occupied",
+            text: "Percent Renter Occupied",
             value: "renter_rate",
         },
     ]);

@@ -1,9 +1,8 @@
 import mapboxgl from "mapbox-gl";
 import { useMapControls } from "~/stores/map-controls-store";
-import type { DemographicMetric, EvictionMetric } from "~/stores/map-controls-store";
-import type { MapboxMouseEvent, SourceId, EvictionFeatureCollection } from "~/utils/types";
 import { useFeatureState } from "~/stores/feature-state-store";
-import { useFeatureProperties } from "~/stores/feature-properties-store";
+import type { DemographicMetric, EvictionMetric } from "~/stores/map-controls-store";
+import type { MapboxMouseEvent, SourceId } from "~/utils/types";
 
 function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
     const {
@@ -69,8 +68,7 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
     const featureState = useFeatureState();
-    const featureProperties = useFeatureProperties();
-    const interpolatedValues = useInterpolatedValues();
+    const interpolated = useInterpolatedValues();
 
     const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
 
@@ -138,10 +136,10 @@ function useMapLayers(map: mapboxgl.Map) {
     const interpolatedDemographicValues = computed(
         (): Record<DemographicMetric, (number | string)[]> => ({
             none: [],
-            renter_count: Object.entries(interpolatedValues.renterCountValues).flatMap(
+            renter_count: Object.entries(interpolated.renter_count).flatMap(
                 ([step, color]) => [Number.parseFloat(step), color]
             ),
-            renter_rate: Object.entries(interpolatedValues.renterRateValues).flatMap(
+            renter_rate: Object.entries(interpolated.renter_rate).flatMap(
                 ([step, color]) => [Number.parseFloat(step), color]
             ),
         })
@@ -150,10 +148,10 @@ function useMapLayers(map: mapboxgl.Map) {
     const interpolatedEvictionValues = computed(
         (): Record<EvictionMetric, (number | string)[]> => ({
             none: [],
-            filing_rate: Object.entries(interpolatedValues.filingRateValues).flatMap(
+            filing_rate: Object.entries(interpolated.filing_rate).flatMap(
                 ([step, size]) => [Number.parseFloat(step), size]
             ),
-            n_filings: Object.entries(interpolatedValues.filingCountValues).flatMap(
+            n_filings: Object.entries(interpolated.n_filings).flatMap(
                 ([step, size]) => [Number.parseFloat(step), size]
             ),
         })

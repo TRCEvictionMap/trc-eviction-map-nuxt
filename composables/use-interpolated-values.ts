@@ -2,10 +2,20 @@ import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useMapControls } from "~/stores/map-controls-store";
 
 const STEPS = [0.1, 0.5, 0.9];
+const RGB = [0, 115, 200];
+const RADIUS = 16;
 
 function useInterpolatedValues() {
     const featureProperties = useFeatureProperties();
     const controls = useMapControls();
+
+    function rgba(alpha: number) {
+        return `rgba(${RGB[0]},${RGB[1]},${RGB[2]},${alpha})`;
+    }
+
+    function radius(step: number) {
+        return Math.round(RADIUS * step);
+    }
 
     interface MaxCounts {
         maxFilingCount: number;
@@ -55,40 +65,41 @@ function useInterpolatedValues() {
     const renterCountValues = computed((): Record<string, string> => STEPS.reduce(
         (accum: Record<string, string>, step) => ({
             ...accum,
-            [Math.round(maxCounts.value.maxRenterCount * step)]: `rgba(0, 0, 200, ${step})`
+            [Math.round(maxCounts.value.maxRenterCount * step)]: rgba(step)
         }),
         {}
     ));
 
-    const filingCountValues: Record<string, number> = STEPS.reduce(
+    const filingCountValues = computed((): Record<string, number> => STEPS.reduce(
         (accum: Record<string, number>, step) => ({
             ...accum,
-            [Math.round(maxCounts.value.maxFilingCount * step)]: Math.round(16 * step)
+            [Math.round(maxCounts.value.maxFilingCount * step)]: radius(step)
         }),
         {}
-    );
+    ));
 
-    const filingRateValues: Record<string, number> = STEPS.reduce(
+    const filingRateValues = computed((): Record<string, number> => STEPS.reduce(
         (accum: Record<string, number>, step) => ({
             ...accum,
-            [Math.round(maxCounts.value.maxFilingRate * step)]: 16 * step
+            [Math.round(maxCounts.value.maxFilingRate * step)]: radius(step)
         }),
         {}
-    );
+    ));
 
     const renterRateValues = {
-        10: "rgba(0, 0, 255, 0.1)",
-        30: "rgba(0, 0, 255, 0.3)",
-        50: "rgba(0, 0, 255, 0.5)",
-        70: "rgba(0, 0, 255, 0.7)",
-        90: "rgba(0, 0, 255, 0.9)",
-    }
+        10: rgba(0.1),
+        50: rgba(0.5),
+        90: rgba(0.9),
+    };
 
     return reactive({
-        renterCountValues,
-        renterRateValues,
-        filingCountValues,
-        filingRateValues,
+        radius,
+        rgba,
+        none: [],
+        renter_count: renterCountValues,
+        renter_rate: renterRateValues,
+        n_filings: filingCountValues,
+        filing_rate: filingRateValues,
     });
 }
 
