@@ -29,7 +29,7 @@ function useSetupMap() {
             new mapboxgl.NavigationControl({
                 visualizePitch: true,
             }),
-            "bottom-right"
+            "top-right"
         );
 
         mapMeta.lngLat = _lngLat;

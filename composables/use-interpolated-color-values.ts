@@ -1,21 +1,28 @@
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useMapControls } from "~/stores/map-controls-store";
 
-const STEPS = [0.1, 0.5, 0.9];
-const RGB = [0, 115, 200];
-const RADIUS = 16;
+const STEPS = [0, 0.1, 0.5, 0.9];
 
-function useInterpolatedValues() {
+// const FILL_RGB = [0, 115, 200];
+const FILL_RGB = [120, 151, 181];
+
+const RADIUS = 20;
+
+const CIRCLE_COLOR = "#F48545";
+// const CIRCLE_COLOR = FILL_"rgb(255, 75, 50)";
+
+function interpolateFillRGBA(alpha: number) {
+    const [r, g, b] = FILL_RGB;
+    return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function interpolateCircleRadius(step: number) {
+    return Math.round(RADIUS * step);
+}
+
+function useInterpolatedColorValues() {
     const featureProperties = useFeatureProperties();
     const controls = useMapControls();
-
-    function rgba(alpha: number) {
-        return `rgba(${RGB[0]},${RGB[1]},${RGB[2]},${alpha})`;
-    }
-
-    function radius(step: number) {
-        return Math.round(RADIUS * step);
-    }
 
     interface MaxCounts {
         maxFilingCount: number;
@@ -65,7 +72,7 @@ function useInterpolatedValues() {
     const renterCountValues = computed((): Record<string, string> => STEPS.reduce(
         (accum: Record<string, string>, step) => ({
             ...accum,
-            [Math.round(maxCounts.value.maxRenterCount * step)]: rgba(step)
+            [Math.round(maxCounts.value.maxRenterCount * step)]: interpolateFillRGBA(step)
         }),
         {}
     ));
@@ -73,7 +80,7 @@ function useInterpolatedValues() {
     const filingCountValues = computed((): Record<string, number> => STEPS.reduce(
         (accum: Record<string, number>, step) => ({
             ...accum,
-            [Math.round(maxCounts.value.maxFilingCount * step)]: radius(step)
+            [Math.round(maxCounts.value.maxFilingCount * step)]: interpolateCircleRadius(step)
         }),
         {}
     ));
@@ -81,20 +88,18 @@ function useInterpolatedValues() {
     const filingRateValues = computed((): Record<string, number> => STEPS.reduce(
         (accum: Record<string, number>, step) => ({
             ...accum,
-            [Math.round(maxCounts.value.maxFilingRate * step)]: radius(step)
+            [Math.round(maxCounts.value.maxFilingRate * step)]: interpolateCircleRadius(step)
         }),
         {}
     ));
 
     const renterRateValues = {
-        10: rgba(0.1),
-        50: rgba(0.5),
-        90: rgba(0.9),
+        10: interpolateFillRGBA(0.1),
+        50: interpolateFillRGBA(0.5),
+        90: interpolateFillRGBA(0.9),
     };
 
     return reactive({
-        radius,
-        rgba,
         none: [],
         renter_count: renterCountValues,
         renter_rate: renterRateValues,
@@ -103,4 +108,4 @@ function useInterpolatedValues() {
     });
 }
 
-export { useInterpolatedValues };
+export { useInterpolatedColorValues, interpolateCircleRadius, interpolateFillRGBA, CIRCLE_COLOR };

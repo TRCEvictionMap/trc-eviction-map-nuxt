@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useMapControls } from "~/stores/map-controls-store";
+import { interpolateFillRGBA } from "~/composables/use-interpolated-color-values";
 
-const interpolated = useInterpolatedValues();
+const interpolated = useInterpolatedColorValues();
 const controls = useMapControls();
 
 const demographicMetricName = computed(() =>
@@ -33,7 +34,7 @@ const evictionStopSizes = computed(() =>
 </script>
 
 <template>
-    <div class="absolute bottom-4 self-center shadow-xl border rounded p-4 bg-white">
+    <div class="absolute bottom-8 right-4 self-end shadow-xl border rounded p-4 bg-white">
 
         <div class="flex space-x-4">
 
@@ -45,7 +46,7 @@ const evictionStopSizes = computed(() =>
                     <div
                         class="h-6 w-full"
                         :style="{
-                            background: `linear-gradient(to right, ${interpolated.rgba(0.05)}, ${interpolated.rgba(0.5)})`
+                            background: `linear-gradient(to right, ${interpolateFillRGBA(0.05)}, ${interpolateFillRGBA(0.8)})`
                         }"
                     ></div>
                     <div class="relative h-8 text-sm">
@@ -86,41 +87,41 @@ const evictionStopSizes = computed(() =>
                         <div class="absolute w-full top-0 h-8 flex items-center">
                             <div class="absolute left-[10%]">
                                 <div
-                                    class="-translate-x-[50%] rounded-full bg-[rgb(255,75,50)] border border-black box-content"
-                                    :style="{
-                                        height: `${evictionStopSizes[0]}px`,
-                                        width: `${evictionStopSizes[0]}px`
-                                    }"
-                                ></div>
-                            </div>
-                            <div class="absolute left-[50%]">
-                                <div
-                                    class="-translate-x-[50%] rounded-full bg-[rgb(255,75,50)] border border-black box-content"
+                                    class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"
                                     :style="{
                                         height: `${evictionStopSizes[1]}px`,
                                         width: `${evictionStopSizes[1]}px`
                                     }"
                                 ></div>
                             </div>
-                            <div class="absolute left-[90%]">
+                            <div class="absolute left-[50%]">
                                 <div
-                                    class="-translate-x-[50%] rounded-full bg-[rgb(255,75,50)] border border-black box-content"
+                                    class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"
                                     :style="{
                                         height: `${evictionStopSizes[2]}px`,
                                         width: `${evictionStopSizes[2]}px`
                                     }"
                                 ></div>
                             </div>
+                            <div class="absolute left-[90%]">
+                                <div
+                                    class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"
+                                    :style="{
+                                        height: `${evictionStopSizes[3]}px`,
+                                        width: `${evictionStopSizes[3]}px`
+                                    }"
+                                ></div>
+                            </div>
                         </div>
                         <div class="text-sm absolute w-full bottom-0">
                             <span class="absolute left-[10%] -translate-x-[50%]">
-                                {{ evictionStops[0] }}
-                            </span>
-                            <span class="absolute left-[50%] -translate-x-[50%]">
                                 {{ evictionStops[1] }}
                             </span>
-                            <span class="absolute left-[90%] -translate-x-[50%]">
+                            <span class="absolute left-[50%] -translate-x-[50%]">
                                 {{ evictionStops[2] }}
+                            </span>
+                            <span class="absolute left-[90%] -translate-x-[50%]">
+                                {{ evictionStops[3] }}
                             </span>
                         </div>
                     </div>

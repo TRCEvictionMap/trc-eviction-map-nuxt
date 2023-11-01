@@ -27,7 +27,7 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
             id: demographicsShadingLayerId,
             type: "fill",
             paint: {
-                "fill-opacity": 0.5
+                "fill-opacity": 0.8,
             }
         },
         {
@@ -55,7 +55,8 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
             id: evictionsLayerId,
             type: "circle",
             paint: {
-                "circle-color": "rgb(255, 75, 50)",
+                // "circle-color": "rgb(255, 75, 50)",
+                "circle-color": CIRCLE_COLOR,
                 "circle-opacity": 0.8,
                 "circle-stroke-color": "black",
                 "circle-stroke-width": 1
@@ -68,7 +69,7 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 function useMapLayers(map: mapboxgl.Map) {
     const controls = useMapControls();
     const featureState = useFeatureState();
-    const interpolated = useInterpolatedValues();
+    const interpolated = useInterpolatedColorValues();
 
     const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
 

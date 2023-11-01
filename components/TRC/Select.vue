@@ -79,10 +79,10 @@ const buttonText = computed(() => {
                         v-slot="props"
                     >
                         <div
-                            class="cursor-pointer flex items-center rounded py-1 px-2 hover:bg-emerald-100"
+                            class="cursor-pointer flex items-center rounded py-1 px-2 hover:bg-trc-blue-100"
                             :class="{
-                                'bg-emerald-200 hover:bg-emerald-300': props.selected,
-                                'bg-emerald-100': props.active && !props.selected,
+                                'bg-trc-blue-200 hover:bg-trc-blue-300': props.selected,
+                                'bg-trc-blue-100': props.active && !props.selected,
                             }"
                         >
                             <div v-if="withCheckmark" class="w-7">

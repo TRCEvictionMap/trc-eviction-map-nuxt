@@ -32,10 +32,11 @@ const controls = useMapControls();
                 <!-- <span class="font-semibold">in</span> -->
                 <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
                 <!-- <TRCSelect :options="controls.yearOptions" v-model="controls.currentYear" /> -->
-                <span>|</span>
+                
+                <!-- <span>|</span>
                 <TRCButton @click="settings.showDialog = true">
                     <IconGear />
-                </TRCButton>
+                </TRCButton> -->
             </div>
 
             <div class="sm:hidden flex flex-col w-full space-y-2">
