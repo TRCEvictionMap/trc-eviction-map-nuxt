@@ -9,68 +9,78 @@ import { EvictionFeatureCollection } from "utils/types";
 function useSetupMap() {
     const map = ref<mapboxgl.Map>();
 
-    const config = useRuntimeConfig();
-    const mapMeta = useMapMeta();
-    const controls = useMapControls();
-    const featureProperties = useFeatureProperties();
-
-    onMounted(() => {
-        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric } = useInitialQueryParams();
-
-        map.value = new mapboxgl.Map({
-            container: "the-map",
-            accessToken: config.public.mapboxAccessToken,
-            style: config.public.mapboxStyleUrlLight,
-            center: _lngLat,
-            zoom: _zoom,
-        });
-
-        map.value.addControl(
-            new mapboxgl.NavigationControl({
-                visualizePitch: true,
-            }),
-            "top-right"
-        );
-
-        mapMeta.lngLat = _lngLat;
-        mapMeta.zoom = _zoom;
-        controls.currentSource = _source;
-        controls.currentYear = _year;
-        controls.currentDemographicMetric = _d_metric;
-        controls.currentEvictionMetric = _e_metric;
-
-        map.value.on("moveend", (ev) => {
-            const { lng, lat } = ev.target.getCenter();
-            mapMeta.lngLat = [lng, lat];
+    try {
+        const config = useRuntimeConfig();
+        const mapMeta = useMapMeta();
+        const controls = useMapControls();
+        const featureProperties = useFeatureProperties();
+    
+        console.log("useSetupMap")
+    
+        onMounted(() => {
+            const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric } = useInitialQueryParams();
+    
+            console.log("useSetupMap mounted")
+    
+            map.value = new mapboxgl.Map({
+                container: "the-map",
+                accessToken: config.public.mapboxAccessToken,
+                style: config.public.mapboxStyleUrlLight,
+                center: _lngLat,
+                zoom: _zoom,
+            });
+    
+            map.value.addControl(
+                new mapboxgl.NavigationControl({
+                    visualizePitch: true,
+                }),
+                "top-right"
+            );
+    
+            mapMeta.lngLat = _lngLat;
+            mapMeta.zoom = _zoom;
+            controls.currentSource = _source;
+            controls.currentYear = _year;
+            controls.currentDemographicMetric = _d_metric;
+            controls.currentEvictionMetric = _e_metric;
+    
+            map.value.on("moveend", (ev) => {
+                const { lng, lat } = ev.target.getCenter();
+                mapMeta.lngLat = [lng, lat];
+            });
+        
+            map.value.on("zoomend", (ev) => {
+                mapMeta.zoom = ev.target.getZoom();
+            });
+    
+            map.value.on("load", () => {
+                const _map = map.value as mapboxgl.Map;
+    
+                _map.addSource("block-group", {
+                    type: "geojson",
+                    promoteId: "id",
+                    data: blockGroupJson as unknown as string,
+                });
+            });
+    
+            const years = featureProperties.loadData(
+                "block-group",
+                blockGroupJson as unknown as EvictionFeatureCollection
+            );
+    
+            years
+                .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+                .forEach((year) => {
+                    controls.yearOptions.push({ value: year });
+                });
+    
         });
     
-        map.value.on("zoomend", (ev) => {
-            mapMeta.zoom = ev.target.getZoom();
-        });
+    } catch (error) {
+        console.error("useSetupMap", error);
+    }
 
-        map.value.on("load", () => {
-            const _map = map.value as mapboxgl.Map;
-
-            _map.addSource("block-group", {
-                type: "geojson",
-                promoteId: "id",
-                data: blockGroupJson as unknown as string,
-            });
-        });
-
-        const years = featureProperties.loadData(
-            "block-group",
-            blockGroupJson as unknown as EvictionFeatureCollection
-        );
-
-        years
-            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-            .forEach((year) => {
-                controls.yearOptions.push({ value: year });
-            });
-
-    });
-
+ 
     return map;
 }
 

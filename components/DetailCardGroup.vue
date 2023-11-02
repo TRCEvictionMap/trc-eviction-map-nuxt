@@ -7,8 +7,7 @@ const featureState = useFeatureState();
 </script>
 
 <template>
-    <div class="absolute top-0 flex items-center min-h-screen">
-        <!-- <TransitionGroup name="items" class="absolute flex space-x-1" tag="div"> -->
+    <div class="absolute top-0 flex items-center h-full">
         <TransitionGroup
             name="items"
             class="absolute flex"
@@ -18,7 +17,7 @@ const featureState = useFeatureState();
             }"
             tag="div"
         >
-            
+
             <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
         </TransitionGroup>
     </div>

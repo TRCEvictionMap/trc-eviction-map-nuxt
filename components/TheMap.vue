@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const map = useSetupMap();
+const map = await useSetupMap();
 
 provide("map", map);
 
 </script>
 
 <template>
-    <main class="flex flex-col min-h-screen">
-        <slot name="control-bar"></slot>
-        <div id="the-map" class="relative min-h-screen"></div>
+    <div class="relative flex flex-col flex-1">
+        <div id="the-map" class="flex-1"></div>
         <slot></slot>
-    </main>
+    </div>
 </template>

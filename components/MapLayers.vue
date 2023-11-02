@@ -2,10 +2,11 @@
 import { useMapControls } from "~/stores/map-controls-store";
 
 const mapControls = useMapControls();
+
 </script>
 
 <template>
-    <template v-for="source in mapControls.sourceOptions">
+    <template v-for="source in mapControls.sourceOptions" :key="source">
         <MapLayer v-if="source.value === mapControls.currentSource" :source="source.value" />
     </template>
 </template>

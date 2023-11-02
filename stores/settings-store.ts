@@ -4,7 +4,10 @@ const LOCAL_STORAGE_KEY = "trcmap-settings"
 
 const defaultOptions = {
     verticalDetailCards: true,
-    showAlderDistricts: false
+    showAlderDistricts: false,
+    // detailCardStyle: "list",
+    // detailCardStyleOptions: ["list", "narrative"],
+    detailCardListUnderlineItems: false,
 }
 
 type Options = typeof defaultOptions;
@@ -16,7 +19,7 @@ function persistOptions(options: Options) {
 const useSettings = defineStore("settings", () => {
     const showDialog = ref(false);
 
-    const options = reactive({} as Options);
+    const options = reactive(defaultOptions as Options);
 
     function loadOptions() {
         if (typeof localStorage !== "undefined") {
@@ -30,11 +33,9 @@ const useSettings = defineStore("settings", () => {
         }
     }
 
-    onMounted(loadOptions);
-
     watch(options, persistOptions);
 
-    return { showDialog, options };
+    return { showDialog, options, loadOptions };
 });
 
 export { useSettings };

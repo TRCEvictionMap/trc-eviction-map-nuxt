@@ -55,7 +55,6 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
             id: evictionsLayerId,
             type: "circle",
             paint: {
-                // "circle-color": "rgb(255, 75, 50)",
                 "circle-color": CIRCLE_COLOR,
                 "circle-opacity": 0.8,
                 "circle-stroke-color": "black",
@@ -67,6 +66,9 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 }
 
 function useMapLayers(map: mapboxgl.Map) {
+
+    console.log(map);
+
     const controls = useMapControls();
     const featureState = useFeatureState();
     const interpolated = useInterpolatedColorValues();
@@ -224,6 +226,7 @@ function useMapLayers(map: mapboxgl.Map) {
     }
 
     onMounted(() => {
+        console.log("useMapLayers mounted")
         layers.forEach((layer) => {
             map.addLayer(layer);
         });
@@ -235,7 +238,7 @@ function useMapLayers(map: mapboxgl.Map) {
 
         updateDemographicsPaintProperties([
             controls.currentDemographicMetric
-        ])
+        ]);
 
         map.on("click", demographicsLayerId, handleMapClick);
         map.on("mousemove", demographicsLayerId, handleMapMousemove);

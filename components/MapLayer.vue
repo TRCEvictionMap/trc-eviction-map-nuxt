@@ -7,4 +7,4 @@ useMapLayers(map);
 
 </script>
 
-<template></template>composables/use-map-layers
+<template></template>

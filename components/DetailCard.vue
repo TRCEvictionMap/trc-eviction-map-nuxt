@@ -2,10 +2,12 @@
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
+import { useSettings } from "~/stores/settings-store";
 
 const featureState = useFeatureState();
 const featureProperties = useFeatureProperties();
 const controls = useMapControls();
+const settings = useSettings();
 
 const { featureId } = defineProps<{
     featureId: string;
@@ -46,7 +48,7 @@ function onMouseleave() {
 
 <template>
     <div
-        class="relative bg-white p-4 h-56 w-48 border shadow-xl rounded"
+        class="relative bg-white p-4 w-64 border shadow-xl rounded"
         @mouseover="onMouseover"
         @mouseleave="onMouseleave"
     >
@@ -55,11 +57,32 @@ function onMouseleave() {
                 <TRCButton class="absolute top-1 right-1" @click="closeCard">
                     <IconXMark class="text-slate-500" />
                 </TRCButton>
-                <div class="space-y-2">
-                    <div class="text-sm font-bold">
+                <div class="space-y-2 text-sm">
+                    <div class=" font-bold">
                         {{ feature.region }} {{ feature.id }}
                     </div>
-                    <DetailCardItem>
+
+                        <ul class="space-y-1">
+                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                                <span>Eviction Filings:</span>
+                                <span>{{ feature.n_filings }}</span>
+                            </li>
+    
+                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                                <span>Total Renter Households:</span>
+                                <span>{{ feature.renter_count }}</span>
+                            </li>
+                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                                <span>Eviction Filing Rate:</span>
+                                <span>{{ feature.filing_rate }}%</span>
+                            </li>
+                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                                <span>Percent Renter Occupied:</span>
+                                <span>{{ feature.renter_rate }}%</span>
+                            </li>
+                        </ul>
+
+                    <!-- <DetailCardItem>
                         <template #label>
                             Eviction Filing Rate 
                         </template>
@@ -77,7 +100,7 @@ function onMouseleave() {
                         </template>
                         <div class="text-sm text-slate-600">Percent renter {{ feature.renter_rate }}</div>
                         <div class="text-sm text-slate-600">Total renter {{ feature.renter_count }}</div>
-                    </DetailCardItem>
+                    </DetailCardItem> -->
                 </div>
             </div>
         </Transition>

@@ -12,7 +12,7 @@ const controls = useMapControls();
     <div class="
         absolute top-0 flex z-10 w-full
         sm:w-auto
-        sm:top-4 sm:justify-center sm:self-center 
+        sm:top-2 sm:justify-center sm:self-center 
     ">
         <div class="
             flex justify-center items-center flex-shrink-0 w-full
