@@ -5,8 +5,6 @@ const LOCAL_STORAGE_KEY = "trcmap-settings"
 const defaultOptions = {
     verticalDetailCards: true,
     showAlderDistricts: false,
-    // detailCardStyle: "list",
-    // detailCardStyleOptions: ["list", "narrative"],
     detailCardListUnderlineItems: false,
 }
 
