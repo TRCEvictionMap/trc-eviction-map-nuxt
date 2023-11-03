@@ -1,1 +1,0 @@
-import{f as o,g as e,o as t,c as n}from"./entry.5a3f358d.js";const r=o({__name:"about",setup(a){return e(()=>{console.log("/about mounted")}),(c,s)=>(t(),n("h1",null,"About"))}});export{r as default};
