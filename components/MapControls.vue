@@ -20,6 +20,7 @@ const controls = useMapControls();
             p-4
             rounded border shadow-2xl
             bg-white
+            
         ">
             <div class="hidden sm:flex items-center space-x-4">
                 <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />

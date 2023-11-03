@@ -6,11 +6,14 @@ const disclosures = useDisclosures();
 </script>
 
 <template>
-    <header class="flex justify-between items-center p-4 text-trc-blue-700">
-        <h1 class="font-bold text-xl">
-            TRC Eviction Map
-        </h1>
-        <div class="flex">
+    <header class="flex justify-between items-center py-1 px-4 text-trc-blue-700 border-b border-trc-blue-700/20">
+        <NuxtPicture
+            format="webp"
+            src="/TRC_logo_Blue_Vector_Transparent.png"
+            alt="Tenant Resource Center logo"
+            sizes="140px sm:180px"
+        />
+        <div class="flex py-2 sm:py-4">
             <button class="sm:hidden" @click="disclosures.showMobileNav = true">
                 <IconBars2 />
             </button>

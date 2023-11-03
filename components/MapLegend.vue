@@ -34,7 +34,7 @@ const evictionStopSizes = computed(() =>
 </script>
 
 <template>
-    <div class="absolute bottom-8 sm:right-4 self-center sm:self-end shadow-xl border rounded  bg-white text-xs p-2 sm:text-sm sm:p-4">
+    <div class="absolute bottom-8 sm:bottom-6 right-2 self-end shadow-xl border rounded  bg-white text-xs p-2 sm:text-sm sm:p-4">
 
         <div class="flex space-x-4">
 

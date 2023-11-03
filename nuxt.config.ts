@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     },
     devtools: { enabled: false },
     modules: [
-        "@pinia/nuxt"
+        "@pinia/nuxt",
+        "@nuxt/image",
     ],
     css: [
         "~/assets/css/main.css"
