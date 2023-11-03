@@ -34,12 +34,12 @@ const evictionStopSizes = computed(() =>
 </script>
 
 <template>
-    <div class="absolute bottom-8 sm:right-4 self-end shadow-xl border rounded p-4 bg-white">
+    <div class="absolute bottom-8 sm:right-4 self-center sm:self-end shadow-xl border rounded  bg-white text-xs p-2 sm:text-sm sm:p-4">
 
         <div class="flex space-x-4">
 
-            <div v-if="controls.currentDemographicMetric !== 'none'" class="w-52 space-y-2">
-                <h2 class="font-semibold text-sm">
+            <div v-if="controls.currentDemographicMetric !== 'none'" class=" space-y-2">
+                <h2 class="font-semibold ">
                     {{ demographicMetricName }}
                 </h2>
                 <div>
@@ -49,21 +49,21 @@ const evictionStopSizes = computed(() =>
                             background: `linear-gradient(to right, ${interpolateFillRGBA(0.05)}, ${interpolateFillRGBA(0.8)})`
                         }"
                     ></div>
-                    <div class="relative h-8 text-sm">
+                    <div class="relative h-8 -bottom-1">
                         <div class="absolute left-[10%]">
-                            <div class="h-2 border-r border-black w-[1px]"></div>
+                            <div class="h-2 border-r border-slate-400 w-[1px]"></div>
                             <div class="-translate-x-[50%]">
                                 {{ demographicStops[0] }}
                             </div>
                         </div>
                         <div class="absolute left-[50%]">
-                            <div class="h-2 border-r border-black w-[1px]"></div>
+                            <div class="h-2 border-r border-slate-400 w-[1px]"></div>
                             <div class="-translate-x-[50%]">
                                 {{ demographicStops[1] }}
                             </div>
                         </div>
                         <div class="absolute left-[90%]">
-                            <div class="h-2 border-r border-black w-[1px]"></div>
+                            <div class="h-2 border-r border-slate-400 w-[1px]"></div>
                             <div class="-translate-x-[50%]">
                                 {{ demographicStops[2] }}
                             </div>
@@ -78,7 +78,7 @@ const evictionStopSizes = computed(() =>
             ></div>
 
             <div v-if="controls.currentEvictionMetric !== 'none'" class="w-36 space-y-2">
-                <h2 class="font-semibold text-sm">
+                <h2 class="font-semibold ">
                     {{ evictionMetric }}
                 </h2>
                 <div>
@@ -113,7 +113,7 @@ const evictionStopSizes = computed(() =>
                                 ></div>
                             </div>
                         </div>
-                        <div class="text-sm absolute w-full bottom-0">
+                        <div class=" absolute w-full -bottom-1">
                             <span class="absolute left-[10%] -translate-x-[50%]">
                                 {{ evictionStops[1] }}
                             </span>

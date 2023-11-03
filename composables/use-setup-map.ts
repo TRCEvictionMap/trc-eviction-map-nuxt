@@ -63,11 +63,9 @@ function useSetupMap() {
             blockGroupJson as unknown as EvictionFeatureCollection
         );
 
-        years
+        controls.yearOptions = years
             .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-            .forEach((year) => {
-                controls.yearOptions.push({ value: year });
-            });
+            .map((year) => ({ value: year }));
 
     });
 
