@@ -5,8 +5,6 @@ const props = defineProps<{
     focusable?: boolean;
 }>();
 
-console.log(props.focusable)
-
 const open = ref(false);
 
 watch(open, (val) => {

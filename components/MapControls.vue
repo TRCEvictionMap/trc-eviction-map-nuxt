@@ -9,8 +9,9 @@ const controls = useMapControls();
 </script>
 
 <template>
+
     <div class="
-        absolute top-0 flex z-10 w-full
+        hidden absolute top-0 sm:flex z-10 
         sm:w-auto
         sm:top-2 sm:justify-center sm:self-center 
     ">
@@ -38,33 +39,31 @@ const controls = useMapControls();
                     <IconGear />
                 </TRCButton> -->
             </div>
-
-            <div class="sm:hidden flex flex-col w-full space-y-2">
-                <Popover class="relative">
-                    <PopoverButton class="">
-                        Map Filters
-                    </PopoverButton>
-                    <Transition
-                        enterActiveClass="transition duration-200 ease-out"
-                        enterFromClass="translate-y-1 opacity-0"
-                        enterToClass="translate-y-0 opacity-100"
-                        leaveActiveClass="transition duration-150 ease-in"
-                        leaveFromClass="translate-y-0 opacity-100"
-                        leaveToClass="translate-y-1 opacity-0"
-                    >
-                        <PopoverPanel
-                            class="absolute z-10  max-w-sm bg-white rounded border p-4 transform "
-                        >
-                            <div>
-                                <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
-                                <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
-                                <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" />
-                                <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
-                            </div>
-                        </PopoverPanel>
-                    </Transition>
-                </Popover>
-            </div>
         </div>
     </div>
+
+    <Popover class="absolute top-2 left-2 sm:hidden">
+        <PopoverButton
+            class="rounded-full bg-trc-blue-700 text-white shadow-2xl p-4 " 
+            title="Adjust map filters"
+        >
+            <IconAdjustmentsHorizontal />
+        </PopoverButton>
+        <Transition
+            enterActiveClass="transition duration-200 ease-out"
+            enterFromClass="translate-y-1 opacity-0"
+            enterToClass="translate-y-0 opacity-100"
+            leaveActiveClass="transition duration-150 ease-in"
+            leaveFromClass="translate-y-0 opacity-100"
+            leaveToClass="translate-y-1 opacity-0"
+        >
+            <PopoverPanel class="absolute z-10 max-w-sm bg-white rounded border p-4 space-y-2 shadow-xl">
+                <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
+                <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
+                <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" />
+                <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
+            </PopoverPanel>
+        </Transition>
+    </Popover>
+
 </template>

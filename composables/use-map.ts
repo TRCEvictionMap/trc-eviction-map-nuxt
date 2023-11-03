@@ -9,10 +9,6 @@ async function useMap(): Promise<mapboxgl.Map> {
     }
 
     await nextTick();
-
-    // watch(map as Ref<mapboxgl.Map>, (m) => {
-    //     console.log(m);
-    // }, { immediate: true });
     
     return new Promise((resolve) => {
         if (map && map.value) {

@@ -41,7 +41,6 @@ function onCloseSettingsMenu() {
 }
 
 onMounted(() => {
-    console.log("/ mounted");
     settings.loadOptions();
     window.addEventListener("keydown", konami.recordKeyPress);
 });
@@ -54,7 +53,10 @@ onUnmounted(() => {
 <template>
     <ClientOnly>
         <TheMap>
-            <ControlBar />
+            <template #header>
+                <TheHeader />
+            </template>
+            <MapControls />
             <DetailCardGroup />
             <MapLayers />
             <MapLegend />

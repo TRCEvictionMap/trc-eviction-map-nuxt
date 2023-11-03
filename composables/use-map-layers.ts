@@ -67,8 +67,6 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
 
 function useMapLayers(map: mapboxgl.Map) {
 
-    console.log(map);
-
     const controls = useMapControls();
     const featureState = useFeatureState();
     const interpolated = useInterpolatedColorValues();
@@ -226,7 +224,6 @@ function useMapLayers(map: mapboxgl.Map) {
     }
 
     onMounted(() => {
-        console.log("useMapLayers mounted")
         layers.forEach((layer) => {
             map.addLayer(layer);
         });
