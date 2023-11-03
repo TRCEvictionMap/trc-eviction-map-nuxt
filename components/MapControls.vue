@@ -11,8 +11,8 @@ const controls = useMapControls();
 <template>
 
     <div class="
-        hidden absolute top-0 sm:flex z-10 
-        sm:w-auto
+        hidden absolute top-0 z-10 
+        sm:w-auto sm:flex
         sm:top-2 sm:justify-center sm:self-center 
     ">
         <div class="

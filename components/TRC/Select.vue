@@ -63,14 +63,14 @@ const buttonText = computed(() => {
                 <ListboxLabel v-if="label" class="px-2 text-xs font-bold text-slate-600">
                     {{ label }}
                 </ListboxLabel>
-                <ListboxButton class="px-2 py-1 border rounded text-start whitespace-nowrap">
+                <ListboxButton class="px-2 py-1 border rounded text-start whitespace-nowrap text-sm">
                     <slot name="button">
                         {{ buttonText }}
                     </slot>
                 </ListboxButton>
             </div>
             <div class="relative">
-                <ListboxOptions class="absolute top-0 p-4 rounded bg-white shadow border space-y-2">
+                <ListboxOptions class="absolute top-0 p-4 rounded bg-white shadow border space-y-1">
                     
                     <ListboxOption
                         v-for="option in options"
@@ -79,7 +79,7 @@ const buttonText = computed(() => {
                         v-slot="props"
                     >
                         <div
-                            class="cursor-pointer flex items-center rounded py-1 px-2 hover:bg-trc-blue-100"
+                            class="cursor-pointer flex items-center rounded py-1 px-2 hover:bg-trc-blue-100 "
                             :class="{
                                 'bg-trc-blue-200 hover:bg-trc-blue-300': props.selected,
                                 'bg-trc-blue-100': props.active && !props.selected,
@@ -88,7 +88,7 @@ const buttonText = computed(() => {
                             <div v-if="withCheckmark" class="w-7">
                                 <IconCheckmark v-if="props.selected" class="h-5" />
                             </div>
-                            <div class="flex-1 whitespace-nowrap">
+                            <div class="flex-1 whitespace-nowrap text-sm">
                                 <slot name="option" v-bind="({ ...option, ...props } as TRCSelectOptionSlotProps)">
                                     {{ option.text ?? option.value }}
                                 </slot>
