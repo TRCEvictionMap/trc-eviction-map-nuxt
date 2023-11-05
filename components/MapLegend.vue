@@ -34,11 +34,17 @@ const evictionStopSizes = computed(() =>
 </script>
 
 <template>
-    <div class="absolute bottom-8 sm:bottom-6 right-2 self-end shadow-xl border rounded  bg-white text-xs p-2 sm:text-sm sm:p-4">
+    <div
+        v-if="controls.currentDemographicMetric !== 'none' || controls.currentEvictionMetric !== 'none'"
+        class="
+            absolute bottom-8 right-2 self-end shadow-xl border rounded bg-white text-xs p-2
+            sm:bottom-6 sm:p-4 sm:text-sm
+        "
+    >
 
         <div class="flex space-x-4">
 
-            <div v-if="controls.currentDemographicMetric !== 'none'" class=" space-y-2">
+            <div v-if="controls.currentDemographicMetric !== 'none'" class="space-y-2">
                 <h2 class="font-semibold ">
                     {{ demographicMetricName }}
                 </h2>
@@ -84,7 +90,7 @@ const evictionStopSizes = computed(() =>
                 <div>
                     <div class="relative flex items-center h-8">
                         <div class="border-b border-slate-300 w-full"></div>
-                        <div class="absolute w-full top-0 h-8 flex items-center">
+                        <div class="absolute left-0 w-full top-0 h-8 flex items-center">
                             <div class="absolute left-[10%]">
                                 <div
                                     class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"
@@ -94,7 +100,7 @@ const evictionStopSizes = computed(() =>
                                     }"
                                 ></div>
                             </div>
-                            <div class="absolute left-[50%]">
+                            <div class="absolute left-[46%]">
                                 <div
                                     class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"
                                     :style="{
@@ -103,7 +109,7 @@ const evictionStopSizes = computed(() =>
                                     }"
                                 ></div>
                             </div>
-                            <div class="absolute left-[90%]">
+                            <div class="absolute left-[86%]">
                                 <div
                                     class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"
                                     :style="{
@@ -113,14 +119,14 @@ const evictionStopSizes = computed(() =>
                                 ></div>
                             </div>
                         </div>
-                        <div class=" absolute w-full -bottom-1">
+                        <div class="absolute left-0 w-full -bottom-1">
                             <span class="absolute left-[10%] -translate-x-[50%]">
                                 {{ evictionStops[1] }}
                             </span>
-                            <span class="absolute left-[50%] -translate-x-[50%]">
+                            <span class="absolute left-[46%] -translate-x-[50%]">
                                 {{ evictionStops[2] }}
                             </span>
-                            <span class="absolute left-[90%] -translate-x-[50%]">
+                            <span class="absolute left-[86%] -translate-x-[50%]">
                                 {{ evictionStops[3] }}
                             </span>
                         </div>

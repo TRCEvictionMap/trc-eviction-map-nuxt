@@ -14,9 +14,7 @@ const disclosures = useDisclosures();
             sizes="140px sm:180px"
         />
         <div class="flex py-2 sm:py-4">
-            <button class="sm:hidden" @click="disclosures.showMobileNav = true">
-                <IconBars2 />
-            </button>
+            <NavDrawer class="sm:hidden" />
             <nav class="hidden sm:block">
                 <ul class="flex space-x-4">
                     <li>

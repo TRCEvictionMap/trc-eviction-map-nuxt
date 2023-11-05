@@ -51,16 +51,18 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <ClientOnly>
-        <TheMap>
-            <template #header>
-                <TheHeader />
-            </template>
-            <MapControls />
-            <DetailCardGroup />
-            <MapLayers />
-            <MapLegend />
-            <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
-        </TheMap>
-    </ClientOnly>
+    <div class="absolute top-0 w-full h-full">
+        <ClientOnly>
+            <TheMap>
+                <template #header>
+                    <TheHeader />
+                </template>
+                <MapControls />
+                <DetailCardGroup />
+                <MapLayers />
+                <MapLegend />
+                <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
+            </TheMap>
+        </ClientOnly>
+    </div>
 </template>

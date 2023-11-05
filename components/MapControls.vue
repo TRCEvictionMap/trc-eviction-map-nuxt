@@ -59,8 +59,8 @@ const controls = useMapControls();
             leaveToClass="translate-y-1 opacity-0"
         >
             <PopoverPanel class="absolute z-10 max-w-sm bg-white rounded border p-4 space-y-2 shadow-xl">
-                <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
                 <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
+                <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
                 <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" />
                 <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
             </PopoverPanel>
