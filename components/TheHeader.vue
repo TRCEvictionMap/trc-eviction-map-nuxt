@@ -9,9 +9,9 @@ const disclosures = useDisclosures();
     <header class="flex justify-between items-center py-1 px-4 text-trc-blue-700 border-b border-trc-blue-700/20">
         <NuxtPicture
             format="webp"
-            src="/TRC_logo_Blue_Vector_Transparent.png"
+            src="/trc_logo_horizontal_color.png"
             alt="Tenant Resource Center logo"
-            sizes="140px sm:180px"
+            sizes="140px sm:170px"
         />
         <div class="flex py-2 sm:py-4">
             <NavDrawer class="sm:hidden" />
