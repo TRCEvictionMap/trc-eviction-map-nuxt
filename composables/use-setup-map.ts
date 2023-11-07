@@ -4,6 +4,7 @@ import { useMapMeta } from "~/stores/map-meta-store";
 import blockGroupJson from "~/geojson/block-group.json";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
+import { useFeatureState } from "~/stores/feature-state-store";
 import { EvictionFeatureCollection } from "utils/types";
 
 function useSetupMap() {
@@ -13,9 +14,10 @@ function useSetupMap() {
     const mapMeta = useMapMeta();
     const controls = useMapControls();
     const featureProperties = useFeatureProperties();
+    const featureState = useFeatureState();
 
     onMounted(() => {
-        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric } = useInitialQueryParams();
+        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features } = useInitialQueryParams();
 
         map.value = new mapboxgl.Map({
             container: "the-map",
@@ -38,6 +40,8 @@ function useSetupMap() {
         controls.currentYear = _year;
         controls.currentDemographicMetric = _d_metric;
         controls.currentEvictionMetric = _e_metric;
+        
+        featureState.initSelectedFeatures(_features);
 
         map.value.on("moveend", (ev) => {
             const { lng, lat } = ev.target.getCenter();

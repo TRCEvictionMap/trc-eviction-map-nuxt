@@ -8,13 +8,7 @@ interface FeatureState {
 }
 
 function useSelectedFeatures() {
-    const route = useRoute();
-
-    const _features = ref<string[]>(
-        typeof route.query.features === "string"
-            ? route.query.features.split(",")
-            : []
-    );
+    const _features = ref<string[]>([]);
 
     const selectedFeatures = computed(() => _features.value.reduce(
         (accum: string[], featureId, index) => {
@@ -25,6 +19,10 @@ function useSelectedFeatures() {
         },
         []
     ));
+
+    function initSelectedFeatures(features: string[]) {
+        _features.value = features;
+    }
 
     function clearSelectedFeatures() {
         _features.value = [];
@@ -42,7 +40,7 @@ function useSelectedFeatures() {
         }
     }
 
-    return { selectedFeatures, clearSelectedFeatures, setIsFeatureSelected };
+    return { selectedFeatures, initSelectedFeatures, clearSelectedFeatures, setIsFeatureSelected };
 }
 
 function useHoveredFeature() {
@@ -68,7 +66,7 @@ function useHoveredFeature() {
 }
 
 const useFeatureState = defineStore("feature-state", () => {
-    const { selectedFeatures, setIsFeatureSelected, clearSelectedFeatures } = useSelectedFeatures();
+    const { selectedFeatures, setIsFeatureSelected, clearSelectedFeatures, initSelectedFeatures } = useSelectedFeatures();
     const { hoveredFeature, hoveredFeatureKind, setIsFeatureHovered, clearHoveredFeature } = useHoveredFeature();
 
     function setFeatureState<Key extends keyof FeatureState>(
@@ -84,7 +82,15 @@ const useFeatureState = defineStore("feature-state", () => {
         }
     }
 
-    return { selectedFeatures, hoveredFeature, hoveredFeatureKind, setFeatureState, clearSelectedFeatures, clearHoveredFeature };
+    return {
+        selectedFeatures,
+        hoveredFeature,
+        hoveredFeatureKind,
+        setFeatureState,
+        clearSelectedFeatures,
+        clearHoveredFeature,
+        initSelectedFeatures
+    };
 });
 
 export { useFeatureState };

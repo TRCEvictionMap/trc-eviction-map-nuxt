@@ -9,6 +9,7 @@ interface QueryParams {
     _source: SourceId;
     _e_metric: EvictionMetric;
     _d_metric: DemographicMetric;
+    _features: string[];
 }
 
 function useInitialQueryParams(): QueryParams {
@@ -20,8 +21,9 @@ function useInitialQueryParams(): QueryParams {
     let _year: QueryParams["_year"] = "2023";
     let _d_metric: QueryParams["_d_metric"] = "renter_count";
     let _e_metric: QueryParams["_e_metric"] = "n_filings";
+    let _features: QueryParams["_features"] = [];
 
-    const { center, zoom, source, year, d_metric, e_metric } = route.query;
+    const { center, zoom, source, year, d_metric, e_metric, features } = route.query;
 
     if (center) {
         const [lng, lat] = (route.query.center as string).split(",");
@@ -51,7 +53,11 @@ function useInitialQueryParams(): QueryParams {
         _e_metric = e_metric;
     }
 
-    return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric };
+    if (typeof features === "string") {
+        _features = features.split(",");
+    }
+
+    return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features };
 }
 
 export { useInitialQueryParams };
