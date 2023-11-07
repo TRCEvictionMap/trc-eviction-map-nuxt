@@ -11,7 +11,7 @@ const disclosures = useDisclosures();
             format="webp"
             src="/trc_logo_horizontal_color.png"
             alt="Tenant Resource Center logo"
-            sizes="140px sm:170px"
+            sizes="150px sm:170px"
         />
         <div class="flex py-2 sm:py-4">
             <NavDrawer class="sm:hidden" />
