@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/mapbox-gl": "^2.7.13",
     "@types/node": "^18.17.3",
     "autoprefixer": "^10.4.15",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
+    "@nuxt/content": "^2.9.0",
     "@nuxt/image": "^1.0.0",
     "@pinia/nuxt": "^0.4.11",
     "mapbox-gl": "^2.15.0",

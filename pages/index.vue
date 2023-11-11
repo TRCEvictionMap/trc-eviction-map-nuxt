@@ -51,12 +51,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="absolute top-0 w-full h-full">
+    <div class="absolute top-0 w-full h-full flex flex-col">
+        <TheHeader />
         <ClientOnly>
             <TheMap>
-                <template #header>
-                    <TheHeader />
-                </template>
                 <MapControls />
                 <DetailCardGroup />
                 <MapLayers />
