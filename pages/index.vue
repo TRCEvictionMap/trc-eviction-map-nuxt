@@ -7,6 +7,10 @@ import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
 
+useHead({
+    title: "Eviction Map - Tenant Resource Center"
+});
+
 const router = useRouter();
 const mapControls = useMapControls();
 const mapMeta = useMapMeta();

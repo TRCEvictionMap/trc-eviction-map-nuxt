@@ -1,11 +1,12 @@
+---
+title: About - Eviction Map - Tenant Resource Center
+---
+
 ### Introduction
 
 This map is a project of the [Tenant Resource Center](https://www.tenantresourcecenter.org/) and was developed by [Jacob Albright](https://jacobalbright.com) and Philip Wales.
 
 It combines demographic data from the [American Community Survey (ACS)](https://www.census.gov/programs-surveys/acs/about.html), geographic data from [TIGER/Line Shapefiles](https://www.census.gov/geographies/mapping-files.html), and eviction data from Wisconsin circuit court's online case management system portal to show patterns in eviction filings over time in Dane County, WI.
-
-
-
 
 <!--
 ### Methods
