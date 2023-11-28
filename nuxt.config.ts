@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    content: {
+        markdown: {
+            tags: {
+                span: "CustomSpan",
+            }
+        }
+    },
     nitro: {
         prerender: {
             crawlLinks: false,

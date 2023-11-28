@@ -1,3 +1,10 @@
+<script setup lang="ts">
+const footnoteInstances = ref({});
+
+provide("footnote-instances", footnoteInstances);
+
+</script>
+
 <template>
     <div class="absolute top-0 flex flex-col min-h-full w-full">
         <TheHeader />
