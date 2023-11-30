@@ -1,35 +1,44 @@
-const letters = "abcdefghijklmnopqrstuvwxyz";
 
-interface FootnoteInstance {
+const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+
+interface FootnoteRefInstance {
+    footnoteId: string;
     backlink: string;
     letter: string;
 }
 
 function useFootnotes() {
-    const instances = inject<Ref<Record<number, FootnoteInstance[]>>>("footnote-instances");
+    const references = inject<Ref<Record<string, FootnoteRefInstance[]>>>("footnote-refs");
+    const ordering = inject<Ref<FootnoteRefInstance["footnoteId"][]>>("footnote-ordering");
 
-    function registerInlineFootnote(number: number) {
-        if (!instances) {
+    function registerFootnoteRef(footnoteId: string) {
+        if (!references || !ordering) {
             return "";
         }
 
-        if (!instances.value[number]) {
-            instances.value[number] = [];
+        if (!references.value[footnoteId]) {
+            references.value[footnoteId] = [];
+            ordering.value.push(footnoteId);
         }
+        
+        const footnoteOrder = ordering.value.indexOf(footnoteId) + 1;
+        const footnoteRefOrder = references.value[footnoteId].length + 1;
 
-        const inlineFootnoteId = `footnote_${number}_${instances.value[number].length + 1}`;
+        const backlink = `footnote_${footnoteOrder}_${footnoteRefOrder}`;
 
-        instances.value[number].push({
-            backlink: inlineFootnoteId,
-            letter: letters[instances.value[number].length],
+        references.value[footnoteId].push({
+            footnoteId,
+            backlink,
+            letter: LETTERS[footnoteRefOrder - 1],
         });
 
-        return inlineFootnoteId;
+        return backlink;
     }
 
     return {
-        registerInlineFootnote,
-        instances: instances as Ref<Record<number, FootnoteInstance[]>>,
+        registerFootnoteRef,
+        ordering: ordering!,
+        references: references!
     };
 }
 

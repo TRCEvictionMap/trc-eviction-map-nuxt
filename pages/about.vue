@@ -1,7 +1,10 @@
 <script setup lang="ts">
-const footnoteInstances = ref({});
 
-provide("footnote-instances", footnoteInstances);
+const footnoteRefs = ref({});
+const footnoteOrdering = ref([]);
+
+provide("footnote-refs", footnoteRefs);
+provide("footnote-ordering", footnoteOrdering);
 
 </script>
 

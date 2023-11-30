@@ -1,19 +1,27 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-    number: number;
+    footnoteId: string; 
 }>();
 
 const footnotes = useFootnotes();
 
-const id = footnotes.registerInlineFootnote(props.number);
+const id = footnotes.registerFootnoteRef(props.footnoteId);
+
+const ordering = computed(
+    () => footnotes.ordering.value.indexOf(props.footnoteId) + 1
+);
 
 </script>
 
 <template>
-    <NuxtLink class="text-trc-orange-500 !no-underline" :id="id" :to="{ hash: `#footnote-bottom_${number}` }">
+    <NuxtLink
+        class="text-trc-orange-500 !no-underline"
+        :id="id"
+        :to="{ hash: `#footnote-bottom_${ordering}` }"
+    >
         <sup>
-            [{{ number }}]
+            [{{ ordering }}]
         </sup> 
     </NuxtLink>
 </template>
