@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { SourceId } from "utils/types";
+import type { SourceId } from "~/utils/types";
 
 const EVICTION_METRICS = ["n_filings", "filing_rate", "none"] as const;
 const DEMOGRAPHIC_METRICS = ["renter_count", "renter_rate", "none"] as const;
@@ -22,7 +22,7 @@ const useMapControls = defineStore("map-controls", () => {
 
     const sourceOptions = ref<Option<SourceId>[]>([
         {
-            text: "Census Block Group",
+            text: "Block Group",
             value: "block-group",
         },
     ]);

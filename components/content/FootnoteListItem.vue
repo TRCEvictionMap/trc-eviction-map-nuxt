@@ -9,16 +9,6 @@ export interface FootnoteListItemProps {
 }
 
 const props = defineProps<FootnoteListItemProps>();
-// const props = defineProps<{
-//     number: string;
-//     id: string;
-//     author: string;
-//     pageTitle: string;
-//     pageUrl: string;
-//     year?: number;
-// }>();
-
-// const id = `footnote-bottom_${props.number}`;
 
 const footnotes = useFootnotes();
 
@@ -29,8 +19,6 @@ const anchorId = computed(
 const route = useRoute();
 
 const className = ref({});
-
-// const number = Number.parseInt(props.number);
 
 watch(() => route.hash, (hash) => {
     className.value = {
@@ -59,7 +47,11 @@ onMounted(() => {
                 ^
                 <ul class="flex p-0 m-0 list-none">
                     <li class="m-0" v-for="reference in footnotes.references.value[id]">
-                        <NuxtLink class="text-trc-orange-500 no-underline" :to="{ hash: `#${reference.backlink}`}">
+                        <NuxtLink
+                            title="Jump up"
+                            class="text-trc-orange-500 no-underline"
+                            :to="{ hash: `#${reference.backlink}`}"
+                        >
                             {{ reference.letter }}
                         </NuxtLink>
                     </li>

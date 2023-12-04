@@ -11,7 +11,9 @@ const sortedItems = computed(() =>
     Array
         .from(props.items)
         .sort((a, b) =>
-            footnotes.ordering.value.indexOf(a.id) - footnotes.ordering.value.indexOf(b.id)
+            footnotes.ordering.value.indexOf(a.id) > -1 && footnotes.ordering.value.indexOf(b.id) > -1
+                ? footnotes.ordering.value.indexOf(a.id) - footnotes.ordering.value.indexOf(b.id)
+                : -1
         )
 );
 
@@ -19,6 +21,6 @@ const sortedItems = computed(() =>
 
 <template>
     <ol>
-        <FootnoteListItem v-for="item in sortedItems" v-bind="item" />
+        <FootnoteListItem v-for="item in sortedItems" :key="item.pageUrl" v-bind="item" />
     </ol>
 </template>

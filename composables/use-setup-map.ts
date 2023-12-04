@@ -5,7 +5,7 @@ import blockGroupJson from "~/geojson/block-group.json";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useFeatureState } from "~/stores/feature-state-store";
-import { EvictionFeatureCollection } from "utils/types";
+import type { EvictionFeatureCollection } from "~/utils/types";
 
 function useSetupMap() {
     const map = ref<mapboxgl.Map>();
