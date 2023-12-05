@@ -6,29 +6,22 @@ title: About - Eviction Map - Tenant Resource Center
 
 This map combines demographic and geographic data from the US Census [American Community Survey (ACS)](https://www.census.gov/programs-surveys/acs/about.html) and [TIGER/Line Shapefiles](https://www.census.gov/geographies/mapping-files.html) with eviction case data from Wisconsin circuit court's online case management system portal to show demographic and geographic patterns in eviction court filings over time in Dane County, WI.
 
-It is a project of the [Tenant Resource Center (TRC)](https://www.tenantresourcecenter.org/) and was developed by [Jacob Albright](https://jacobalbright.com) and Philip Wales.
-
 
 ## Data and Methods
 
 ### Evictions
-The eviction data represented on the map was collected from Wisconsin circuit court's online case management system portal. Although many eviction procedings result in small claims court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County.
 
-<!-- Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property.  -->
+Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property. The eviction data represented on the map was collected from Wisconsin circuit court's online case management system portal. Although many eviction procedings result in court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County. 
 
 In Wisconsin,
 
-> the legal eviction process begins when the landlord serves the tenant a written notice under Wis. Stat. 704.17 stating how the tenant has violated the lease. This may be a 5-day, 14-day or 30-day notice. This is not a court document and does not go in the court records at this point, only the landlord's files. It is a warning that the landlord may take the tenant to court if they don't move out or do what the notice asks them to do. [(TRC - About Eviction)](https://www.tenantresourcecenter.org/about_eviction)
+> the legal eviction process begins when the landlord serves the tenant a written notice under Wis. Stat. 704.17 stating how the tenant has violated the lease. This may be a 5-day, 14-day or 30-day notice. This is not a court document and does not go in the court records at this point, only the landlord's files. It is a warning that the landlord may take the tenant to court if they don't move out or do what the notice asks them to do. [(Tenant Resource Center)](https://www.tenantresourcecenter.org/about_eviction)
 
-Because of this and [illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions)
-
-
-
-
-
+If a tenant served with an eviction notice moves out before to a court case is filed, their eviction will not show up our data. Likewise, [illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions) will not appear in our data.
 
 ### Block Groups
 
+A block group 
 
 A block group is a statistical geographical unit used by the U.S. Census Bureau to present data and generally contain between 600 and 3000 people.[]{cid=glsry-bg} The U.S. Census Bureau publishes data from the ACS and decennial census tabulated by block group.
 
@@ -85,6 +78,11 @@ Housing occupancy data[]{cid=tbl-ho} tells
 
 
 Using [PostGIS](https://postgis.net/),
+
+
+## The team
+
+This map is a project of the [Tenant Resource Center](https://www.tenantresourcecenter.org/) and was developed by [Jacob Albright](https://jacobalbright.com) and Philip Wales.
 
 
 ## References
