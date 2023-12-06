@@ -27,7 +27,7 @@ A block group is a statistial geographical unit used by the U.S. Census to prese
 
 ### Representing evictions geographically
 
-As of this writing, the map uses 4 key metrics to represent eviction and demographic characteristics across Dane County. We use [block groups](#block-groups) as the statistical geographical unit to organize these metrics.
+As of this writing, the map uses 4 metrics to represent eviction and demographic characteristics across Dane County. We use [block groups](#block-groups) as the statistical geographical unit to organize these metrics.
 
 | Metric                        | Description                                                                                           |
 | ---                           | ---                                                                                                   |

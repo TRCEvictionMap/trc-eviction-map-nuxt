@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MarkdownNode, MarkdownRoot } from '@nuxt/content/dist/runtime/types';
+import type { MarkdownNode, MarkdownRoot } from "@nuxt/content/dist/runtime/types";
 
 const footnoteRefs = ref({});
 const footnoteOrdering = ref<string[]>([]);
@@ -7,23 +7,22 @@ const footnoteOrdering = ref<string[]>([]);
 provide("footnote-refs", footnoteRefs);
 provide("footnote-ordering", footnoteOrdering);
 
-await useAsyncData("about", async () => {
+useAsyncData(async () => {
     const content = await queryContent("/about").findOne();
 
     if (content.body) {
-        depthFirstSearch(content.body)
+        depthFirstCitationIdSearch(content.body)
     }
 
-    function depthFirstSearch(node: MarkdownRoot | MarkdownNode) {
+    function depthFirstCitationIdSearch(node: MarkdownRoot | MarkdownNode) {
         const { cid } = node.props ?? {};
 
         if (typeof cid === "string" && !footnoteOrdering.value.includes(cid)) {
             footnoteOrdering.value.push(cid);
         }
 
-        node.children?.forEach((child) => depthFirstSearch(child));
-    }
-    
+        node.children?.forEach((child) => depthFirstCitationIdSearch(child));
+    } 
 });
 
 </script>
