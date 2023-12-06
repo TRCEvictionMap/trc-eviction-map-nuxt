@@ -38,15 +38,15 @@ onMounted(() => {
     <li :id="anchorId" class="mb-6" :class="className">
         <cite>
             {{ author }}, &quot;{{ pageTitle }}&quot; {{ year ? year + "," : undefined }}
-            <NuxtLink :to="pageUrl" target="_blank">
+            <NuxtLink :href="pageUrl" target="_blank">
                 {{ pageUrl }}
             </NuxtLink>
         </cite>
         <div v-if="footnotes.references.value[id]" class="flex items-center space-x-2">
             <template v-if="footnotes.references.value[id].length > 1">
                 ^
-                <ul class="flex p-0 m-0 list-none">
-                    <li class="m-0" v-for="reference in footnotes.references.value[id]">
+                <ul class="flex !p-0 !m-0 list-none">
+                    <li class="!m-0" v-for="reference in footnotes.references.value[id]">
                         <NuxtLink
                             title="Jump up"
                             class="text-trc-orange-500 no-underline"

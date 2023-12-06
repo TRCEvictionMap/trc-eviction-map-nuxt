@@ -7,20 +7,24 @@ const props = defineProps<{
 
 const footnotes = useFootnotes();
 
-const sortedItems = computed(() =>
-    Array
-        .from(props.items)
-        .sort((a, b) =>
-            footnotes.ordering.value.indexOf(a.id) > -1 && footnotes.ordering.value.indexOf(b.id) > -1
-                ? footnotes.ordering.value.indexOf(a.id) - footnotes.ordering.value.indexOf(b.id)
-                : -1
-        )
-);
+const sortedItems = computed(() => {
+    const ordering = footnotes.ordering.value.concat(
+        props.items
+            .map((item) => item.id)
+            .filter((id) => !footnotes.ordering.value.includes(id))
+    );
+
+    const items = Array.from(props.items);
+
+    items.sort((a, b) => ordering.indexOf(a.id) - ordering.indexOf(b.id));
+
+    return items;
+});
 
 </script>
 
 <template>
     <ol>
-        <FootnoteListItem v-for="item in sortedItems" :key="item.pageUrl" v-bind="item" />
+        <FootnoteListItem v-for="(item, i) in sortedItems" :key="i" v-bind="item" />
     </ol>
 </template>

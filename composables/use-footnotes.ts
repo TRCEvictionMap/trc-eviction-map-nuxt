@@ -18,7 +18,6 @@ function useFootnotes() {
 
         if (!references.value[footnoteId]) {
             references.value[footnoteId] = [];
-            ordering.value.push(footnoteId);
         }
         
         const footnoteOrder = ordering.value.indexOf(footnoteId) + 1;
