@@ -36,6 +36,8 @@ As of this writing, the map uses 4 metrics to represent eviction and demographic
 | _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                        |
 | _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                            |
 
+
+
 [\[...work in progress\]]
 
 ## Who made this
