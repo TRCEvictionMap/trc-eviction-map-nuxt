@@ -16,7 +16,7 @@ const ordering = computed(
 
 <template>
     <NuxtLink
-        class="text-trc-orange-500 !no-underline"
+        class="text-trc-orange-500 !no-underline !-mt-2 !pt-2"
         :id="id"
         :to="{ hash: `#footnote-bottom_${ordering}` }"
     >

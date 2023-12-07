@@ -22,20 +22,28 @@ If a tenant served with an eviction notice by their landlord moves out before a 
 
 ### Block Groups
 
-A block group is a statistial geographical unit used by the U.S. Census to present data and is the smallest area for which demographic characteristics are produced from the American Community Survey (ACS).[]{cid=glsry-bg}[]{cid=psap-guide}[]{cid=acs-about}
+A block group is a statistial geographical unit used by the U.S. Census to present data and is the smallest area for which demographic characteristics are produced from the American Community Survey (ACS).[]{cid=glsry-bg}[]{cid=acs-5-year-data}
 
 
-### Representing evictions geographically
+### Representing eviction cases geographically
 
 As of this writing, the map uses 4 metrics to represent eviction and demographic characteristics across Dane County. We use [block groups](#block-groups) as the statistical geographical unit to organize these metrics.
 
-| Metric                        | Description                                                                                           |
-| ---                           | ---                                                                                                   |
-| _Eviction Filings_            | The number of eviction filings where the defendant's address is in a block group.                     | 
-| _Eviction Filing Rate_        | Represents the number of eviction filings for every 100 renter-occupied households in a block group.  |
-| _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                        |
-| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                            |
+| Metric                        | Description                                                                                                                               |
+| ---                           | ---                                                                                                                                       |
+| _Eviction Filings_            | The number of eviction filings where the defendant address listed in the court record falls inside the geographic area of a block group.  | 
+| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
+| _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
+| _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
 
+#### Eviction Filings
+
+To organize eviction filings by block group, we geocoded the _defendant address_ in each eviction case record using Google's [Geocoding](https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works) API and converted the results into 
+
+
+#### Renter Occupied Households
+
+The ACS produces estimates of the numbers of renter-occupied and owner-occupied households in each block group.[]{cid=tbl-ho}[] As of this writing, the map uses ACS 5-year estimates published in 2021. This means that _Eviction Filing Rate_ values calculated for years other than 2021 are less reliable than those calculated for 2021. We will update the map to use more current data as it becomes available.[]{cid=acs-release-schedule}
 
 
 [\[...work in progress\]]
@@ -89,20 +97,20 @@ items:
       pageTitle: Illegal, "Self-Help" Evictions
       pageUrl: https://www.tenantresourcecenter.org/illegal_self_help_evictions
 
-    - id: acs-about
+    - id: acs-5-year-data
       author: U.S. Census Buerau
-      pageTitle: About the American Community Survey
-      pageUrl: https://www.census.gov/programs-surveys/acs/about.html
+      pageTitle: American Community Survey 5-Year Data (2009-2022)
+      pageUrl: https://www.census.gov/data/developers/data-sets/acs-5year.html
+      year: 2023
+
+    - id: acs-release-schedule
+      author: U.S. Census Buerau
+      pageTitle: Data Releases
+      pageUrl: https://www.census.gov/programs-surveys/acs/news/data-releases.html
 
     - id: glsry-bg
       author: U.S. Census Bureau
       pageTitle: Glossary - Block Group
       pageUrl: https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4
-
-    - id: psap-guide
-      author: U.S. Census Bureau
-      pageTitle: 2020 Census Participant Statistical Areas Program (PSAP) Information Guide
-      pageUrl: https://www2.census.gov/geo/pdfs/partnerships/psap/PSAP-InfoGuide.pdf
-      year: 2018
 ---
 ::
