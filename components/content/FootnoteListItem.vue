@@ -35,7 +35,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <li :id="anchorId" class="mb-6" :class="className">
+    <li :id="anchorId" class="mb-6 break-words" :class="className">
         <cite>
             {{ author }}, &quot;{{ pageTitle }}&quot; {{ year ? year + "," : undefined }}
             <NuxtLink :href="pageUrl" target="_blank">
