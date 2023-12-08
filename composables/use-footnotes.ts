@@ -1,3 +1,4 @@
+import type { FootnoteListItemProps } from "~/components/content/FootnoteListItem.vue";
 
 const LETTERS = "abcdefghijklmnopqrstuvwxyz";
 
@@ -7,15 +8,21 @@ interface FootnoteRefInstance {
     letter: string;
 }
 
+type FootnoteContentPreview = Pick<FootnoteListItemProps, "author" | "pageTitle">;
+
 function useFootnotes() {
-    const references = inject<Ref<Record<string, FootnoteRefInstance[]>>>("footnote-refs");
-    const ordering = inject<Ref<FootnoteRefInstance["footnoteId"][]>>("footnote-ordering");
+    const references = inject<Ref<Record<string, FootnoteRefInstance[]>>>("footnote-refs")!;
+    const content = inject<Ref<Record<string, FootnoteContentPreview>>>("footnote-content")!;
+    const ordering = inject<Ref<FootnoteRefInstance["footnoteId"][]>>("footnote-ordering")!;
+
+    if (!references || !content || !ordering) {
+        console.warn(
+            "[useFootnotes] some dependencies are undefined!",
+            { references, content, ordering }
+        );
+    }
 
     function registerFootnoteRef(footnoteId: string) {
-        if (!references || !ordering) {
-            return "";
-        }
-
         if (!references.value[footnoteId]) {
             references.value[footnoteId] = [];
         }
@@ -36,8 +43,9 @@ function useFootnotes() {
 
     return {
         registerFootnoteRef,
-        ordering: ordering!,
-        references: references!
+        ordering,
+        references,
+        content,
     };
 }
 

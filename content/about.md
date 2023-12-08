@@ -32,13 +32,26 @@ As of this writing, the map uses 4 metrics to represent eviction and demographic
 | Metric                        | Description                                                                                                                               |
 | ---                           | ---                                                                                                                                       |
 | _Eviction Filings_            | The number of eviction filings where the defendant address listed in the court record falls inside the geographic area of a block group.  | 
-| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
 | _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
+| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
 | _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
+
 
 #### Eviction Filings
 
-To organize eviction filings by block group, we geocoded the _defendant address_ in each eviction case record using Google's [Geocoding](https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works) API and converted the results into 
+Each eviction filing record includes the defendant's address. After converting these addresses into latitude and longitude coordinates using Google's geocoding API, we used PostGIS count the number of eviction cases whose coordinates fall inside the area of a given block group, grouping the results by year.[]{cid=postgis-spatial-joins}
+
+
+<!-- Eviction case
+- Street address
+- Geographic point
+
+Block group
+- Geographic area
+
+PostGIS spatial join
+- count the number of eviction cases whose coordinates fall inside the area of a given block group and then group these totals by year -->
+
 
 
 #### Renter Occupied Households
@@ -112,5 +125,11 @@ items:
       author: U.S. Census Bureau
       pageTitle: Glossary - Block Group
       pageUrl: https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4
+
+    - id: postgis-spatial-joins
+      author: PostGIS
+      pageTitle: Introduction to PostGIS - Spatial Joins
+      pageUrl: https://postgis.net/workshops/postgis-intro/joins.html#spatial-joins
+      year: 2023
 ---
 ::
