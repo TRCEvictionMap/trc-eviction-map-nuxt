@@ -36,10 +36,57 @@ As of this writing, the map uses 4 metrics to represent eviction and demographic
 | _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
 | _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
 
-
 #### Eviction Filings
 
-Each eviction filing record includes the defendant's address. After converting these addresses into latitude and longitude coordinates using Google's geocoding API, we used PostGIS count the number of eviction cases whose coordinates fall inside the area of a given block group, grouping the results by year.[]{cid=postgis-spatial-joins}
+In the most baisc terms, we used GIS software to determine the geographic coordinates of each _eviction filing_'s defendant address and then overlay those coordinates on the geographic boundaries of Dane County block groups to count how many occurred inside each.
+
+We used Google's Geocoding API to determine the latitude and longitude of each _eviciton filing_'s defendant address.[]{cid=google-geocode-api}
+
+We used PostGIS to overlay each of these coordnates on block group boundaries and count how many occurred each year.[]{cid=postgis-spatial-joins}[]{cid=shp-bg}
+
+
+
+<!-- 
+
+Each eviction filing record includes a defendant address and a filing date.
+
+Counting the number of evictions filed in each block group for each year we have eviction filing data
+
+
+We used PostGIS, an open source geographic information
+
+Each eviction filing record includes a defendant address and a filing date. Using these two pieces of information, we counted the number of annual filings in each block group. This process involved the following steps:
+
+To 
+
+1. _Geocode each defendant address._ We used Google's Geocoding API to determine the latitude and longitude of each defendant address.[]{cid=google-geocode-api} We 
+2. _Spatially join_
+
+
+
+This is the process of converting an address (_e.g._ 123 Fake Street, Madison, WI) into geographic coordinates. We used Google's geocoding API to accomplish 
+
+
+We determined the latitude and longitude of each address. Then, we used PostGIS, open source geographic information system (GIS) software, to overlay the geographic boundaries 
+
+Each eviction filing includes a defendant address and a filing date. Using these two pieces of information, we counted annual eviction filings in each block group. This involved the following steps:
+
+1. Convert each defendant address into geographic coordinates
+2. Overlay these coordinates on the areas
+
+the number of eviction 
+
+The map shows the number of eviction filings in each block group for every year we have eviction filing data.
+
+
+We used PostGIS – open source geographic information system (GIS) software – to overlay the geographic coordinates of each eviction filing's defendant address on the geographic areas of Dane County block groups. 
+
+
+
+Each eviction case record includes a defendant address and a filing date. We geocoded each of these addresses to convert them into geographic coordinates.  Next, we used PostGIS – open source geographic information system (GIS) software – to overlay these coordinates with the geographic areas Dane County block groups to determine determine how many evictions were filed in each.[]{cid=postgis-spatial-joins}[]{cid=shp-bg} Finally, we grouped these counts by filing year.
+ -->
+
+
 
 
 <!-- Eviction case
@@ -53,10 +100,13 @@ PostGIS spatial join
 - count the number of eviction cases whose coordinates fall inside the area of a given block group and then group these totals by year -->
 
 
-
 #### Renter Occupied Households
 
 The ACS produces estimates of the numbers of renter-occupied and owner-occupied households in each block group.[]{cid=tbl-ho}[] As of this writing, the map uses ACS 5-year estimates published in 2021. This means that _Eviction Filing Rate_ values calculated for years other than 2021 are less reliable than those calculated for 2021. We will update the map to use more current data as it becomes available.[]{cid=acs-release-schedule}
+
+
+#### Eviction Filing Rate
+
 
 
 [\[...work in progress\]]
@@ -131,5 +181,12 @@ items:
       pageTitle: Introduction to PostGIS - Spatial Joins
       pageUrl: https://postgis.net/workshops/postgis-intro/joins.html#spatial-joins
       year: 2023
+
+    - id: google-geocode-api
+      author: Google Maps Platform
+      pageTitle: How the Geocoding API works
+      pageUrl: https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works
+      year: 2023
+
 ---
 ::

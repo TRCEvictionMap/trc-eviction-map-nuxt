@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "ci:geojson": "node ci/geojson.js",
     "dev": "nuxt dev",
     "generate": "BASE_URL=/trc-eviction-map-nuxt/ nuxt generate",
     "generate:local": "node ci/geojson.js && BASE_URL=/ nuxt generate",

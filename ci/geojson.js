@@ -10,7 +10,7 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY,
 );
 
-function writeGeojsonFile(name, data) {
+function writeGeojson(name, data) {
   fs.writeFileSync(path.resolve("./geojson", `${name}.json`), JSON.stringify(data));
 }
 
@@ -26,7 +26,7 @@ async function rpc(fn) {
 
 (async () => {
   try {
-    writeGeojsonFile("block-group", await rpc("get_block_group_geojson"));
+    writeGeojson("block-group", await rpc("get_block_group_geojson"));
   } catch (error) {
     console.error(error);
   }
