@@ -6,18 +6,16 @@ title: About - Eviction Map - Tenant Resource Center
 
 This map combines eviction filing data from court records with data from the U.S. Census to provide an up to date, historical view of where evictions are (and aren't) happening in Dane County, Wisconsin.
 
-<!-- This map combines data from the U.S. Census with eviction case data from Wisconsin circuit court's online case management system portal to show demographic and geographic patterns in eviction court filings over time in Dane County, WI. -->
-
 
 ## Eviction data
 
-The eviction data represented on the map was collected from Wisconsin circuit court's online case management system portal.[]{cid=ccap}[]{cid=trc-about-ccap} Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property. Although many eviction procedings result in court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County. 
+The eviction data represented on the map was collected from Wisconsin circuit court's online case management [system portal](https://wcca.wicourts.gov/). Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property. Although many eviction procedings result in court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County. 
 
 In Wisconsin,
 
-> the legal eviction process begins when the landlord serves the tenant a written notice under Wis. Stat. 704.17 stating how the tenant has violated the lease. This may be a 5-day, 14-day or 30-day notice. This is not a court document and does not go in the court records at this point, only the landlord's files. It is a warning that the landlord may take the tenant to court if they don't move out or do what the notice asks them to do.[]{cid=trc-about-eviction}
+> the legal eviction process begins when the landlord serves the tenant a written notice under Wis. Stat. 704.17 stating how the tenant has violated the lease. This may be a 5-day, 14-day or 30-day notice. This is not a court document and does not go in the court records at this point, only the landlord's files. It is a warning that the landlord may take the tenant to court if they don't move out or do what the notice asks them to do. ([Tenant Resource Center](https://www.tenantresourcecenter.org/about_eviction))
 
-If a tenant served with an eviction notice by their landlord moves out before a court case is filed, their eviction will not show up our data. Illegal evictions will also not appear in our data.[]{cid=trc-illegal-eviction}
+If a tenant served with an eviction notice by their landlord moves out before a court case is filed, their eviction will not show up our data. [Illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions) will also not appear in our data.
 
 
 ## Visualizing eviction data
@@ -33,122 +31,9 @@ The map represents the following metrics:
 | _Eviction Filings_            | The number of eviction filings where the defendant address listed in the court record falls inside the geographic area of a block group.  | 
 | _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
 | _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
-| _Percent Renter Occupied_     | A ratio representing the number of renter-occupied over owner-occupied households in a block group.                                       |
+| _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
 
 We use [ACS 5-Year estimates](https://www.census.gov/data/developers/data-sets/acs-5year.html) of the number of [renter-occupied and owner-occupied households](https://data.census.gov/table?q=B25008&g=050XX00US55025$1500000) in each block group that were published in 2021. This means that _Eviction Filing Rate_ values calculated for years other than 2021 may be less reliable. We will update the map to use more current estimates [as they become available](https://www.census.gov/programs-surveys/acs/news/data-releases.html).
-
-<!-- Estimates of the number of renter-occupied and owner-occupied households in each block group came from  [_Table B25008: Total Population in Occupied Housing Units by Tenure_](https://data.census.gov/table?q=B25008&g=050XX00US55025$1500000) -->
-
-
-<!-- We use used GIS software to determine annual eviction filing counts for each Census Block Group in Dane County – the smallest geography for which ACS 5-Year estimates are provided – as our geographical statistical unit.  
-
-Block groups are the smallest geographical statistical unit 
-
-The U.S. Census Bureau tabulates and publishes data at [multiple geographic levels](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_15). Block groups are the smallest level
-
-We rely on 5-Year estimates from the ACS
-
-The ACS publishes data at multiple geographic levels. The smallest 
-
-
-Using estimates from [_Table B25008: Total Population in Occupied Housing Units by Tenure_](https://data.census.gov/table?q=B25008&g=050XX00US55025$1500000) of the number of renter-occupied and owner-occupied households in each [block group](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4) in Dane County, we calculated the following metrics:
-
-| Metric                        | Description                                                                                                                               |
-| ---                           | ---                                                                                                                                       |
-| _Eviction Filings_            | The number of eviction filings where the defendant address listed in the court record falls inside the geographic area of a block group.  | 
-| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
-| _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
-| _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
-
-
-
-To provide as granular a view as possible of eviction and demographic characteristics across Dane County, we use block groups as our geographical statistical unit. 
-
-Table [B25008: Total Population in Occupied Housing Units by Tenure](https://data.census.gov/table?q=B25008&g=050XX00US55025$1500000) provides estimates of the number of renter-occupied and owner-occupied households in each block group. A block group is the smallest 
-
-We use estimates of the number of renter-occupied vs. owner-occupied households from table [B25008: Total Population in Occupied Housing Units by Tenure](https://data.census.gov/table?q=B25008&g=050XX00US55025$1500000) to
-
-We use block group as our geographical statistical unit becauase it is the smallest geo
-
-We use block groups as our geographical statistical unit because it is the smallest granular geographuc
-
-The ACS produces data across a range of geographies the smalle
-
-To give a sense 
-
-We use [block groups](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4) -->
-
-
-
-
-
-<!-- Some neighborhoods see far higher numbers of eviction filings than others. By overlaying eviction filing counts derived from small claims court records on top of U.S. Census block group boundaries we are able to provide a granular view of  -->
-
-<!-- With this map, we aim to provide an up to date historical view of where evictions are (and aren't) happening in Dane County. By overlaying eviction filing counts derived from small claims court records on top of U.S. Census block groups, we are able to combine block group level data published by -->
-
-<!-- Some neighborhoods see far higher numbers of eviction filings than others. With this map, we aim to provide an up to date historical view of where evictions are (and aren't) happening in Dane County. By overlaying eviction filing counts derived from small claims court records on top of U.S. Census block groups, we are able to combine block group level data published by
-
- we are able to draw on the vast amounts of demographic and housing characterists data published by the U.S. 
-
- By overlaying eviction filing counts derived from Wisconsin small claims court records on top of census block groups, we give a richer picture of the places where evictions happen (or don't) and the populations that live in them by using block group level data published by the U.S. Census.
-
-we mapped eviction filings and housing characteristics of the places where they occurr by census block group. A block group is a statistical geographical unit used by the U.S. Census to represent data. By overlaying eviction filing counts derived from Wisconsin small claims court records on top of census block groups, we give a richer picture of the places where evictions happen (or don't) and the populations that live in them by using block group level data published by the U.S. Census.
-
-, along with demographic and housing characteristics 
-
-
-The ACS covers a broad range of topics about social, economic, demographic, and housing characteristics of the U.S. population.
-
-Eviction occurrs unevenly across different geographic areas and demographic categories. 
-
-Our map illuminates the and visually represents how 
-
-Of the multitude of demographic and geographic and other factors at play, our map 
-
-Of the multitude of intersecting factors that texture eviciton in 
-
- Of the many possible ways to visually tell the story of who faces eviction and where they live 
-
- neighborhoods and demographic categories and 
-
-- Eviction is not felt evenly https://evictionlab.org/who-is-evicted-in-america/
-- 
-Being forced or coerced to leave ones home through an eviction process is not an experience
-
-The threat of eviction does not fall evenly across everyone in 
-
-We use U.S. Census Block Groups as our statistical geographical unit of analysis  -->
-
-<!-- As of this writing, the map uses 4 metrics to represent eviction and demographic characteristics across Dane County using U.S. Census Block Groups as our statistical geographical unit of analysis.
-
-A block group is a statistial geographical unit used by the U.S. Census to present data and is the smallest area for which demographic characteristics are produced from the American Community Survey (ACS).[]{cid=glsry-bg}[]{cid=acs-5-year-data}
-
-| Metric                        | Description                                                                                                                               |
-| ---                           | ---                                                                                                                                       |
-| _Eviction Filings_            | The number of eviction filings where the defendant address listed in the court record falls inside the geographic area of a block group.  | 
-| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
-| _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
-| _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
-
-Each eviction filing court record includes a defendant address and a filing date. We used GIS software to determine the geographic coordinates of each defendant address and then overlay those coordinates on the geographic boundaries of Dane County block groups to count how evictions were filed each year for each block group.[]{cid=google-geocode-api}[]{cid=postgis-spatial-joins}[]{cid=shp-bg}
-
-The ACS produces estimates of the numbers of renter-occupied and owner-occupied households in each block group.[]{cid=tbl-ho}[] As of this writing, the map uses ACS 5-year estimates published in 2021. This means that _Eviction Filing Rate_ values calculated for years other than 2021 are less reliable than those calculated for 2021. We will update the map to use more current data as it becomes available.[]{cid=acs-release-schedule} -->
-
-
-<!-- ### Representing eviction cases geographically
-
-As of this writing, the map uses 4 metrics to represent eviction and demographic characteristics across Dane County. We use [block groups](#block-groups) as the statistical geographical unit to organize these metrics.
-
-| Metric                        | Description                                                                                                                               |
-| ---                           | ---                                                                                                                                       |
-| _Eviction Filings_            | The number of eviction filings where the defendant address listed in the court record falls inside the geographic area of a block group.  | 
-| _Renter Occupied Households_  | The number of renter-occupied households in a block group.                                                                                |
-| _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
-| _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
-
-Each eviction filing court record includes a defendant address and a filing date. We used GIS software to determine the geographic coordinates of each defendant address and then overlay those coordinates on the geographic boundaries of Dane County block groups to count how evictions were filed each year for each block group.[]{cid=google-geocode-api}[]{cid=postgis-spatial-joins}[]{cid=shp-bg}
-
-The ACS produces estimates of the numbers of renter-occupied and owner-occupied households in each block group.[]{cid=tbl-ho}[] As of this writing, the map uses ACS 5-year estimates published in 2021. This means that _Eviction Filing Rate_ values calculated for years other than 2021 are less reliable than those calculated for 2021. We will update the map to use more current data as it becomes available.[]{cid=acs-release-schedule} -->
 
 
 ## Who made this
@@ -156,7 +41,7 @@ The ACS produces estimates of the numbers of renter-occupied and owner-occupied 
 This map is a project of the [Tenant Resource Center](https://www.tenantresourcecenter.org/) and was developed by [Jacob Albright](https://jacobalbright.com) and Philip Wales.
 
 
-## References
+<!-- ## References
 
 ::FootnoteList
 ---
@@ -229,4 +114,4 @@ items:
       year: 2023
 
 ---
-::
+:: -->
