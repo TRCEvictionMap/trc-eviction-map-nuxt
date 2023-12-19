@@ -9,7 +9,9 @@ This map combines eviction filing data from court records with data from the U.S
 
 ## Eviction data
 
-The eviction data represented on the map was collected from Wisconsin circuit court's online case management [system portal](https://wcca.wicourts.gov/). Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property. Although many eviction procedings result in court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County. 
+The eviction data represented on the map was collected from Wisconsin circuit court's online case management [system portal](https://wcca.wicourts.gov/).
+
+Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property. Although many eviction procedings result in court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County. 
 
 In Wisconsin,
 
@@ -33,7 +35,7 @@ The map represents the following metrics:
 | _Eviction Filing Rate_        | A ratio representing the number of eviction filings for every 100 renter-occupied households in a block group.                            |
 | _Percent Renter Occupied_     | The percentage of renter-occupied households in a block group.                                                                            |
 
-We use [ACS 5-Year estimates](https://www.census.gov/data/developers/data-sets/acs-5year.html) published in 2021 to determine the numbers of [renter-occupied and owner-occupied households](https://data.census.gov/table?q=B25008&g=050XX00US55025$1500000) in each block group. This means that _Eviction Filing Rate_ values calculated for years other than 2021 may be less reliable. We will update the map to use more current estimates [as they become available](https://www.census.gov/programs-surveys/acs/news/data-releases.html).
+We use [ACS 5-Year estimates](https://www.census.gov/data/developers/data-sets/acs-5year.html) published in 2021 to determine the numbers of [renter-occupied and owner-occupied households](https://data.census.gov/table/ACSDT5Y2021.B25008?q=B25008&g=050XX00US55025$1500000) in each block group. This means that _Eviction Filing Rate_ values calculated for years other than 2021 may be less reliable. We will update the map to use more current estimates [as they become available](https://www.census.gov/programs-surveys/acs/news/data-releases.html).
 
 
 ## Who made this
