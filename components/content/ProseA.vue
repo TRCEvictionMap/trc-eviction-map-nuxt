@@ -27,7 +27,7 @@ const rel = target === "_blank" ? "noopener noreferrer" : attrs.rel as string;
     :target="target"
     :rel="rel"
     :class="{
-      'text-trc-orange-400': href.startsWith('http'),
+      'text-trc-orange-500 font-normal': href.startsWith('http'),
     }"
   >
     <slot />
