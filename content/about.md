@@ -18,7 +18,7 @@ In Wisconsin,
 If a tenant served with an eviction notice by their landlord moves out before a court case is filed, their eviction will not show up our data. [Illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions) will also not appear in our data.
 
 
-## Visualizing eviction data
+## Mapping eviction data
 
 Each eviction court filing record includes a defendant address and a filing date. We used Google's [Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works) to determine latitude and longitude coordinates for each of these addresses. With these coordinates, we can plot the physical location of the homes of each person who had an eviction case filed against them on a map.
 
