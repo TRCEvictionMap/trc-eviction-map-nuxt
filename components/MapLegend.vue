@@ -59,19 +59,19 @@ const evictionStopSizes = computed(() =>
                         <div class="absolute left-[10%]">
                             <div class="h-2 border-r border-slate-400 w-[1px]"></div>
                             <div class="-translate-x-[50%]">
-                                {{ demographicStops[0] }}
+                                {{ demographicStops[1] }}
                             </div>
                         </div>
                         <div class="absolute left-[50%]">
                             <div class="h-2 border-r border-slate-400 w-[1px]"></div>
                             <div class="-translate-x-[50%]">
-                                {{ demographicStops[1] }}
+                                {{ demographicStops[2] }}
                             </div>
                         </div>
                         <div class="absolute left-[90%]">
                             <div class="h-2 border-r border-slate-400 w-[1px]"></div>
                             <div class="-translate-x-[50%]">
-                                {{ demographicStops[2] }}
+                                {{ demographicStops[3] }}
                             </div>
                         </div>
                     </div>

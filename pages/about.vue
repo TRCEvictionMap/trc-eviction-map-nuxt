@@ -31,7 +31,6 @@ useAsyncData(async () => {
             items.forEach((item) => {
                 footnoteContent.value[item.id] = item;
             });
-
         }
 
         if (typeof cid === "string" && !footnoteOrdering.value.includes(cid)) {

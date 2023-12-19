@@ -22,7 +22,14 @@ const rel = target === "_blank" ? "noopener noreferrer" : attrs.rel as string;
 </script>
 
 <template>
-    <NuxtLink :href="href" :target="target" :rel="rel">
-        <slot /> 
-    </NuxtLink>
+  <NuxtLink
+    :href="href"
+    :target="target"
+    :rel="rel"
+    :class="{
+      'text-trc-orange-400': href.startsWith('http'),
+    }"
+  >
+    <slot />
+  </NuxtLink>
 </template>

@@ -3,13 +3,11 @@ import { useMapControls } from "~/stores/map-controls-store";
 
 const STEPS = [0, 0.1, 0.5, 0.9];
 
-// const FILL_RGB = [0, 115, 200];
 const FILL_RGB = [120, 151, 181];
 
 const RADIUS = 20;
 
 const CIRCLE_COLOR = "#F48545";
-// const CIRCLE_COLOR = FILL_"rgb(255, 75, 50)";
 
 function interpolateFillRGBA(alpha: number) {
     const [r, g, b] = FILL_RGB;
