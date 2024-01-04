@@ -9,7 +9,7 @@ This map combines eviction filing data from court records with data from the U.S
 
 ## Eviction data
 
-The eviction data represented on the map was collected from Wisconsin circuit court's online case management [system portal](https://wcca.wicourts.gov/).
+The eviction data represented on the map was collected from Wisconsin circuit court's online case management system portal.
 
 Eviction is a process initiated by a landlord against a tenant which often results in the forced or coerced removal of the tenant from the leased property. Although many eviction procedings result in court filings, many do not. This means that our map provides an incomplete picture of evictions in Dane County. 
 

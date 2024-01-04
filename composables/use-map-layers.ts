@@ -3,6 +3,7 @@ import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureState } from "~/stores/feature-state-store";
 import type { DemographicMetric, EvictionMetric } from "~/stores/map-controls-store";
 import type { MapboxMouseEvent, SourceId } from "~/utils/types";
+import { useFeatureProperties } from "~/stores/feature-properties-store";
 
 function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
     const {
@@ -69,6 +70,7 @@ function useMapLayers(map: mapboxgl.Map) {
 
     const controls = useMapControls();
     const featureState = useFeatureState();
+    const featureProperties = useFeatureProperties();
     const interpolated = useInterpolatedColorValues();
 
     const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
