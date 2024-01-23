@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { EvictionFeatureProperties, DemographicFeatureProperties, SourceId, EvictionFeatureCollection } from "utils/types";
+import type { EvictionFeatureProperties, DemographicFeatureProperties, SourceId, EvictionFeatureCollection } from "@/utils/types";
 
 type FeatureProperties = EvictionFeatureProperties & DemographicFeatureProperties;
 

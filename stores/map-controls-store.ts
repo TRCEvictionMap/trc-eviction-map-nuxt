@@ -1,8 +1,17 @@
 import { defineStore } from "pinia";
 import type { SourceId } from "~/utils/types";
 
-const EVICTION_METRICS = ["n_filings", "filing_rate", "none"] as const;
-const DEMOGRAPHIC_METRICS = ["renter_count", "renter_rate", "none"] as const;
+const EVICTION_METRICS = [
+    "n_filings",
+    "filing_rate",
+    "none"
+] as const;
+const DEMOGRAPHIC_METRICS = [
+    "renter_count",
+    "renter_rate",
+    "poverty_rate",
+    "none"
+] as const;
 
 type EvictionMetric = typeof EVICTION_METRICS[number];
 type DemographicMetric = typeof DEMOGRAPHIC_METRICS[number];
@@ -22,7 +31,7 @@ const useMapControls = defineStore("map-controls", () => {
 
     const sourceOptions = ref<Option<SourceId>[]>([
         {
-            text: "Block Group",
+            text: "Census Block Group",
             value: "block-group",
         },
     ]);
@@ -48,12 +57,16 @@ const useMapControls = defineStore("map-controls", () => {
             value: "none",
         },
         {
-            text: "Renter Occupied Households",
+            text: "Renter-Occupied Households",
             value: "renter_count",
         },
         {
-            text: "Percent Renter Occupied",
+            text: "Percent Renter-Occupied",
             value: "renter_rate",
+        },
+        {
+            text: "Poverty Rate",
+            value: "poverty_rate",
         },
     ]);
 

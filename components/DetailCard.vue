@@ -67,7 +67,6 @@ function onMouseleave() {
                                 <span>Eviction Filings:</span>
                                 <span>{{ feature.n_filings }}</span>
                             </li>
-    
                             <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
                                 <span>Total Renter Households:</span>
                                 <span>{{ feature.renter_count }}</span>
@@ -80,27 +79,11 @@ function onMouseleave() {
                                 <span>Percent Renter Occupied:</span>
                                 <span>{{ feature.renter_rate }}%</span>
                             </li>
+                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                                <span>Poverty Rate:</span>
+                                <span>{{ feature.poverty_rate }}%</span>
+                            </li>
                         </ul>
-
-                    <!-- <DetailCardItem>
-                        <template #label>
-                            Eviction Filing Rate 
-                        </template>
-                        {{ feature.filing_rate }}{{ feature.filing_rate > 0 ? "%" : "" }}
-                    </DetailCardItem>
-                    <DetailCardItem>
-                        <template #label>
-                            Eviction Filings
-                        </template>
-                        {{ feature.n_filings }}
-                    </DetailCardItem>
-                    <DetailCardItem>
-                        <template #label>
-                            Households
-                        </template>
-                        <div class="text-sm text-slate-600">Percent renter {{ feature.renter_rate }}</div>
-                        <div class="text-sm text-slate-600">Total renter {{ feature.renter_count }}</div>
-                    </DetailCardItem> -->
                 </div>
             </div>
         </Transition>

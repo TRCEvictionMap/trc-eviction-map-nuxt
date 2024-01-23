@@ -145,6 +145,9 @@ function useMapLayers(map: mapboxgl.Map) {
             renter_rate: Object.entries(interpolated.renter_rate).flatMap(
                 ([step, color]) => [Number.parseFloat(step), color]
             ),
+            poverty_rate: Object.entries(interpolated.poverty_rate).flatMap(
+                ([step, color]) => [Number.parseFloat(step), color]
+            ),
         })
     );
 

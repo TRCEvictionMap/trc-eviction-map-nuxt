@@ -13,25 +13,20 @@ function isSourceId(data: unknown): data is SourceId {
     return false;
 }
 
-type AlderDistricts = GeoJSON.FeatureCollection<any, {
-    count: number;
-    month: string;
-    district_no: number;
-}[]>;
-
-
 type Region = "Block Group";
 
 interface DemographicFeatureProperties {
     id: string;
     region: Region;
+    race: Record<string, number>,
+    poverty_rate: number;
     n_households: number;
     owner_count: number;
     renter_count: number;
     renter_rate: number;
 }
 
-type Year = "2021" | "2022" | "2023" | string;
+type Year = "2021" | "2022" | "2023" | "2024" | string;
 interface EvictionFeatureProperties {
     id: string;
     region: Region;

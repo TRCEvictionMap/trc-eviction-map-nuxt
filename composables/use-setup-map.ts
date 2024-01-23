@@ -1,7 +1,7 @@
 import mapboxgl from "mapbox-gl";
 import { useMapMeta } from "~/stores/map-meta-store";
 
-import blockGroupJson from "~/geojson/block-group.json";
+import blockGroupJson from "~/geojson/LATEST.block-group.json";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useFeatureState } from "~/stores/feature-state-store";
@@ -54,7 +54,6 @@ function useSetupMap() {
 
         map.value.on("load", () => {
             const _map = map.value as mapboxgl.Map;
-
             _map.addSource("block-group", {
                 type: "geojson",
                 promoteId: "id",

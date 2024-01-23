@@ -24,21 +24,9 @@ const controls = useMapControls();
         ">
             <div class="hidden sm:flex items-center space-x-4">
                 <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />
-                <!-- <TRCSelect :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" /> -->
-                <!-- <span class="font-semibold">for</span> -->
                 <TRCSelect label="Eviction Metric" :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" />
-                <!-- <TRCSelect :options="controls.evictionMetricOptions" v-model="controls.currentEvictionMetric" /> -->
-                <!-- <span class="font-semibold">and</span> -->
-                <TRCSelect label="Region" :options="controls.sourceOptions" v-model="controls.currentSource" />
-                <!-- <TRCSelect :options="controls.sourceOptions" v-model="controls.currentSource" /> -->
-                <!-- <span class="font-semibold">in</span> -->
+                <TRCSelect label="Geography" :options="controls.sourceOptions" v-model="controls.currentSource" />
                 <TRCSelect label="Year" :options="controls.yearOptions" v-model="controls.currentYear" />
-                <!-- <TRCSelect :options="controls.yearOptions" v-model="controls.currentYear" /> -->
-                
-                <!-- <span>|</span>
-                <TRCButton @click="settings.showDialog = true">
-                    <IconGear />
-                </TRCButton> -->
             </div>
         </div>
     </div>

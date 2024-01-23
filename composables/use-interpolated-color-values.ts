@@ -26,6 +26,7 @@ function useInterpolatedColorValues() {
         maxFilingCount: number;
         maxFilingRate: number;
         maxRenterCount: number;
+        maxPovertyRate: number;
     }
 
     const maxCounts = computed((): MaxCounts =>
@@ -36,7 +37,7 @@ function useInterpolatedColorValues() {
                     featureId
                 );
                 if (properties) {
-                    const { evictions, renter_count } = properties;
+                    const { evictions, renter_count, poverty_rate } = properties;
                     const { regionMaxFilingCount, regionMaxFilingRate } = Object.values(evictions).reduce(
                         (
                             accum: { regionMaxFilingCount: number, regionMaxFilingRate: number },
@@ -58,11 +59,12 @@ function useInterpolatedColorValues() {
                         accum.maxFilingRate,
                         regionMaxFilingRate
                     );
+                    accum.maxPovertyRate = Math.max(accum.maxPovertyRate, poverty_rate);
                     accum.maxRenterCount = Math.max(accum.maxRenterCount, renter_count);
                 }
                 return accum;
             },
-            { maxFilingCount: 0, maxRenterCount: 0, maxFilingRate: 0 }
+            { maxFilingCount: 0, maxRenterCount: 0, maxFilingRate: 0, maxPovertyRate: 0 }
         )
     );
 
@@ -92,6 +94,14 @@ function useInterpolatedColorValues() {
     ));
 
     const renterRateValues = {
+        0: interpolateFillRGBA(0),
+        10: interpolateFillRGBA(0.1),
+        50: interpolateFillRGBA(0.5),
+        90: interpolateFillRGBA(0.9),
+    };
+    
+    const povertyRateValues = {
+        0: interpolateFillRGBA(0),
         10: interpolateFillRGBA(0.1),
         50: interpolateFillRGBA(0.5),
         90: interpolateFillRGBA(0.9),
@@ -101,6 +111,7 @@ function useInterpolatedColorValues() {
         none: [],
         renter_count: renterCountValues,
         renter_rate: renterRateValues,
+        poverty_rate: povertyRateValues,
         n_filings: filingCountValues,
         filing_rate: filingRateValues,
     });
