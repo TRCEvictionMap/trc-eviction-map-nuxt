@@ -13,6 +13,8 @@ const { featureId } = defineProps<{
     featureId: string;
 }>();
 
+const isHovered = computed(() => featureState.hoveredFeature === featureId);
+
 const feature = computed(() => {
     const properties = featureProperties.getFeatureProperties(
         controls.currentSource,
@@ -49,6 +51,9 @@ function onMouseleave() {
 <template>
     <div
         class="relative bg-white p-4 w-64 border shadow-xl rounded"
+        :class="{
+            'ring-2 ring-black': isHovered
+        }"
         @mouseover="onMouseover"
         @mouseleave="onMouseleave"
     >
