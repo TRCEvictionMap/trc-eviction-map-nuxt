@@ -71,6 +71,7 @@ const useFeatureProperties = defineStore("feature-properties", () => {
                 renter_rate,
                 poverty_rate,
                 poverty_rate_pct_moe,
+                race,
                 ...demographicProperties
             } = data.value[source][`d_${root}`] as DemographicFeatureProperties;
             return {
@@ -79,6 +80,12 @@ const useFeatureProperties = defineStore("feature-properties", () => {
                 renter_rate: roundPercent(renter_rate),
                 poverty_rate: roundPercent(poverty_rate),
                 poverty_rate_pct_moe: roundPercent(poverty_rate_pct_moe),
+                race: Object.entries(race).reduce(
+                    (accum: typeof race, [key, value]) => ({
+                        ...accum,
+                        [key as keyof typeof race]: roundPercent(value),
+                    }), {} as typeof race
+                ),
                 evictions: Object.entries(evictions).reduce(
                     (accum: typeof evictions, [year, { filing_rate, n_filings }]) => ({
                         ...accum,
@@ -86,8 +93,7 @@ const useFeatureProperties = defineStore("feature-properties", () => {
                             n_filings,
                             filing_rate: roundPercent(filing_rate),
                         },
-                    }),
-                    {}
+                    }), {}
                 ),
             } as FeatureProperties;
         }
@@ -110,3 +116,4 @@ const useFeatureProperties = defineStore("feature-properties", () => {
 });
 
 export { useFeatureProperties, isEvictionFeatureProperties, isDemographicFeatureProperties };
+export type { FeatureProperties };

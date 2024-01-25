@@ -18,25 +18,31 @@ type Region = "Block Group";
 interface DemographicFeatureProperties {
     id: string;
     region: Region;
-    race: Record<string, number>,
     poverty_rate: number;
     poverty_rate_pct_moe: number;
     n_households: number;
     owner_count: number;
     renter_count: number;
     renter_rate: number;
+    race: {
+        pct_wh: number;
+        pct_bl: number;
+        pct_ai: number;
+        pct_as: number;
+        pct_pi: number;
+        pct_other: number;
+        pct_multi: number;
+    };
 }
 
-type Year = "2021" | "2022" | "2023" | "2024" | string;
 interface EvictionFeatureProperties {
     id: string;
     region: Region;
-    evictions: Record<Year, {
+    evictions: Record<string, {
         n_filings: number;
         filing_rate: number;
     }>;
 }
-
 
 type EvictionFeatureCollection = GeoJSON.FeatureCollection<
     any,

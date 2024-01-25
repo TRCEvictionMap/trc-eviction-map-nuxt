@@ -21,10 +21,10 @@ const featureState = useFeatureState();
         >
             <div v-if="featureState.selectedFeatures.length > 0" class="flex justify-between px-1">
               <button
-                class="rounded shadow-lg bg-white border border-slate-300 text-trc-blue-900 p-2"
+                class="rounded shadow-lg  border border-trc-blue-500 bg-trc-blue-500 text-white p-2 font-mono text-sm font-bold"
                 @click="disclosures.showDetailModal = true"
               >
-                {{ featureState.selectedFeatures.length > 1 ? 'Compare' : 'show' }} details
+                {{ featureState.selectedFeatures.length > 1 ? 'Compare' : 'Show' }} details
               </button>
             </div>
             <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
