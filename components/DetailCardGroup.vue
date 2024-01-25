@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useSettings } from "~/stores/settings-store";
 import { useFeatureState } from "~/stores/feature-state-store";
+import { useDisclosures } from "~/stores/disclosures-store";
 
+const disclosures = useDisclosures();
 const settings = useSettings();
 const featureState = useFeatureState();
 </script>
@@ -17,7 +19,14 @@ const featureState = useFeatureState();
             }"
             tag="div"
         >
-
+            <div v-if="featureState.selectedFeatures.length > 0" class="flex justify-between px-1">
+              <button
+                class="rounded shadow-lg bg-white border border-slate-300 text-trc-blue-900 p-2"
+                @click="disclosures.showDetailModal = true"
+              >
+                {{ featureState.selectedFeatures.length > 1 ? 'Compare' : 'show' }} details
+              </button>
+            </div>
             <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
         </TransitionGroup>
     </div>

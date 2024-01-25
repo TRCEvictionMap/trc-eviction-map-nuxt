@@ -50,7 +50,7 @@ function onMouseleave() {
 
 <template>
     <div
-        class="relative bg-white p-4 w-64 border shadow-xl rounded"
+        class="relative bg-white p-4 w-56 border shadow-xl rounded"
         :class="{
             'ring-2 ring-black': isHovered
         }"
@@ -63,32 +63,28 @@ function onMouseleave() {
                     <IconXMark class="text-slate-500" />
                 </TRCButton>
                 <div class="space-y-2 text-sm">
+                    
+                    <!-- <span class="font-bold">{{ feature.n_filings }}</span> evictions were filed against
+                    people living in <span class="font-bold">{{ feature.region }} {{ feature.id }}</span>
+                    in <span class="font-bold">{{ controls.currentYear }}</span>  -->
+                    
                     <div class=" font-bold">
                         {{ feature.region }} {{ feature.id }}
                     </div>
-
-                        <ul class="space-y-1">
-                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
-                                <span>Eviction Filings:</span>
-                                <span>{{ feature.n_filings }}</span>
-                            </li>
-                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
-                                <span>Total Renter Households:</span>
-                                <span>{{ feature.renter_count }}</span>
-                            </li>
-                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
-                                <span>Eviction Filing Rate:</span>
-                                <span>{{ feature.filing_rate }}%</span>
-                            </li>
-                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
-                                <span>Percent Renter Occupied:</span>
-                                <span>{{ feature.renter_rate }}%</span>
-                            </li>
-                            <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
-                                <span>Poverty Rate:</span>
-                                <span>{{ feature.poverty_rate }}%</span>
-                            </li>
-                        </ul>
+                    <ul class="space-y-1">
+                        <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                            <span>Eviction Filings:</span>
+                            <span>{{ feature.n_filings }}</span>
+                        </li>
+                        <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                            <span>Eviction Filing Rate:</span>
+                            <span>{{ feature.filing_rate }}%</span>
+                        </li>
+                        <li class="flex justify-between" :class="{ 'border-b': settings.options.detailCardListUnderlineItems }">
+                            <span>Year:</span>
+                            <span>{{ controls.currentYear }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </Transition>

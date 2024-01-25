@@ -64,6 +64,7 @@ onUnmounted(() => {
                 <MapLayers />
                 <MapLegend />
                 <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
+                <DetailModal />
             </TheMap>
         </ClientOnly>
     </div>

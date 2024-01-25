@@ -20,6 +20,7 @@ interface DemographicFeatureProperties {
     region: Region;
     race: Record<string, number>,
     poverty_rate: number;
+    poverty_rate_pct_moe: number;
     n_households: number;
     owner_count: number;
     renter_count: number;

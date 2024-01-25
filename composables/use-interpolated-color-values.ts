@@ -68,44 +68,23 @@ function useInterpolatedColorValues() {
         )
     );
 
+    function interpolate(maxValue: number, colorFn: "fill" | "radius"): Record<string, number> {
+        return  STEPS.reduce(
+            (accum: Record<string, number>, step) => ({
+                ...accum,
+                [Math.round(maxValue * step)]: colorFn === "fill"
+                    ? interpolateFillRGBA(step)
+                    : interpolateCircleRadius(step)
+            }),
+            {}
+        );
+    }
 
-    const renterCountValues = computed((): Record<string, string> => STEPS.reduce(
-        (accum: Record<string, string>, step) => ({
-            ...accum,
-            [Math.round(maxCounts.value.maxRenterCount * step)]: interpolateFillRGBA(step)
-        }),
-        {}
-    ));
-
-    const filingCountValues = computed((): Record<string, number> => STEPS.reduce(
-        (accum: Record<string, number>, step) => ({
-            ...accum,
-            [Math.round(maxCounts.value.maxFilingCount * step)]: interpolateCircleRadius(step)
-        }),
-        {}
-    ));
-
-    const filingRateValues = computed((): Record<string, number> => STEPS.reduce(
-        (accum: Record<string, number>, step) => ({
-            ...accum,
-            [Math.round(maxCounts.value.maxFilingRate * step)]: interpolateCircleRadius(step)
-        }),
-        {}
-    ));
-
-    const renterRateValues = {
-        0: interpolateFillRGBA(0),
-        10: interpolateFillRGBA(0.1),
-        50: interpolateFillRGBA(0.5),
-        90: interpolateFillRGBA(0.9),
-    };
-    
-    const povertyRateValues = {
-        0: interpolateFillRGBA(0),
-        10: interpolateFillRGBA(0.1),
-        50: interpolateFillRGBA(0.5),
-        90: interpolateFillRGBA(0.9),
-    };
+    const filingCountValues = computed(() => interpolate(maxCounts.value.maxFilingCount, "radius"));
+    const filingRateValues = computed(() => interpolate(maxCounts.value.maxFilingRate, "radius"));
+    const renterCountValues = computed(() => interpolate(maxCounts.value.maxRenterCount, "fill"));
+    const povertyRateValues = computed(() => interpolate(maxCounts.value.maxPovertyRate, "fill"));
+    const renterRateValues = computed(() => interpolate(100, "fill"));
 
     return reactive({
         none: [],

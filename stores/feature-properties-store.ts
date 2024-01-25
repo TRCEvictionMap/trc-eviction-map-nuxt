@@ -56,12 +56,39 @@ const useFeatureProperties = defineStore("feature-properties", () => {
         )
     );
 
+    function roundPercent(value: number) {
+        return value < 10 ? value : Math.round(value);
+    }
+
     function getFeatureProperties(source: SourceId, featureId: string): FeatureProperties | undefined {
         if (typeof data.value[source][featureId] !== "undefined") {
             const root = featureId.replace(/^\w_/, "");
+            const {
+                evictions,
+                ...evictionProperties
+            } = data.value[source][`e_${root}`] as EvictionFeatureProperties;
+            const {
+                renter_rate,
+                poverty_rate,
+                poverty_rate_pct_moe,
+                ...demographicProperties
+            } = data.value[source][`d_${root}`] as DemographicFeatureProperties;
             return {
-                ...data.value[source][`e_${root}`],
-                ...data.value[source][`d_${root}`],
+                ...evictionProperties,
+                ...demographicProperties,
+                renter_rate: roundPercent(renter_rate),
+                poverty_rate: roundPercent(poverty_rate),
+                poverty_rate_pct_moe: roundPercent(poverty_rate_pct_moe),
+                evictions: Object.entries(evictions).reduce(
+                    (accum: typeof evictions, [year, { filing_rate, n_filings }]) => ({
+                        ...accum,
+                        [year]: {
+                            n_filings,
+                            filing_rate: roundPercent(filing_rate),
+                        },
+                    }),
+                    {}
+                ),
             } as FeatureProperties;
         }
     }
