@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import "mapbox-gl/dist/mapbox-gl.css";
 
+import { Disclosure } from "@headlessui/vue";
+
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
+import { useDisclosures } from "~/stores/disclosures-store";
 
 useHead({
     title: "Eviction Map - Tenant Resource Center"
@@ -16,6 +19,7 @@ const mapControls = useMapControls();
 const mapMeta = useMapMeta();
 const featureState = useFeatureState();
 const settings = useSettings();
+const disclosures = useDisclosures();
 
 const konami = useKonamiCode();
 
@@ -58,14 +62,18 @@ onUnmounted(() => {
     <div class="absolute top-0 w-full h-full flex flex-col">
         <TheHeader />
         <ClientOnly>
-            <TheMap>
-                <MapControls />
-                <DetailCardGroup />
-                <MapLayers />
-                <MapLegend />
-                <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
-                <DetailModal />
-            </TheMap>
+            <Disclosure :defaultOpen="disclosures.showDetails"> 
+                <TheMap>
+                    <MapControls />
+                    <!-- <DetailCardGroup /> -->
+                    <MapLayers />
+                    <MapLegend />
+                    <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
+                    <!-- <DetailModal /> -->
+                </TheMap>
+                <DetailCardGroup v-if="!disclosures.showDetails" />
+                <DetailDisclosurePanel />
+            </Disclosure>
         </ClientOnly>
     </div>
 </template>

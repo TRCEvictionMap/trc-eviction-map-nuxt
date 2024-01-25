@@ -19,13 +19,8 @@ const featureState = useFeatureState();
             }"
             tag="div"
         >
-            <div v-if="featureState.selectedFeatures.length > 0" class="flex justify-between px-1">
-              <button
-                class="rounded shadow-lg  border border-trc-blue-500 bg-trc-blue-500 text-white p-2 font-mono text-sm font-bold"
-                @click="disclosures.showDetailModal = true"
-              >
-                {{ featureState.selectedFeatures.length > 1 ? 'Compare' : 'Show' }} details
-              </button>
+            <div v-if="featureState.selectedFeatures.length > 0" class="px-1">
+              <DetailDisclosureButton />
             </div>
             <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
         </TransitionGroup>

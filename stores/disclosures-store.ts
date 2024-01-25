@@ -5,8 +5,9 @@ const useDisclosures = defineStore("disclosures", () => {
     const showMobileNav =  ref(false);
 
     const showDetailModal = ref(false);
+    const showDetails = ref(false);
 
-    return { showSearch, showMobileNav, showDetailModal };
+    return { showSearch, showMobileNav, showDetailModal, showDetails };
 });
 
 export { useDisclosures };

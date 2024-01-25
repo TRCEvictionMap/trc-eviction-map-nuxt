@@ -44,7 +44,7 @@ const evictionStopSizes = computed(() =>
 
         <div class="flex space-x-4">
 
-            <div v-if="controls.currentDemographicMetric !== 'none'" class="space-y-2 min-w-[200px]">
+            <div v-if="controls.currentDemographicMetric !== 'none'" class="space-y-2 min-w-[160px]">
                 <h2 class="font-semibold ">
                     {{ demographicMetricName }}
                 </h2>
