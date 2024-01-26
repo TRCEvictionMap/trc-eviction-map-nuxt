@@ -23,9 +23,7 @@ function onClose(close: () => void) {
       class="flex items-center space-x-2 sticky left-1 top-1 rounded shadow-lg border border-trc-blue-500 bg-trc-blue-500 text-white p-2 font-mono text-sm font-bold"
       @click="() => onClose(close)"
     >
-      <span>
-        Close details
-      </span>
+      <span>Close</span>
       <IconXMark />
     </button>
     <div class="flex justify-center space-x-4">
