@@ -43,7 +43,7 @@ function onMouseleave() {
 
 <template>
   <div
-    class="border rounded w-80 h-full relative bg-white"
+    class="border rounded w-80 h-full relative bg-white p-2"
     :class="{
       'ring-2 ring-black': isHovered
     }"
@@ -51,10 +51,10 @@ function onMouseleave() {
     @mouseleave="onMouseleave"
   >
     <div class="sticky top-0">
-      <TRCButton class="absolute top-2 right-2 z-30" @click="closeCard">
+      <TRCButton class="absolute top-1 right-1 z-30 hover:bg-slate-200" @click="closeCard">
         <IconXMark class="text-slate-500" />
       </TRCButton>
-      <h2 class="font-semibold  bg-white px-2 pt-4 pb-2">
+      <h2 class="font-semibold bg-white px-2 pt-4 pb-2">
         {{ feature.region }} {{ feature.id }}
       </h2>
     </div>

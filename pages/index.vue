@@ -56,22 +56,44 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener("keydown", konami.recordKeyPress);
 });
+
 </script>
 
 <template>
     <div class="absolute top-0 w-full h-full flex flex-col">
         <TheHeader />
         <ClientOnly>
-            <Disclosure :defaultOpen="disclosures.showDetails"> 
+            <Disclosure :defaultOpen="disclosures.showDetails">
                 <TheMap>
                     <MapControls />
                     <MapLayers />
                     <MapLegend />
+                    <DetailCardGroup v-if="!disclosures.showDetails" />
                     <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
                 </TheMap>
-                <DetailCardGroup v-if="!disclosures.showDetails" />
-                <DetailDisclosurePanel />
+                <Transition name="details-drawer" >
+                    <DetailDisclosurePanel static v-if="disclosures.showDetails" />
+                </Transition>
             </Disclosure>
         </ClientOnly>
     </div>
 </template>
+
+<style scoped>
+.details-drawer-enter-active {
+    animation: details-drawer-open 0.1s;
+}
+
+.details-drawer-leave-active {
+    animation: details-drawer-open 0.1s reverse;
+}
+
+@keyframes details-drawer-open {
+    from {
+        height: 0;
+    }
+    to {
+        height: 50%;
+    }
+}
+</style>
