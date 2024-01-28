@@ -92,7 +92,14 @@ function onMouseleave() {
         </li>
       </ul>
       <h4 class="text-sm italic">
-        2020 Decennial Census
+        <TRCTooltip text="The Census" #="props">
+          <!-- <template #activator="props"> -->
+            <div v-bind="props" class="underline decoration-dashed">
+              2020 Decennial Census
+            </div>
+          <!-- </template> -->
+          <!-- The census -->
+        </TRCTooltip>
       </h4>
       <ul class="space-y-1">
         <li class="flex justify-between items-center">

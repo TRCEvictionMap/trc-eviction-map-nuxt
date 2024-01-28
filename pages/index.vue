@@ -67,7 +67,7 @@ onUnmounted(() => {
                 <TheMap>
                     <MapControls />
                     <MapLayers />
-                    <MapLegend />
+                    <MapLegend v-if="!disclosures.showDetails" />
                     <DetailCardGroup v-if="!disclosures.showDetails" />
                     <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
                 </TheMap>
