@@ -75,12 +75,17 @@ const useMapControls = defineStore("map-controls", () => {
     const currentEvictionMetric = ref<EvictionMetric>("n_filings");
     const currentDemographicMetric = ref<DemographicMetric>("renter_rate");
 
+    const currentSourceHumanReadable = computed(() =>
+        sourceOptions.value.find((opt) => opt.value === currentSource.value)?.text
+    );
+
     return {
         yearOptions,
         sourceOptions,
         evictionMetricOptions,
         demographicMetricOptions,
         currentSource,
+        currentSourceHumanReadable,
         currentYear,
         currentEvictionMetric,
         currentDemographicMetric,

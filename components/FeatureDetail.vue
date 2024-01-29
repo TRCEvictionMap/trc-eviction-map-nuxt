@@ -43,7 +43,7 @@ function onMouseleave() {
 
 <template>
   <div
-    class="border rounded w-96 h-full relative bg-white p-2"
+    class="border rounded min-w-[25rem] h-full relative bg-white p-2"
     :class="{
       'ring-2 ring-black': isHovered
     }"
@@ -54,7 +54,7 @@ function onMouseleave() {
       <TRCButton class="absolute top-1 right-1 z-30 hover:bg-slate-200" @click="closeCard">
         <IconXMark class="text-slate-500" />
       </TRCButton>
-      <h2 class="text-xl font-semibold bg-white px-2 pt-4 pb-2">
+      <h2 class="text-xl font-semibold bg-white px-2 pt-4 pb-2 z-10">
         {{ feature.region }} {{ feature.id }}
       </h2>
     </div>
@@ -67,39 +67,63 @@ function onMouseleave() {
           <span>{{ feature.n_filings }}</span>
         </li>
         <li class="flex justify-between items-center">
-          <span>Eviction Filing Rate</span>
-          <span>{{ feature.filing_rate }}</span>
+          <TRCTooltip
+            #="{ ref }"
+            :text="`
+              A ratio representing the number of eviction filings for every
+              100 renter-occupied households in a given
+              ${controls.currentSourceHumanReadable?.toLowerCase()}
+            `"
+          >
+            <span :ref="ref" class="underline decoration-dashed">
+              Eviction Filing Rate
+            </span>
+          </TRCTooltip>
+          <span>{{ feature.filing_rate }}%</span>
         </li>
       </ul>
       <h3 class="font-bold">Census Demographics</h3>
       <h4 class="text-sm italic">2022 ACS 5-Year Estimates</h4>
-      <ul class="space-y-1">
-        <li class="flex justify-between items-center">
-          <span>Poverty Rate</span>
-          <span>{{ feature.poverty_rate }}%</span>
-        </li>
-        <li class="flex justify-between items-center">
-          <span>Poverty Rate Margin of Error</span>
-          <span>&plusmn;{{ feature.poverty_rate_pct_moe }}%</span>
-        </li>
-        <li class="flex justify-between items-center">
-          <span>Renter Rate</span>
-          <span>{{ feature.renter_rate }}%</span>
-        </li>
-        <li class="flex justify-between items-center">
-          <span>Total Renter Households</span>
-          <span>{{ feature.renter_count }}</span>
-        </li>
-      </ul>
-      <h4 class="text-sm italic">
-        <TRCTooltip text="The Census" #="props">
-          <!-- <template #activator="props"> -->
-            <div v-bind="props" class="underline decoration-dashed">
-              2020 Decennial Census
-            </div>
-          <!-- </template> -->
-          <!-- The census -->
-        </TRCTooltip>
+      <table class="table-auto w-full text-left">
+        <thead>
+          <tr>
+            <th class="text-sm">Measure</th>
+            <th class="text-sm">Estimate</th>
+            <TRCTooltip #default="props" text="Margin of Error">
+              <th v-bind="props" class="text-sm underline decoration-dashed">MOE</th>
+            </TRCTooltip>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Poverty Rate</td>
+            <td>{{ feature.poverty_rate }}%</td>
+            <td>&plusmn;{{ feature.poverty_rate_pct_moe }}%</td>
+          </tr>
+          <tr>
+            <TRCTooltip
+              #="{ ref }"
+              :text="`
+                The percentage of renter-occupied households in a given
+                ${controls.currentSourceHumanReadable?.toLowerCase()}
+              `"
+            >
+              <td :ref="ref" class="underline decoration-dashed">Renter Rate</td>
+            </TRCTooltip>
+            <td>{{ feature.renter_rate }}%</td>
+            <!-- <td>&plusmn;{{ feature.renter_rate_moe }}%</td> -->
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Renter-Occupied Households</td>
+            <td>{{ feature.renter_count }}</td>
+            <!-- <td>&plusmn;{{ feature.renter_count_moe }}</td> -->
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 class="text-sm italic inline-block">
+        2020 Decennial Census
       </h4>
       <ul class="space-y-1">
         <li class="flex justify-between items-center">

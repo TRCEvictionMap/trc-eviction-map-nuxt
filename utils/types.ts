@@ -23,7 +23,9 @@ interface DemographicFeatureProperties {
     n_households: number;
     owner_count: number;
     renter_count: number;
+    renter_count_moe: number;
     renter_rate: number;
+    renter_rate_moe: number;
     race: {
         pct_wh: number;
         pct_bl: number;
