@@ -43,20 +43,21 @@ function onMouseleave() {
 
 <template>
   <div
-    class="border rounded min-w-[25rem] h-full relative bg-white p-2"
+    class="border rounded w-[22rem] sm:w-[24rem] h-full relative bg-white"
     :class="{
       'ring-2 ring-black': isHovered
     }"
     @mouseover="onMouseover"
     @mouseleave="onMouseleave"
   >
-    <div class="sticky top-0">
-      <TRCButton class="absolute top-1 right-1 z-30 hover:bg-slate-200" @click="closeCard">
+    <div class="sticky top-0 z-10 px-2">
+      <TRCButton class="absolute top-1 right-1 hover:bg-slate-200" @click="closeCard">
         <IconXMark class="text-slate-500" />
       </TRCButton>
-      <h2 class="text-xl font-semibold bg-white px-2 pt-4 pb-2 z-10">
+      <h2 class="text-xl font-semibold bg-white pt-4 pb-2 ">
         {{ feature.region }} {{ feature.id }}
       </h2>
+      <hr>
     </div>
     <div class="p-2 space-y-4">
       <h3 class="font-bold">Evictions</h3>
@@ -89,9 +90,26 @@ function onMouseleave() {
           <tr>
             <th class="text-sm">Measure</th>
             <th class="text-sm">Estimate</th>
-            <TRCTooltip #default="props" text="Margin of Error">
-              <th v-bind="props" class="text-sm underline decoration-dashed">MOE</th>
-            </TRCTooltip>
+            <th class="text-sm flex items-center ">
+              MOE
+              <TRCInfoPopover class="font-normal ">
+                <h2 class="font-semibold">
+                  Margin of Error (MOE)
+                </h2>
+                <p class="text-sm">
+                  American Community Survey (ACS) data are estimates. The <span class="italic">margin of error</span> 
+                  is an indicator of how precise a given estimate is. For more information, check out
+                  <NuxtLink
+                    href="https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf"
+                    target="_blank"
+                    class="text-trc-orange-500 underline"
+                  >
+                    "Understanding Error and Determining Statistical Significance"
+                  </NuxtLink>
+                  from the U.S. Census Bureau.
+                </p>
+              </TRCInfoPopover>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -115,7 +133,7 @@ function onMouseleave() {
             <td>-</td>
           </tr>
           <tr>
-            <td>Renter-Occupied Households</td>
+            <td>Total Renter Households</td>
             <td>{{ feature.renter_count }}</td>
             <!-- <td>&plusmn;{{ feature.renter_count_moe }}</td> -->
             <td>-</td>

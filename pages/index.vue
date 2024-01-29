@@ -62,6 +62,7 @@ onUnmounted(() => {
 <template>
     <div class="absolute top-0 w-full h-full flex flex-col">
         <TheHeader />
+
         <ClientOnly>
             <Disclosure :defaultOpen="disclosures.showDetails">
                 <TheMap>
@@ -71,11 +72,12 @@ onUnmounted(() => {
                     <DetailCardGroup v-if="!disclosures.showDetails" />
                     <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
                 </TheMap>
-                <Transition name="details-drawer" >
+                <Transition name="details-drawer">
                     <DetailDisclosurePanel static v-if="disclosures.showDetails" />
                 </Transition>
             </Disclosure>
         </ClientOnly>
+
     </div>
 </template>
 

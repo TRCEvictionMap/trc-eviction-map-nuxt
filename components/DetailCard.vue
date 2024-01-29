@@ -50,7 +50,7 @@ function onMouseleave() {
 
 <template>
     <div
-        class="relative bg-white p-4 w-56 border shadow-xl rounded"
+        class="relative bg-white p-4 w-52 border shadow-xl rounded"
         :class="{
             'ring-2 ring-black': isHovered
         }"
@@ -63,11 +63,6 @@ function onMouseleave() {
                     <IconXMark class="text-slate-500" />
                 </TRCButton>
                 <div class="space-y-2 text-sm">
-                    
-                    <!-- <span class="font-bold">{{ feature.n_filings }}</span> evictions were filed against
-                    people living in <span class="font-bold">{{ feature.region }} {{ feature.id }}</span>
-                    in <span class="font-bold">{{ controls.currentYear }}</span>  -->
-                    
                     <div class=" font-bold">
                         {{ feature.region }} {{ feature.id }}
                     </div>

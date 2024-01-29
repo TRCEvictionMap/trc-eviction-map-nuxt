@@ -16,17 +16,25 @@ function onClose(close: () => void) {
 
 <template>
   <DisclosurePanel
-    class="h-1/2 relative overflow-auto pb-2 border-t border-trc-blue-700/20 bg-slate-100"
+    class="
+      h-1/2 top-0 pb-2 border-t border-trc-blue-700/20 bg-slate-100 
+      elative flex flex-col items-center  overflow-auto
+    "
     #="{ close }: { close: () => void }"
   >
     <button
-      class="flex items-center space-x-2 sticky left-1 top-1 rounded shadow-lg bg-trc-blue-500 text-white p-2 font-mono text-sm font-bold"
+      class="
+        rounded shadow-lg mt-4
+        bg-trc-blue-500 text-white p-2 font-mono text-sm font-bold
+      "
       @click="() => onClose(close)"
     >
-      <span>Close</span>
-      <IconXMark />
+      <span>Hide details</span>
     </button>
-    <div class="flex justify-center space-x-4">
+    <div class="
+      flex flex-col justify-center items-center space-y-4 mt-4
+      sm:flex-row sm:space-x-4 sm:space-y-0 
+    ">
       <FeatureDetail
         v-for="featureId in featureState.selectedFeatures"
         :key="featureId"
@@ -36,24 +44,3 @@ function onClose(close: () => void) {
   </DisclosurePanel>
 </template>
 
-<!-- <template>
-  <DisclosurePanel
-    class="h-1/2 relative overflow-auto pb-2 border-t border-trc-blue-700/20 bg-slate-100"
-    #="{ close }: { close: () => void }"
-  >
-    <button
-      class="flex items-center space-x-2 sticky left-1 top-1 rounded shadow-lg bg-trc-blue-500 text-white p-2 font-mono text-sm font-bold"
-      @click="() => onClose(close)"
-    >
-      <span>Close</span>
-      <IconXMark />
-    </button>
-    <div class="flex justify-center space-x-4 bg-orange-300 relative overflow-x-auto w-screen">
-      <FeatureDetail
-        v-for="featureId in featureState.selectedFeatures"
-        :key="featureId"
-        :featureId="featureId"
-      />
-    </div>
-  </DisclosurePanel>
-</template> -->

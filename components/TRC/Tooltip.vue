@@ -2,7 +2,7 @@
 import { useFloating, autoUpdate, autoPlacement, arrow, offset } from "@floating-ui/vue";
 import type { CSSProperties } from "nuxt/dist/app/compat/capi";
 
-defineProps<{ text: string }>();
+const props = defineProps<{ text: string, delay?: number }>();
 
 const isShowing = ref(false);
 
@@ -54,8 +54,6 @@ const floatingArrowStyles = computed((): CSSProperties => {
       // rv.transform
     }
 
-  
-
     return {};
   })();
 
@@ -63,16 +61,20 @@ const floatingArrowStyles = computed((): CSSProperties => {
     position: "absolute",
     left: arrow && typeof arrow.x === "number" ? `${arrow.x}px` : "",
     top: arrow && typeof arrow.y === "number" ? `${arrow.y}px` : "",
-
     // ...marginAndBorder
   };
 })
 
+let handle: any;
+
 function show() {
-  isShowing.value = true;
+  handle = setTimeout(() => {
+    isShowing.value = true;
+  }, props.delay ?? 250);
 }
 
 function hide() {
+  clearTimeout(handle);
   isShowing.value = false;
 }
 
