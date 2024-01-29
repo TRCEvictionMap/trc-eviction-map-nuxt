@@ -90,9 +90,11 @@ function onMouseleave() {
           <tr>
             <th class="text-sm">Measure</th>
             <th class="text-sm">Estimate</th>
-            <th class="text-sm flex items-center ">
-              MOE
-              <TRCInfoPopover class="font-normal ">
+            <th class="text-sm flex items-center space-x-0.5">
+              <span>
+                MOE
+              </span>
+              <TRCInfoPopover iconSize="sm">
                 <h2 class="font-semibold">
                   Margin of Error (MOE)
                 </h2>
