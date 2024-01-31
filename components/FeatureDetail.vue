@@ -50,8 +50,8 @@ function onMouseleave() {
     @mouseover="onMouseover"
     @mouseleave="onMouseleave"
   >
-    <div class="sticky top-0 z-10 px-2">
-      <TRCButton class="absolute top-1 right-1 hover:bg-slate-200" @click="closeCard">
+    <div class="sticky top-0 z-10 px-4">
+      <TRCButton class="absolute top-2 right-2 hover:bg-slate-200" @click="closeCard">
         <IconXMark class="text-slate-500" />
       </TRCButton>
       <h2 class="text-xl font-semibold bg-white pt-4 pb-2 ">
@@ -59,8 +59,8 @@ function onMouseleave() {
       </h2>
       <hr>
     </div>
-    <div class="p-2 space-y-4">
-      <h3 class="font-bold">Evictions</h3>
+    <div class="p-4 space-y-5">
+      <h3 class="font-bold">Eviction Filings</h3>
       <h4 class="text-sm italic">Eviction statistics for {{ controls.currentYear }}</h4>
       <ul class="space-y-1">
         <li class="flex justify-between items-center">
@@ -118,7 +118,7 @@ function onMouseleave() {
           <tr>
             <td>Poverty Rate</td>
             <td>{{ feature.poverty_rate }}%</td>
-            <td>&plusmn;{{ feature.poverty_rate_pct_moe }}%</td>
+            <td>&plusmn;{{ feature.poverty_rate_moe }}%</td>
           </tr>
           <tr>
             <TRCTooltip
@@ -131,14 +131,12 @@ function onMouseleave() {
               <td :ref="ref" class="underline decoration-dashed">Renter Rate</td>
             </TRCTooltip>
             <td>{{ feature.renter_rate }}%</td>
-            <!-- <td>&plusmn;{{ feature.renter_rate_moe }}%</td> -->
-            <td>-</td>
+            <td>&plusmn;{{ feature.renter_rate_moe }}%</td>
           </tr>
           <tr>
             <td>Total Renter Households</td>
             <td>{{ feature.renter_count }}</td>
-            <!-- <td>&plusmn;{{ feature.renter_count_moe }}</td> -->
-            <td>-</td>
+            <td>&plusmn;{{ feature.renter_count_moe }}</td>
           </tr>
         </tbody>
       </table>
