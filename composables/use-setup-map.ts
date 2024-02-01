@@ -1,7 +1,7 @@
 import mapboxgl from "mapbox-gl";
-import { useMapMeta } from "~/stores/map-meta-store";
 
 import blockGroupJson from "~/geojson/block-group.json";
+import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useFeatureState } from "~/stores/feature-state-store";
@@ -19,13 +19,15 @@ function useSetupMap() {
     onMounted(() => {
         const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features } = useInitialQueryParams();
 
-        map.value = new mapboxgl.Map({
-            container: "the-map",
-            accessToken: config.public.mapboxAccessToken,
-            style: config.public.mapboxStyleUrlLight,
-            center: _lngLat,
-            zoom: _zoom,
-        });
+        map.value = markRaw(
+            new mapboxgl.Map({
+                container: "the-map",
+                accessToken: config.public.mapboxAccessToken,
+                style: config.public.mapboxStyleUrlLight,
+                center: _lngLat,
+                zoom: _zoom,
+            })
+        );
 
         map.value.addControl(
             new mapboxgl.NavigationControl({
