@@ -5,7 +5,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "BASE_URL=/trc-eviction-map-nuxt/ nuxt generate",
-    "generate:local": "node ci/geojson.js && BASE_URL=/ nuxt generate",
+    "generate:local": "BASE_URL=/ nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },

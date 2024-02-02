@@ -6,8 +6,24 @@ title: About - Eviction Map - Tenant Resource Center
 
 This map combines eviction filing data from court records with data from the U.S. Census to provide an up to date, historical view of where evictions are (and aren't) happening in Dane County, Wisconsin.
 
+## Eviction
 
-## Eviction data
+Eviction is a process landlords may begin when they believe a tenant has violated their lease, and they want the tenant to fix the problem or move out.
+
+The legal eviction process begins when the landlord serves the tenant a written notice stating how the tenant has violated the lease and whether the tenant can fix (“cure”) the problem or must vacate (“quit”) by a certain date. Landlords can file for eviction in small claims court when the deadline for successfully curing and/or quitting has passed and the tenant still lives in the unit. 
+
+Filing for eviction creates a public court record that landlords can use as justification to not rent to a prospective tenant, making safe, affordable housing even harder to attain.
+
+Most evictions are filed due to nonpayment of rent.
+
+
+Eviction is a major driver of housing insecurity. It can result in the expulsion of families from their homes and communities; force tenants to fall back on unhealthy or dangerous living situations; and cause serious economic, emotional, and physical harm. Single-mothers, African Americans, and low-income households disproportionately face eviction.
+
+<!-- An eviction also creates a public record in Dane County that landlords can use as justification to not rent to a prospective tenant, making safe, affordable housing even harder to attain. -->
+
+Although our map captures thousands of eviction proceedings, many evictions do not result in a court filing, such as when a tenant voluntarily vacates prior to the expiration of an eviction notice or non-renewal. [Illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions) will also not appear in our data. This means that our map provides an incomplete picture of evictions in Dane County
+
+<!-- ## Eviction data
 
 The eviction data represented on the map was collected from Wisconsin circuit court's online case management system portal.
 
@@ -17,10 +33,10 @@ In Wisconsin,
 
 > the legal eviction process begins when the landlord serves the tenant a written notice under Wis. Stat. 704.17 stating how the tenant has violated the lease. This may be a 5-day, 14-day or 30-day notice. This is not a court document and does not go in the court records at this point, only the landlord's files. It is a warning that the landlord may take the tenant to court if they don't move out or do what the notice asks them to do. ([Tenant Resource Center](https://www.tenantresourcecenter.org/about_eviction))
 
-If a tenant served with an eviction notice by their landlord moves out before a court case is filed, their eviction will not show up our data. [Illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions) will also not appear in our data.
+If a tenant served with an eviction notice by their landlord moves out before a court case is filed, their eviction will not show up our data. [Illegal evictions](https://www.tenantresourcecenter.org/illegal_self_help_evictions) will also not appear in our data. -->
 
 
-## Mapping eviction data
+## Mapping evictions
 
 Each eviction court filing record includes a defendant address and a filing date. We used Google's [Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works) to determine latitude and longitude coordinates for each of these addresses. With these coordinates, we can plot the physical location of the homes of each person who had an eviction case filed against them on a map.
 

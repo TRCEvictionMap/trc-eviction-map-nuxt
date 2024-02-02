@@ -11,10 +11,15 @@ const supabase = createClient(
 );
 
 function writeGeojson(name, data) {
-  fs.writeFileSync(path.resolve("./geojson", `${name}.json`), JSON.stringify(data));
+  fs.writeFileSync(
+    path.resolve("./geojson", `${name}.json`),
+    JSON.stringify(data)
+  );
 }
 
 async function rpc(fn) {
+  console.info("[rpc]", fn);
+
   const { data, error } = await supabase.rpc(fn);
 
   if (error) {
@@ -24,10 +29,27 @@ async function rpc(fn) {
   return data;
 }
 
-(async () => {
-  try {
-    writeGeojson("block-group", await rpc("get_block_group_geojson"));
-  } catch (error) {
-    console.error(error);
+function isFeatureCollection(data) {
+  return data.type === "FeatureCollection" && Array.isArray(data.features);
+}
+
+function validate(data) {
+  if (!isFeatureCollection(data)) {
+    throw new Error("Invalid FeatureCollection");
   }
-})();
+
+  return data;
+}
+
+async function pullGeoJSON() {
+  try {
+    console.info("[pullGeoJSON] Begin");
+    writeGeojson("block-group", validate(await rpc("get_block_group_geojson")));
+  } catch (error) {
+    console.error("[pullGeoJSON]", error);
+  } finally {
+    console.info("[pullGeoJSON] Complete");
+  }
+}
+
+pullGeoJSON();
