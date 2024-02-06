@@ -112,7 +112,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <slot v-bind="{ ref: (el: any) => reference = el }"></slot>
+    <slot v-bind="{
+      ref: (el: any) => reference = el,
+      class: 'underline decoration-dashed'
+    }"></slot>
+
     <Teleport to="body">
       <div
         v-if="isShowing"

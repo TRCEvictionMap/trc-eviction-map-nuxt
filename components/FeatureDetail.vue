@@ -7,6 +7,8 @@ const controls = useMapControls();
 const featureState = useFeatureState();
 const featureProperties = useFeatureProperties();
 
+const tooltipText = useTooltipText();
+
 const { featureId } = defineProps<{ featureId: string }>();
 
 const feature = computed(() => {
@@ -64,21 +66,14 @@ function onMouseleave() {
       <h4 class="text-sm italic">Eviction statistics for {{ controls.currentYear }}</h4>
       <ul class="space-y-1">
         <li class="flex justify-between items-center">
-          <span>Total Eviction Filings</span>
+          <TRCTooltip #="props" :text="tooltipText.n_filings">
+            <span v-bind="props">Total Eviction Filings</span>
+          </TRCTooltip>
           <span>{{ feature.n_filings }}</span>
         </li>
         <li class="flex justify-between items-center">
-          <TRCTooltip
-            #="{ ref }"
-            :text="`
-              A ratio representing the number of eviction filings for every
-              100 renter-occupied households in a given
-              ${controls.currentSourceHumanReadable?.toLowerCase()}
-            `"
-          >
-            <span :ref="ref" class="underline decoration-dashed">
-              Eviction Filing Rate
-            </span>
+          <TRCTooltip #="props" :text="tooltipText.filing_rate">
+            <span v-bind="props">Eviction Filing Rate</span>
           </TRCTooltip>
           <span>{{ feature.filing_rate }}%</span>
         </li>
@@ -116,25 +111,23 @@ function onMouseleave() {
         </thead>
         <tbody>
           <tr>
-            <td>Poverty Rate</td>
+            <TRCTooltip #="props" :text="tooltipText.poverty_rate">
+              <td v-bind="props">Poverty Rate</td>
+            </TRCTooltip>
             <td>{{ feature.poverty_rate }}%</td>
             <td>&plusmn;{{ feature.poverty_rate_moe }}%</td>
           </tr>
           <tr>
-            <TRCTooltip
-              #="{ ref }"
-              :text="`
-                The percentage of renter-occupied households in a given
-                ${controls.currentSourceHumanReadable?.toLowerCase()}
-              `"
-            >
-              <td :ref="ref" class="underline decoration-dashed">Renter Rate</td>
+            <TRCTooltip #="props" :text="tooltipText.renter_rate">
+              <td v-bind="props">Renter Rate</td>
             </TRCTooltip>
             <td>{{ feature.renter_rate }}%</td>
             <td>&plusmn;{{ feature.renter_rate_moe }}%</td>
           </tr>
           <tr>
-            <td>Total Renter Households</td>
+            <TRCTooltip #="props" :text="tooltipText.renter_count">
+              <td v-bind="props">Total Renter Households</td>
+            </TRCTooltip>
             <td>{{ feature.renter_count }}</td>
             <td>&plusmn;{{ feature.renter_count_moe }}</td>
           </tr>

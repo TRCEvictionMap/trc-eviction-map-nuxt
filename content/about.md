@@ -6,13 +6,103 @@ title: About - Eviction Map - Tenant Resource Center
 
 This map combines eviction filing data from court records with data from the U.S. Census to provide an up to date, historical view of where evictions are (and aren't) happening in Dane County, Wisconsin.
 
-## Eviction
+## What is eviction
 
-Eviction is a process landlords may begin when they believe a tenant has violated their lease, and they want the tenant to fix the problem or move out.
+Eviction is a process landlords may begin when they believe a tenant has violated their lease, and they want the tenant to fix the problem or move out. 
 
-The legal eviction process begins when the landlord serves the tenant a written notice stating how the tenant has violated the lease and whether the tenant can fix (“cure”) the problem or must vacate (“quit”) by a certain date. Landlords can file for eviction in small claims court when the deadline for successfully curing and/or quitting has passed and the tenant still lives in the unit. 
+The process usually begins with a notice giving the tenant at least 5 days to fix the problem, and may eventually end up in small claims court. There, a judge will decide whether the tenant has to move out (eviction); they get to stay (dismissal); or the case will be dismissed by mutual agreement (stipulation), usually for a payment plan or a move-out date.
 
-Filing for eviction creates a public court record that landlords can use as justification to not rent to a prospective tenant, making safe, affordable housing even harder to attain.
+It is important to remember that in Wisconsin a tenant can only be forced to leave an apartment after they have a court date, and only if the judge rules in the landlord's favor. Then the judge's order must be given to the sheriff who would then remove the tenant from the apartment. The landlord cannot change the locks, throw the tenant's stuff out, or take any other action without this court order. The sheriff is the only person who can physically remove the tenant.
+
+Check out [this page](https://www.tenantresourcecenter.org/about_eviction) to read more about the eviction process in Wisconsin.
+
+## Eviction data 
+
+The eviction data represented on the map comes from public court records created when landlords file for eviction. These records tell us when and where evictions were filed – we use them to count how many evictions were filed in a given area in given year.
+
+Although many eviction proceedings result in court filings and records, many do not. This means that our map provides an incomplete picture of eviction in Dane County.
+
+
+## Mapping evictions
+
+Each eviction court filing record includes a defendant address and a filing date. We used Google's [Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works) to determine latitude and longitude coordinates for each of these addresses. With these coordinates, we can plot the physical location of the homes of each person who had an eviction case filed against them on a map.
+
+This in itself would illuminate the degree to which evictions are geographically concentrated. But by [using PostGIS to overlay](https://postgis.net/workshops/postgis-intro/joins.html#spatial-joins) the defendant address coordinates on top of geographic boundaries used by the U.S. Census, we can calculate and present annual eviction filing counts and rates alongside demographic data produced by the [American Community Survey (ACS)](https://www.census.gov/data/developers/data-sets/acs-5year.html) and [Decennial Census](https://www.census.gov/programs-surveys/decennial-census/about.html) to paint a richer picture of eviction filings and population characteristics across all Census [Block Groups](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4) in Dane County.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
+When using the map, it's important to remember that not all 
+
+We combine this information with demographic data from the Census
+
+
+However, these records provide an incomplete picture of eviction. 
+
+
+
+
+Although many eviction proceedings result in court filings, 
+
+ It's important to remember that 
+
+
+## Mapping evictions
+
+
+
+The eviction data represented on the map comes from public court records created when landlords file for eviction. 
+
+
+
+We collect the filing date and tenant address from each of these records
+
+
+
+Each record contains information about the   case including the address of the tenant's 
+
+
+Eviction filings create public court records 
+
+---
+
+In Dane County, CCAP creates public records with information about eviciton cases
+
+An eviction filing creates a public record accessible online that includes information about the tenant, the landlord, and the status of the case. 
+
+
+
+These court filings result in 
+
+
+
+
+
+The legal eviction process begins when the landlord serves the tenant a written notice stating how the tenant has violated the lease and whether the tenant can fix (“cure”) the problem or must move out (“quit”) by a certain date. The 
+
+Landlords can file for eviction in small claims court when the deadline for successfully curing and/or quitting has passed and the tenant still lives in the unit.
+
+
+Once 
+
+These filings create public court records that landlords can use as justification to not rent to a prospective tenant, making safe, affordable housing even harder to attain. 
 
 Most evictions are filed due to nonpayment of rent.
 
@@ -40,7 +130,7 @@ If a tenant served with an eviction notice by their landlord moves out before a 
 
 Each eviction court filing record includes a defendant address and a filing date. We used Google's [Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview#how-the-geocoding-api-works) to determine latitude and longitude coordinates for each of these addresses. With these coordinates, we can plot the physical location of the homes of each person who had an eviction case filed against them on a map.
 
-This in itself would illuminate the degree to which evictions are geographically concentrated. But by [using PostGIS to overlay](https://postgis.net/workshops/postgis-intro/joins.html#spatial-joins) the defendant address coordinates on top of geographic boundaries used by the U.S. Census, we can calculate and present annual eviction filing counts and rates alongside demographic data produced by the [American Community Survey (ACS)](https://www.census.gov/data/developers/data-sets/acs-5year.html) to paint a richer picture of eviction filings and population characteristics across all Census [Block Groups](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4) in Dane County.
+This in itself would illuminate the degree to which evictions are geographically concentrated. But by [using PostGIS to overlay](https://postgis.net/workshops/postgis-intro/joins.html#spatial-joins) the defendant address coordinates on top of geographic boundaries used by the U.S. Census, we can calculate and present annual eviction filing counts and rates alongside demographic data produced by the [American Community Survey (ACS)](https://www.census.gov/data/developers/data-sets/acs-5year.html) and [Decennial Census](https://www.census.gov/programs-surveys/decennial-census/about.html) to paint a richer picture of eviction filings and population characteristics across all Census [Block Groups](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_4) in Dane County.
 
 The map represents the following metrics:
 
