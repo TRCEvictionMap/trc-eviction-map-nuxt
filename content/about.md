@@ -14,13 +14,13 @@ The process usually begins with a notice giving the tenant at least 5 days to fi
 
 It is important to remember that in Wisconsin a tenant can only be forced to leave an apartment after they have a court date, and only if the judge rules in the landlord's favor. Then the judge's order must be given to the sheriff who would then remove the tenant from the apartment. The landlord cannot change the locks, throw the tenant's stuff out, or take any other action without this court order. The sheriff is the only person who can physically remove the tenant.
 
-Check out [this page](https://www.tenantresourcecenter.org/about_eviction) to read more about the eviction process in Wisconsin.
+Eviction is a major driver of housing insecurity. It can result in the expulsion of families from their homes and communities; force tenants to fall back on unhealthy or dangerous living situations; and cause serious economic, emotional, and physical harm. Single-mothers, African Americans, and low-income households disproportionately face eviction.
 
-## Eviction data 
+## Our eviction data
 
-The eviction data represented on the map comes from public court records created when landlords file for eviction. These records tell us when and where evictions were filed – we use them to count how many evictions were filed in a given area in given year.
+The eviction data represented on the map comes from public court records created when landlords file for eviction. These records tell us when evictions were filed and where the people they were filed against lived. We used these court records to calculate all eviction numbers shown on the map.
 
-Although many eviction proceedings result in court filings and records, many do not. This means that our map provides an incomplete picture of eviction in Dane County.
+Although many eviction proceedings result in court filings, many do not. For example, cases where a tenant moved out after recieving an eviction notice but before their landlord filed for eviction in court will not show up in our numbers. This means that the map provides an incomplete picture of evictions in Dane County.
 
 
 ## Mapping evictions
