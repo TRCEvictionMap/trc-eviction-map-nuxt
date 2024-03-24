@@ -22,9 +22,10 @@ defineProps<{
       <div class="relative">
         <IconMinus class="absolute right-0" />
         <IconMinus
-          class="absolute right-0 rotate-90 transition-transform"
+          class="absolute right-0 transition-transform"
           :class="{
-            'rotate-0': open
+            'rotate-0': open,
+            'rotate-90': !open
           }"
         />
       </div>

@@ -32,7 +32,6 @@ const components = {
 
 </script>
 
-<!-- :open="disclosures.showWelcomeModal || show" -->
 <template>
   <TRCModal
     :open="disclosures.showWelcomeModal || (show && Boolean(welcomeModalContent))"
@@ -42,7 +41,7 @@ const components = {
     <section class="px-6 pt-6">
       <h2>Welcome to Tenant Resource Center Eviction Map</h2>
     </section>
-    <section class="relative overflow-auto max-h-[70vh]  bg-white px-6">
+    <section class="relative overflow-auto max-h-[70vh] bg-white px-6">
       <ContentRenderer :use="$slots.default" :components="components" :value="welcomeModalContent" />
     </section>
     <section class="flex justify-end gap-4 px-6 py-4">
