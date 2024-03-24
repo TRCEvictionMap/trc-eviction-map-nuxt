@@ -18,6 +18,7 @@ function closeModal() {
   disclosures.showWelcomeModal = false;
 }
 
+
 const { data: welcomeModalContent } = await useAsyncData(
   "welcome-modal-content",
   () => queryContent("/welcome-modal-content").findOne()
@@ -31,9 +32,10 @@ const components = {
 
 </script>
 
+<!-- :open="disclosures.showWelcomeModal || (show && Boolean(welcomeModalContent))" -->
 <template>
   <TRCModal
-    :open="disclosures.showWelcomeModal || (show && Boolean(welcomeModalContent))"
+    :open="disclosures.showWelcomeModal || show"
     @close="closeModal"
     class="prose prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-headings:mt-0 !bg-slate-100"
   >
