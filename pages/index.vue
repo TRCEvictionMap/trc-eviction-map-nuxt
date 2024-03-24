@@ -9,6 +9,7 @@ import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
 import { useDisclosures } from "~/stores/disclosures-store";
+import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
 
 useHead({
     title: "Eviction Map - Tenant Resource Center"
@@ -76,8 +77,8 @@ onUnmounted(() => {
                     <DetailDisclosurePanel static v-if="disclosures.showDetails" />
                 </Transition>
             </Disclosure>
+            <WelcomeModal />
         </ClientOnly>
-
     </div>
 </template>
 

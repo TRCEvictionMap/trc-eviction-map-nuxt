@@ -1,4 +1,4 @@
-import type { SourceId } from "utils/types";
+import type { SourceId } from "~/utils/types";
 
 function useLayerIds(source: SourceId) {
     return {
