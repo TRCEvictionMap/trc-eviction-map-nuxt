@@ -16,12 +16,17 @@ const disclosures = useDisclosures();
             />
         </NuxtLink>
         <div class="flex py-1 sm:py-3">
-            <NavDrawer class="sm:hidden" />
-            <nav class="hidden sm:block">
+            <nav>
                 <button @click="disclosures.showWelcomeModal = true" class="">
                     About
                 </button>
             </nav>
+            <!-- <NavDrawer class="sm:hidden" />
+            <nav class="hidden sm:block">
+                <button @click="disclosures.showWelcomeModal = true" class="">
+                    About
+                </button>
+            </nav> -->
         </div>
     </header>
 </template>
