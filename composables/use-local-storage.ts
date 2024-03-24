@@ -13,7 +13,7 @@ function useLocalStorage<Value>(key: string, defaultValue: Value) {
       return value;
     } catch (_error) {
       // If the stored value is altered by a user action in developer tools
-      // or by a other code and the `Stored<Value>` contract is broken
+      // or by a other code and violates the `Stored<Value>` contract,
       // the possible ensuing error will be caught and handled by using the
       // provided `defaultValue` argument.
       localStorage.setItem(key, JSON.stringify({ value: defaultValue }));

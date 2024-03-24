@@ -8,20 +8,20 @@ const featureState = useFeatureState();
 
 <template>
     <div class="absolute top-0 flex items-center h-full">
-        <TransitionGroup
-            name="items"
-            class="absolute flex"
-            :class="{
-                'flex-row space-x-1': !settings.options.verticalDetailCards,
-                'flex-col space-y-1': settings.options.verticalDetailCards,
-            }"
-            tag="div"
-        >
-            <div v-if="featureState.selectedFeatures.length > 0" class="px-1">
-              <DetailDisclosureButton  />
-            </div>
-            <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
-        </TransitionGroup>
+      <TransitionGroup
+          name="items"
+          class="absolute flex"
+          :class="{
+              'flex-row space-x-1': !settings.options.verticalDetailCards,
+              'flex-col space-y-1': settings.options.verticalDetailCards,
+          }"
+          tag="div"
+      >
+        <div v-if="featureState.selectedFeatures.length > 0" class="px-1">
+          <DetailDisclosureButton  />
+        </div>
+        <DetailCard v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
+      </TransitionGroup>
     </div>
 </template>
 
