@@ -41,7 +41,7 @@ const components = {
       <h2>Welcome to Tenant Resource Center Eviction Map</h2>
     </section>
     <section class="relative overflow-auto max-h-[70vh]  bg-white px-6">
-      <ContentRenderer :components="components" :value="welcomeModalContent" />
+      <ContentRenderer :use="$slots.default" :components="components" :value="welcomeModalContent" />
     </section>
     <section class="flex justify-end gap-4 px-6 py-4">
       <div class="flex items-center gap-2">
