@@ -1,5 +1,5 @@
 
-This map combines eviction data frmo court records with demographic data from the U.S. Census to provide an up-to-date, historical view of where evictions are (and aren't) happening in Dane County, Wisconsin.
+This map combines eviction data from court records with demographic data from the U.S. Census to provide an up-to-date, historical view of where evictions are (and aren't) happening in Dane County, Wisconsin.
 
 <div class="flex flex-col divide-y">
 
