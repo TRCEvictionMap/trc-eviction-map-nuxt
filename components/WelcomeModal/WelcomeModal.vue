@@ -32,10 +32,10 @@ const components = {
 
 </script>
 
-<!-- :open="disclosures.showWelcomeModal || (show && Boolean(welcomeModalContent))" -->
+<!-- :open="disclosures.showWelcomeModal || show" -->
 <template>
   <TRCModal
-    :open="disclosures.showWelcomeModal || show"
+    :open="disclosures.showWelcomeModal || (show && Boolean(welcomeModalContent))"
     @close="closeModal"
     class="prose prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-headings:mt-0 !bg-slate-100"
   >
@@ -44,7 +44,6 @@ const components = {
     </section>
     <section class="relative overflow-auto max-h-[70vh]  bg-white px-6">
       <ContentRenderer :use="$slots.default" :components="components" :value="welcomeModalContent" />
-      <!-- <ContentDoc :components="components"  path="/welcome-modal-content" /> -->
     </section>
     <section class="flex justify-end gap-4 px-6 py-4">
       <div class="flex items-center gap-2">
