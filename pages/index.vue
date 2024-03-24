@@ -58,6 +58,12 @@ onUnmounted(() => {
     window.removeEventListener("keydown", konami.recordKeyPress);
 });
 
+await useAsyncData(
+  "welcome-modal-content",
+  () => queryContent("/welcome-modal-content").findOne()
+);
+
+
 </script>
 
 <template>
