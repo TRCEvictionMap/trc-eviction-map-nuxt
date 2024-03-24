@@ -10,9 +10,9 @@ defineProps<{
 <template>
   <Disclosure v-slot="{ open }: { open: boolean }" as="div" class="flex flex-col py-2">
     <DisclosureButton
-      class="font-semibold text-lg flex justify-between p-2"
-      :class="{
-        'text-trc-orange-500': open,
+    class="font-semibold text-lg flex justify-between sticky top-0 bg-white py-2"
+    :class="{
+        'text-trc-orange-500 ': open,
         'text-slate-800': !open,
       }"
     >
@@ -29,7 +29,7 @@ defineProps<{
         />
       </div>
     </DisclosureButton>
-    <DisclosurePanel class="px-2">
+    <DisclosurePanel>
       <slot />
     </DisclosurePanel>
   </Disclosure>
