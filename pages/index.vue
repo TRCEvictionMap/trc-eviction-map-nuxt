@@ -38,8 +38,7 @@ const unwatch = watchEffect(() => {
             features: featureState.selectedFeatures.length
                 ? featureState.selectedFeatures.join(",")
                 : undefined,
-            showDetails: disclosures.showDetails ? "t" : "f", 
-
+            showDetails: disclosures.showDetails ? "t" : "f",
         },
     });
 });
