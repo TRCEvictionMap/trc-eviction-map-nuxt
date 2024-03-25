@@ -3,6 +3,7 @@ import { type SourceId, isSourceId } from "~/utils/types";
 
 
 interface QueryParams {
+    _showDetails: boolean;
     _lngLat: [number, number];
     _zoom: number;
     _year: string;
@@ -22,8 +23,9 @@ function useInitialQueryParams(): QueryParams {
     let _d_metric: QueryParams["_d_metric"] = "renter_count";
     let _e_metric: QueryParams["_e_metric"] = "n_filings";
     let _features: QueryParams["_features"] = [];
+    let _showDetails: QueryParams["_showDetails"] = false;
 
-    const { center, zoom, source, year, d_metric, e_metric, features } = route.query;
+    const { center, zoom, source, year, d_metric, e_metric, features, showDetails } = route.query;
 
     if (center) {
         const [lng, lat] = (route.query.center as string).split(",");
@@ -57,7 +59,11 @@ function useInitialQueryParams(): QueryParams {
         _features = features.split(",");
     }
 
-    return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features };
+    if (typeof showDetails === "string") {
+        _showDetails = ["t", "true"].includes(showDetails.toLowerCase()) && _features.length > 0;
+    }
+
+    return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features, _showDetails };
 }
 
 export { useInitialQueryParams };

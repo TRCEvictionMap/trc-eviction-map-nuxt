@@ -6,6 +6,7 @@ import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useFeatureState } from "~/stores/feature-state-store";
 import type { EvictionFeatureCollection } from "~/utils/types";
+import { useDisclosures } from "~/stores/disclosures-store";
 
 function useSetupMap() {
     const map = ref<mapboxgl.Map>();
@@ -15,9 +16,10 @@ function useSetupMap() {
     const controls = useMapControls();
     const featureProperties = useFeatureProperties();
     const featureState = useFeatureState();
+    const disclosures = useDisclosures();
 
     onMounted(() => {
-        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features } = useInitialQueryParams();
+        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features, _showDetails } = useInitialQueryParams();
 
         map.value = markRaw(
             new mapboxgl.Map({
@@ -44,6 +46,8 @@ function useSetupMap() {
         controls.currentEvictionMetric = _e_metric;
         
         featureState.initSelectedFeatures(_features);
+        
+        disclosures.showDetails = _showDetails;
 
         map.value.on("moveend", (ev) => {
             const { lng, lat } = ev.target.getCenter();
