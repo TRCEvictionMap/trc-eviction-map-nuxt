@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { DisclosurePanel } from "@headlessui/vue";
 
-import { useMapControls } from "~/stores/map-controls-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import { useFeatureState } from "~/stores/feature-state-store";
 
-const controls = useMapControls();
 const disclosures = useDisclosures();
 const featureState = useFeatureState();
 
@@ -43,15 +41,6 @@ watch(() => featureState.selectedFeatures.length, (nSelectedFeatures) => {
         :featureId="featureId"
       />
       <FeatureDetailPlaceholder v-for="n in 3 - featureState.selectedFeatures.length"  />
-      <!-- <div
-        v-for="n in 3 - featureState.selectedFeatures.length"
-        :key="`placeholder-${n}`"
-        class="border rounded w-[22rem] sm:w-[24rem] h-full relative bg-slate-300/50 flex justify-center py-10"
-      >
-        <h3 class="font-bold text-slate-700">
-          Select another {{ controls.currentSourceHumanReadable }}
-        </h3>
-      </div> -->
     </div>
   </DisclosurePanel>
 </template>

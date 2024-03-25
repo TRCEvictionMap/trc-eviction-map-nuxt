@@ -60,7 +60,7 @@ function useInitialQueryParams(): QueryParams {
     }
 
     if (typeof showDetails === "string") {
-        _showDetails = ["t", "true"].includes(showDetails.toLowerCase());
+        _showDetails = ["t", "true"].includes(showDetails.toLowerCase()) && _features.length > 0;
     }
 
     return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features, _showDetails };
