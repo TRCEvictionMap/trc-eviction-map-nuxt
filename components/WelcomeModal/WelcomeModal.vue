@@ -18,7 +18,6 @@ function closeModal() {
   disclosures.showWelcomeModal = false;
 }
 
-
 const { data: welcomeModalContent } = await useAsyncData(
   "welcome-modal-content",
   () => queryContent("/welcome-modal-content").findOne()
@@ -38,8 +37,11 @@ const components = {
     @close="closeModal"
     class="prose prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-headings:mt-0 !bg-slate-100"
   >
-    <section class="px-6 pt-6">
+    <section class="px-6 pt-6 relative flex justify-between items-center">
       <h2>Welcome to Tenant Resource Center Eviction Map</h2>
+      <TRCButton @click="closeModal" class="absolute top-4 right-4 hover:bg-slate-300/40">
+        <IconXMark />
+      </TRCButton>
     </section>
     <section class="relative overflow-auto max-h-[70vh] bg-white px-6">
       <ContentRenderer :use="$slots.default" :components="components" :value="welcomeModalContent" />
@@ -50,7 +52,7 @@ const components = {
         <input id="never-show" type="checkbox" v-model="showOnPageLoad" />
       </div>
       <button class="px-6 py-2 rounded bg-trc-blue-600 text-white" @click="closeModal">
-        Close
+        Ok
       </button>
     </section>
   </TRCModal>
