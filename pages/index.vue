@@ -31,13 +31,15 @@ const unwatch = watchEffect(() => {
             year: mapControls.currentYear,
             e_metric: mapControls.currentEvictionMetric,
             d_metric: mapControls.currentDemographicMetric,
-            features: featureState.selectedFeatures.length
-                ? featureState.selectedFeatures.join(",")
-                : undefined,
+            zoom: mapMeta.zoom,
             center: mapMeta.lngLat
                 ? mapMeta.lngLat.join(",")
                 : undefined,
-            zoom: mapMeta.zoom,
+            features: featureState.selectedFeatures.length
+                ? featureState.selectedFeatures.join(",")
+                : undefined,
+            showDetails: disclosures.showDetails ? "t" : "f", 
+
         },
     });
 });
