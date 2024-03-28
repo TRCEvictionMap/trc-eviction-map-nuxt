@@ -43,7 +43,7 @@ const components = {
         <IconXMark />
       </TRCButton>
     </section>
-    <section class="relative overflow-auto max-h-[70vh] bg-white px-6">
+    <section class="relative overflow-auto max-h-[60vh] sm:max-h-[70vh] bg-white px-6">
       <ContentRenderer :use="$slots.default" :components="components" :value="welcomeModalContent" />
     </section>
     <section class="flex justify-end gap-4 px-6 py-4">
