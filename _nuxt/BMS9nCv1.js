@@ -1,1 +1,0 @@
-import{_ as t}from"./BU3Dw_ZC.js";import{f as n,o,J as s,c as a,L as r}from"./CULcXBib.js";import"./BmD0wbTZ.js";import"./CQ6GjMob.js";const p={key:1},_=n({__name:"CustomSpan",setup(c){return(e,f)=>typeof e.$attrs.cid<"u"?(o(),s(t,{key:0,footnoteId:e.$attrs.cid},null,8,["footnoteId"])):(o(),a("span",p,[r(e.$slots,"default")]))}});export{_ as default};
