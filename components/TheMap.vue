@@ -5,11 +5,14 @@ const map = useSetupMap();
 
 provide("map", map);
 
+
+
 </script>
 
 <template>
     <div class="relative flex flex-col flex-1">
         <div id="the-map" class="flex-1"></div>
         <slot></slot>
+        <FeaturesTable />
     </div>
 </template>
