@@ -30,7 +30,7 @@ const controls = useMapControls();
             </div>
         </div>
     </div>
-
+    
     <Popover class="absolute top-2 left-2 sm:hidden">
         <PopoverButton
             class="rounded-full bg-trc-blue-700 text-white shadow-2xl p-4 " 

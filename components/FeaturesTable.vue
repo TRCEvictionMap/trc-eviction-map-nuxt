@@ -2,9 +2,11 @@
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { dataTableRowsAndCols, type DataTableColumn, type DataTableRow } from "./TRC/DataTable/data-table-types";
 import { useMapControls } from "~/stores/map-controls-store";
+import { useFeatureState } from "~/stores/feature-state-store";
 
 const controls = useMapControls();
 const featureProperties = useFeatureProperties();
+const featureState = useFeatureState();
 
 const { columns, rows } = dataTableRowsAndCols({
   columns: [
@@ -134,10 +136,12 @@ const { columns, rows } = dataTableRowsAndCols({
 </script>
 
 <template>
-  <TRCDataTable
-    :columns="columns"
-    :rows="rows"
-    @row:mouseover="id => console.log(id)"
-    @row:mouseleave="id => console.log(id)"
-  />
+  <div class="bg-orange-400">
+    <TRCDataTable
+      :columns="columns"
+      :rows="rows"
+      @row:mouseover="id => featureState.setFeatureState(id, 'isHovered', 'table-row')"
+      @row:mouseleave="id => featureState.setFeatureState(id, 'isHovered', false)"
+    />
+  </div>
 </template>

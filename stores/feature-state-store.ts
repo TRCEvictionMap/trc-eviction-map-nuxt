@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-type HoveredFeatureKind = "feature" | "card" | false;
+type HoveredFeatureKind = "feature" | "card" | "table-row" | false;
 
 interface FeatureState {
     isHovered: HoveredFeatureKind;

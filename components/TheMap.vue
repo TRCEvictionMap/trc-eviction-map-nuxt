@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const map = useSetupMap();
+const map = useSetupMap("the-map");
 
 provide("map", map);
-
-
 
 </script>
 
@@ -13,6 +11,5 @@ provide("map", map);
     <div class="relative flex flex-col flex-1">
         <div id="the-map" class="flex-1"></div>
         <slot></slot>
-        <FeaturesTable />
     </div>
 </template>

@@ -8,7 +8,7 @@ import { useFeatureState } from "~/stores/feature-state-store";
 import type { EvictionFeatureCollection } from "~/utils/types";
 import { useDisclosures } from "~/stores/disclosures-store";
 
-function useSetupMap() {
+function useSetupMap(containerId: string) {
     const map = ref<mapboxgl.Map>();
 
     const config = useRuntimeConfig();
@@ -23,7 +23,7 @@ function useSetupMap() {
 
         map.value = markRaw(
             new mapboxgl.Map({
-                container: "the-map",
+                container: containerId,
                 accessToken: config.public.mapboxAccessToken,
                 style: config.public.mapboxStyleUrlLight,
                 center: _lngLat,

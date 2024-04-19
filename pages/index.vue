@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import "mapbox-gl/dist/mapbox-gl.css";
 
+import { nextTick } from "#imports";
 import { Disclosure } from "@headlessui/vue";
 
 import { useMapMeta } from "~/stores/map-meta-store";
@@ -44,6 +45,16 @@ const unwatch = watchEffect(() => {
 });
 
 onBeforeRouteLeave(unwatch);
+
+// This is meant to force a window resize event to ensure the map
+// never leaves white space unfilled when the the details drawer
+// closes
+watch(() => disclosures.showDetails, async () => {
+    const height = window.innerHeight;
+    window.innerHeight = height - 1;
+    await nextTick();
+    window.innerHeight = height;
+});
 
 function onCloseSettingsMenu() {
     konami.reset();
