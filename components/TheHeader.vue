@@ -25,7 +25,7 @@ const featureFlags = useFeatureFlags();
                     <TRCSwitch
                         v-if="!featureFlags.disableDataTable"
                         v-model="settings.options.showDataTable"
-                        label="Show Data Table"
+                        :label="`${settings.options.showDataTable ? 'Hide' : 'Show'} Data Table`"
                     />
                 </ClientOnly>
                 <div class="pl-4">

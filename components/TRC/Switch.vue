@@ -31,14 +31,14 @@ const checked = computed({
         v-model="checked"
         :class="checked ? 'bg-trc-blue-900' : 'bg-trc-blue-300'"
         class="
-          relative inline-flex h-6 w-12 shrink-0 cursor-pointer
+          relative inline-flex h-6 w-10 shrink-0 cursor-pointer
           rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out 
           focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75
         "
       >
         <span
           aria-hidden="true"
-          :class="checked ? 'translate-x-6' : 'translate-x-0'"
+          :class="checked ? 'translate-x-4' : 'translate-x-0'"
           class="
             pointer-events-none inline-block h-5 w-5 transform rounded-full
            bg-white shadow-lg ring-0 transition duration-200 ease-in-out

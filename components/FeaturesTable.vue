@@ -13,6 +13,7 @@ const { columns, rows } = dataTableRowsAndCols({
     {
       field: "renter_count",
       headerText: "Renter Count",
+      width: 150
     },
     {
       field: "renter_count_moe",
@@ -136,12 +137,22 @@ const { columns, rows } = dataTableRowsAndCols({
 </script>
 
 <template>
-  <div class="bg-orange-400">
-    <TRCDataTable
-      :columns="columns"
-      :rows="rows"
-      @row:mouseover="id => featureState.setFeatureState(id, 'isHovered', 'table-row')"
-      @row:mouseleave="id => featureState.setFeatureState(id, 'isHovered', false)"
-    />
+  <div class="w-1/2 relative p-2 flex flex-col">
+    <!-- <MapControls class="relative" /> -->
+    <TRCDataTable :columns="columns" :rows="rows">
+      <template #row="{ row }">
+        <tr
+          @mouseover="() => featureState.setFeatureState('d_' + row.id, 'isHovered', 'card')"
+          @mouseleave="() => featureState.setFeatureState('d_' + row.id, 'isHovered', false)"
+        >
+          <td scope="col" class="sticky z-10 left-0 bg-slate-100  shadow-slate-950 py-1 px-2">
+            {{ row.id }}
+          </td>
+          <td v-for="column in columns" :key="column.field" class="px-4" >
+            {{ row.fields[column.field] }}
+          </td>
+        </tr>
+      </template>
+    </TRCDataTable>
   </div>
 </template>

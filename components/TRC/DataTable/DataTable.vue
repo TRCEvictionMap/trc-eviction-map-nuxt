@@ -13,29 +13,31 @@ defineEmits<{
 </script>
 
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th v-for="column in columns">
+
+  <table class="relative h-full overflow-auto block border border-collapse">
+    <colgroup>
+      <slot name="colgroup"></slot>
+    </colgroup>
+    <thead class="relative z-10">
+      <tr class="sticky top-0 bg-white p-2">
+        <th align="left" scope="col" class="sticky left-0 bg-slate-300 px-2">
+          ID
+        </th>
+        <th
+          v-for="column in columns"
+          :key="column.field"
+          :title="column.headerTitle"
+          scope="col"
+          class="whitespace-nowrap px-4 bg-slate-100" 
+        >
           {{ column.headerText }}
         </th>
       </tr>
     </thead>
-    <tbody>
-      <tr
-        v-for="row in rows"
-        :key="row.id"
-        @mouseover="$emit('row:mouseover', row.id)"
-        @mouseleave="$emit('row:mouseleave', row.id)"
-      >
-        <slot name="row" v-bind="{ row }">
-          <td>{{ row.id }}</td>
-          <td v-for="column in columns">
-            {{ row.fields[column.field] }}
-          </td>
-        </slot>
-      </tr>
+    <tbody class="relative z-0">
+      <template v-for="row in rows">
+        <slot name="row" v-bind="{ row }"></slot>
+      </template>
     </tbody>
   </table>
 </template>
