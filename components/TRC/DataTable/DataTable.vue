@@ -13,25 +13,18 @@ defineEmits<{
 </script>
 
 <template>
-
-  <table class="relative h-full overflow-auto block border border-collapse">
+  <table class="relative h-full overflow-auto block border">
     <colgroup>
       <slot name="colgroup"></slot>
     </colgroup>
     <thead class="relative z-10">
-      <tr class="sticky top-0 bg-white p-2">
-        <th align="left" scope="col" class="sticky left-0 bg-slate-300 px-2">
+      <tr class="sticky top-0 bg-white">
+        <th scope="col" class="sticky left-0 bg-slate-300">
           ID
         </th>
-        <th
-          v-for="column in columns"
-          :key="column.field"
-          :title="column.headerTitle"
-          scope="col"
-          class="whitespace-nowrap px-4 bg-slate-100" 
-        >
-          {{ column.headerText }}
-        </th>
+        <template v-for="column in columns">
+          <slot name="th" v-bind="{ column }"></slot>
+        </template>
       </tr>
     </thead>
     <tbody class="relative z-0">

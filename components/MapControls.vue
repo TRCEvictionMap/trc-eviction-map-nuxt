@@ -9,7 +9,6 @@ const controls = useMapControls();
 </script>
 
 <template>
-
     <div class="
         hidden absolute top-0 z-10 
         sm:w-auto sm:flex
@@ -20,7 +19,6 @@ const controls = useMapControls();
             p-4
             rounded border shadow-2xl
             bg-white
-            
         ">
             <div class="hidden sm:flex items-center space-x-4">
                 <TRCSelect label="Demographic Metric" :options="controls.demographicMetricOptions" v-model="controls.currentDemographicMetric" />

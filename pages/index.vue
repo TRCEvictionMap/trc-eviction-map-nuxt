@@ -83,7 +83,7 @@ await useAsyncData(
 <template>
     <div class="absolute top-0 w-full h-full flex flex-col">
         <TheHeader />
-        <template v-if="flags.disableDataTable">
+        <template v-if="!settings.options.showDataTable">
             <ClientOnly>
                 <Disclosure :defaultOpen="disclosures.showDetails">
                     <TheMap>
@@ -91,7 +91,6 @@ await useAsyncData(
                         <MapLayers />
                         <MapLegend v-if="!disclosures.showDetails" />
                         <DetailCardGroup v-if="!disclosures.showDetails && !settings.options.showAlderDistricts" />
-                        <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
                     </TheMap>
                     <Transition name="details-drawer">
                         <DetailDisclosurePanel static v-if="disclosures.showDetails" />
@@ -109,8 +108,10 @@ await useAsyncData(
                     <MapLayers />
                     <MapLegend />
                 </TheMap>
+                <WelcomeModal />
             </ClientOnly>
         </template>
+        <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
     </div>
 </template>
 

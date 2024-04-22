@@ -11,74 +11,59 @@ const featureState = useFeatureState();
 const { columns, rows } = dataTableRowsAndCols({
   columns: [
     {
-      field: "renter_count",
-      headerText: "Renter Count",
-      width: 150
+      field: "n_filings",
+      headerText: "Evictions Filed",
     },
     {
-      field: "renter_count_moe",
-      headerText: "MOE",
-      headerTitle: "Renter count margin of error",
+      field: "filing_rate",
+      headerText: "Filing Rate",
+      infoText: "The number of evictions filed per 100 renters",
+    },
+    {
+      field: "renter_count",
+      headerText: "Renter Count",
     },
     {
       field: "renter_rate",
       headerText: "Renter Rate",
     },
     {
-      field: "renter_rate_moe",
-      headerText: "MOE",
-      headerTitle: "Renter rate margin of error",
-    },
-    {
       field: "poverty_rate",
       headerText: "Poverty Rate",
     },
     {
-      field: "poverty_rate_moe",
-      headerText: "MOE",
-      headerTitle: "Poverty rate margin of error",
-    },
-    {
-      field: "n_filings",
-      headerText: "Filings"
-    },
-    {
-      field: "filing_rate",
-      headerText: "Filing Rate"
-    },
-    {
       field:"pct_ai",
-      headerText: "% American Indian",
+      headerText: "American Indian",
       headerTitle: "Percent American Indian",
     },
     {
       field:"pct_as",
-      headerText: "% Asian",
+      headerText: "Asian",
       headerTitle: "Percent Asian",
     },
     {
       field:"pct_bl",
-      headerText: "% Black",
+      headerText: "Black",
       headerTitle: "Percent Black",
     },
     {
       field:"pct_multi",
-      headerText: "% Multiple Races",
+      headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
     },
     {
       field:"pct_other",
-      headerText: "% Other",
+      headerText: "Other",
       headerTitle: "Percent Other",
     },
     {
       field:"pct_pi",
-      headerText: "% Pacific Islander",
+      headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
     },
     {
       field:"pct_wh",
-      headerText: "% White",
+      headerText: "White",
       headerTitle: "Percent White",
     },
   ],
@@ -113,21 +98,59 @@ const { columns, rows } = dataTableRowsAndCols({
         return {
           id: featureId.slice(2),
           fields: {
-            renter_count,
-            renter_count_moe,
-            renter_rate,
-            renter_rate_moe,
-            poverty_rate,
-            poverty_rate_moe,
-            n_filings,
-            filing_rate,
-            pct_ai,
-            pct_as,
-            pct_bl,
-            pct_multi,
-            pct_other,
-            pct_pi,
-            pct_wh,
+
+            renter_count: {
+              value: renter_count,
+              moe: renter_count_moe,
+              srOnly: `${renter_count} plus or minus ${renter_count_moe}`
+            },
+            renter_rate: {
+              value: renter_rate,
+              text: `${renter_rate}%`,
+              moe: `${renter_rate_moe}%`,
+              srOnly: `${renter_rate} plus or minus ${renter_rate_moe} percent`
+            },
+            poverty_rate: {
+              value: poverty_rate,
+              text: `${poverty_rate}%`,
+              moe: `${poverty_rate_moe}%`,
+              srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
+            },
+            n_filings: {
+              value: n_filings,
+            },
+            filing_rate: {
+              value: filing_rate,
+              text: `${filing_rate}%`
+            },
+            pct_ai: {
+              value: pct_ai,
+              text: `${pct_ai}%`
+            },
+            pct_as: {
+              value: pct_as,
+              text: `${pct_as}%`
+            },
+            pct_bl: {
+              value: pct_bl,
+              text: `${pct_bl}%`
+            },
+            pct_multi: {
+              value: pct_multi,
+              text: `${pct_multi}%`,
+            },
+            pct_other: {
+              value: pct_other,
+              text: `${pct_other}%`,
+            },
+            pct_pi: {
+              value: pct_pi,
+              text: `${pct_pi}%`,
+            },
+            pct_wh: {
+              value: pct_wh,
+              text: `${pct_wh}%`,
+            },
           },
         };
       })
@@ -138,18 +161,55 @@ const { columns, rows } = dataTableRowsAndCols({
 
 <template>
   <div class="w-1/2 relative p-2 flex flex-col">
-    <!-- <MapControls class="relative" /> -->
+    <h1>{{ controls.currentSourceHumanReadable }}</h1>
+    <p>{{ controls.currentYear }}</p>
     <TRCDataTable :columns="columns" :rows="rows">
-      <template #row="{ row }">
-        <tr
-          @mouseover="() => featureState.setFeatureState('d_' + row.id, 'isHovered', 'card')"
-          @mouseleave="() => featureState.setFeatureState('d_' + row.id, 'isHovered', false)"
+      <template #th="{ column }">
+        <th
+          :key="column.field"
+          :title="column.headerTitle"
+          scope="col"
+          class="whitespace-nowrap px-4 bg-slate-100" 
         >
-          <td scope="col" class="sticky z-10 left-0 bg-slate-100  shadow-slate-950 py-1 px-2">
-            {{ row.id }}
+          <div class="flex items-center gap-1">
+            <span>{{ column.headerText }}</span>
+            <TRCInfoPopover v-if="column.infoText" iconSize="sm">
+              {{ column.infoText }}
+            </TRCInfoPopover>
+          </div>
+        </th>
+      </template>
+      <template #row="{ row: { fields, id: rowId } }">
+        <tr
+          @mouseover="() => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+          @mouseleave="() => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
+          class="divide-x divide-y"
+          :class="{
+            'ring-1 ring-black bg-trc-blue-100': featureState.selectedFeatures.includes(`d_${rowId}`)
+          }"
+        >
+          <td scope="col" class="sticky z-10 left-0 bg-slate-100 shadow-slate-950 py-2 px-2 border-b">
+            <div class="flex gap-2">
+              <button
+                role="checkbox"
+                :aria-checked="featureState.selectedFeatures.includes(`d_${rowId}`)"
+                @click="featureState.setFeatureState(
+                  `d_${rowId}`,
+                  'isSelected',
+                  !featureState.selectedFeatures.includes(`d_${rowId}`)
+                )"
+              >
+                <IconCheckSquareFill v-if="featureState.selectedFeatures.includes(`d_${rowId}`)" class="text-trc-blue-500" />
+                <IconSquare v-else />
+              </button>
+              {{ rowId }}
+            </div>
           </td>
-          <td v-for="column in columns" :key="column.field" class="px-4" >
-            {{ row.fields[column.field] }}
+          <td v-for="{ field } in columns" scope="col" :key="field" class="px-4">
+            <div class="flex justify-between items-end">
+              <span>{{ fields[field].text || fields[field].value }}</span>
+              <span v-if="fields[field].moe" class="text-sm">&plusmn;{{ fields[field].moe }}</span>
+            </div>
           </td>
         </tr>
       </template>
