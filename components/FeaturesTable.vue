@@ -190,10 +190,13 @@ function setColumnPin(field: string, pinned: boolean) {
   }
 }
 
+const panelWidth = ref(window.innerWidth / 2);
+
 </script>
 
 <template>
-  <div class="w-1/2 relative p-2 flex flex-col">
+  <div class="relative p-2 flex flex-col" :style="{ width: `${panelWidth}px` }">
+    <!-- <TRCResizeX @moveX="delta => panelWidth += delta" /> -->
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
     <TRCDataTable
