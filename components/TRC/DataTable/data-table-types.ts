@@ -1,5 +1,7 @@
 interface DataTableColumn<Field extends string> {
   field: Field;
+  width: number;
+  pinned?: boolean;
   headerText: string;
   headerTitle?: string;
   infoText?: string;

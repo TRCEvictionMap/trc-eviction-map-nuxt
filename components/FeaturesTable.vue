@@ -8,60 +8,82 @@ const controls = useMapControls();
 const featureProperties = useFeatureProperties();
 const featureState = useFeatureState();
 
+
 const { columns, rows } = dataTableRowsAndCols({
   columns: [
     {
+      field: "id",
+      width: 80,
+      pinned: true,
+      headerText: "ID",
+    },
+    {
       field: "n_filings",
-      headerText: "Evictions Filed",
+      width: 80,
+      headerText: "Filings",
+      infoText: `The number of evictions filed against renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "filing_rate",
+      width: 100,
+      pinned: false,
       headerText: "Filing Rate",
-      infoText: "The number of evictions filed per 100 renters",
+      infoText: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "renter_count",
+      width: 120,
       headerText: "Renter Count",
     },
     {
       field: "renter_rate",
+      width: 100,
       headerText: "Renter Rate",
     },
     {
       field: "poverty_rate",
+      width: 120,
       headerText: "Poverty Rate",
     },
     {
       field:"pct_ai",
+      width: 140,
       headerText: "American Indian",
       headerTitle: "Percent American Indian",
     },
     {
       field:"pct_as",
+      width: 80,
+      pinned: true,
       headerText: "Asian",
       headerTitle: "Percent Asian",
     },
     {
+      width: 80,
       field:"pct_bl",
       headerText: "Black",
       headerTitle: "Percent Black",
     },
     {
+      width: 140,
       field:"pct_multi",
       headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
     },
     {
+      width: 80,
       field:"pct_other",
       headerText: "Other",
       headerTitle: "Percent Other",
     },
     {
+      width: 140,
       field:"pct_pi",
       headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
     },
     {
+      width: 80,
       field:"pct_wh",
       headerText: "White",
       headerTitle: "Percent White",
@@ -98,7 +120,10 @@ const { columns, rows } = dataTableRowsAndCols({
         return {
           id: featureId.slice(2),
           fields: {
-
+            id: {
+              value: 0,
+              text: featureId.slice(2),
+            },
             renter_count: {
               value: renter_count,
               moe: renter_count_moe,
@@ -157,13 +182,34 @@ const { columns, rows } = dataTableRowsAndCols({
   )
 });
 
+const selectedRows = ref<string[]>([]);
+
+function onSelectRow(rowId: string) {
+  if (selectedRows.value.includes(rowId)) {
+    selectedRows.value = selectedRows.value.filter((x) => x !== rowId);
+  } else {
+    selectedRows.value = selectedRows.value.concat(rowId);
+  }
+}
+
 </script>
 
 <template>
   <div class="w-1/2 relative p-2 flex flex-col">
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
-    <TRCDataTable :columns="columns" :rows="rows">
+    <TRCDataTable
+      :columns="columns"
+      :rows="rows" v-model="selectedRows"
+      @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
+      @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+    />
+    <!-- <TRCDataTable
+      :columns="columns"
+      :rows="rows" v-model="selectedRows"
+      @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
+      @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+    >
       <template #th="{ column }">
         <th
           :key="column.field"
@@ -188,22 +234,18 @@ const { columns, rows } = dataTableRowsAndCols({
             'ring-1 ring-black bg-trc-blue-100': featureState.selectedFeatures.includes(`d_${rowId}`)
           }"
         >
+          <td>
+            <button
+              role="checkbox"
+              :aria-checked="selectedRows.includes(`d_${rowId}`)"
+              @click="onSelectRow(`d_${rowId}`)"
+            >
+              <IconCheckSquareFill v-if="selectedRows.includes(`d_${rowId}`)" class="text-trc-blue-500" />
+              <IconSquare v-else />
+            </button>
+          </td>
           <td scope="col" class="sticky z-10 left-0 bg-slate-100 shadow-slate-950 py-2 px-2 border-b">
-            <div class="flex gap-2">
-              <button
-                role="checkbox"
-                :aria-checked="featureState.selectedFeatures.includes(`d_${rowId}`)"
-                @click="featureState.setFeatureState(
-                  `d_${rowId}`,
-                  'isSelected',
-                  !featureState.selectedFeatures.includes(`d_${rowId}`)
-                )"
-              >
-                <IconCheckSquareFill v-if="featureState.selectedFeatures.includes(`d_${rowId}`)" class="text-trc-blue-500" />
-                <IconSquare v-else />
-              </button>
               {{ rowId }}
-            </div>
           </td>
           <td v-for="{ field } in columns" scope="col" :key="field" class="px-4">
             <div class="flex justify-between items-end">
@@ -213,6 +255,6 @@ const { columns, rows } = dataTableRowsAndCols({
           </td>
         </tr>
       </template>
-    </TRCDataTable>
+    </TRCDataTable> -->
   </div>
 </template>

@@ -111,7 +111,9 @@ await useAsyncData(
                 <WelcomeModal />
             </ClientOnly>
         </template>
-        <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
+        <ClientOnly>
+            <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
+        </ClientOnly>
     </div>
 </template>
 
