@@ -40,7 +40,7 @@ function useSelectedFeatures() {
         }
     }
 
-    return { selectedFeatures, initSelectedFeatures, clearSelectedFeatures, setIsFeatureSelected };
+    return { selectedFeatures, initSelectedFeatures, clearSelectedFeatures, setIsFeatureSelected, _features };
 }
 
 function useHoveredFeature() {
@@ -66,13 +66,13 @@ function useHoveredFeature() {
 }
 
 const useFeatureState = defineStore("feature-state", () => {
-    const { selectedFeatures, setIsFeatureSelected, clearSelectedFeatures, initSelectedFeatures } = useSelectedFeatures();
+    const { selectedFeatures, setIsFeatureSelected, clearSelectedFeatures, initSelectedFeatures, _features } = useSelectedFeatures();
     const { hoveredFeature, hoveredFeatureKind, setIsFeatureHovered, clearHoveredFeature } = useHoveredFeature();
 
-    function setFeatureState<Key extends keyof FeatureState>(
+    function setFeatureState<State extends keyof FeatureState>(
         featureId: string,
-        key: Key,
-        value: FeatureState[Key]
+        key: State,
+        value: FeatureState[State]
     ) {
         if (key === "isSelected") {
             setIsFeatureSelected(featureId, value as FeatureState["isSelected"]);
@@ -89,7 +89,8 @@ const useFeatureState = defineStore("feature-state", () => {
         setFeatureState,
         clearSelectedFeatures,
         clearHoveredFeature,
-        initSelectedFeatures
+        initSelectedFeatures,
+        _features
     };
 });
 

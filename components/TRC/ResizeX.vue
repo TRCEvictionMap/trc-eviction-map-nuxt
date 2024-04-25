@@ -1,32 +1,41 @@
 <script setup lang="ts">
 
-const posStart = ref(-1);
+const emit = defineEmits<{ "moveX": [delta: number] }>();
 
-const emit = defineEmits<{
-  "moveX": [delta: number];
-}>();
+const currentX = ref(-1);
 
 function onMousemove(ev: MouseEvent) {
-  console.log("hello")
-  emit("moveX", ev.offsetX - posStart.value);
+    const delta = ev.clientX - currentX.value;
+    currentX.value = ev.clientX;
+    emit("moveX", delta);
 }
 
 function onMouseup(ev: MouseEvent) {
-  posStart.value = -1;
+  currentX.value = -1;
+  window.removeEventListener("selectstart", disableTextSelect);
   window.removeEventListener("mousemove", onMousemove);
 }
 
 function onMousedown(ev: MouseEvent) {
-  posStart.value = ev.offsetX;
-
+  currentX.value = ev.clientX;
+  window.addEventListener("selectstart", disableTextSelect);
   window.addEventListener("mousemove", onMousemove);
 }
+
+function disableTextSelect(ev: Event) {
+  ev.preventDefault();
+}
+
+onMounted(() => {
+  window.addEventListener("mouseup", onMouseup);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("mouseup", onMouseup);
+});
+
 </script>
 
 <template>
-  <div
-    @mousedown="onMousedown"
-    @mouseup="onMouseup"
-    class="absolute top-0 bottom-0 right-0 w-1 hover:cursor-ew-resize hover:ring hover:ring-inset hover:ring-black"
-  ></div>
+  <div @mousedown="onMousedown" class="absolute top-0 bottom-0 right-0 w-1 hover:cursor-ew-resize transition hover:bg-trc-blue-500/80"></div>
 </template>

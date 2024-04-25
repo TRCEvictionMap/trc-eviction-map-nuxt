@@ -35,13 +35,16 @@ const isSelectAll = computed({
         <div
           v-for="col in colsPinned"
           :key="col.field"
-          class="dt-cell font-bold text-sm justify-between"
+          class="dt-cell font-bold text-sm justify-between  hover-show-parent"
           :style="{ width: `${colWidths[col.field]}px`}"
         >
           <span>
             {{ col.headerText }}
           </span>
-          <button @click="$emit('col:setPin', { field: col.field, pinned: !col.pinned })">pin</button>
+          <button class="hover-show-child" @click="$emit('col:setPin', { field: col.field, pinned: !col.pinned })">
+            <IconPinAngleFill v-if="col.pinned" class="h-[14px] w-[14px]" />
+            <IconPinAngle v-else class="h-[14px] w-[14px]" />
+          </button>
         </div>
       </div>
 
@@ -50,15 +53,32 @@ const isSelectAll = computed({
       <div
         v-for="col in cols"
         :key="col.field"
-        class="dt-cell font-bold text-sm justify-between"
+        class="dt-cell font-bold text-sm justify-between  hover-show-parent"
         :style="{ width: `${colWidths[col.field]}px`}"
       >
         <span>
           {{ col.headerText }}
         </span>
-        <button @click="$emit('col:setPin', { field: col.field, pinned: !col.pinned })">pin</button>
+        <button class="hover-show-child" @click="$emit('col:setPin', { field: col.field, pinned: !col.pinned })">
+          <IconPinAngleFill v-if="col.pinned" class="h-[14px] w-[14px]" />
+          <IconPinAngle v-else class="h-[14px] w-[14px]"  />
+        </button>
       </div>
     </div>
-
   </div>
 </template>
+
+<style scoped>
+.hover-show-child {
+  opacity: 0;
+  transition: opacity 0.08s;
+}
+
+.hover-show-child:focus {
+}
+
+.hover-show-parent:hover .hover-show-child,
+.hover-show-child:focus {
+  opacity: 1;
+}
+</style>

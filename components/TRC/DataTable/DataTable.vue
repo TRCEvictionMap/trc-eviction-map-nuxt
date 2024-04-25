@@ -10,6 +10,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   "row:mouseover": [rowId: string];
   "row:mouseleave": [rowId: string];
+  "rows:select": [rowIds: string[]];
   "col:setPin": [payload: { field: string, pinned: boolean }];
   "update:modelValue": [rowIds: string[]];
 }>();
@@ -17,6 +18,11 @@ const emit = defineEmits<{
 const tableColumns = useTableColumns(props.columns);
 
 const selectedRows = ref<string[]>([]);
+
+watch(selectedRows, (selectedRows) => {
+  console.log("asdlkjasdlkj", JSON.stringify(selectedRows))
+  emit("rows:select", selectedRows);
+}, { deep: true });
 
 function onRowsSelectAll(selectAll: boolean) {
   if (selectAll) {

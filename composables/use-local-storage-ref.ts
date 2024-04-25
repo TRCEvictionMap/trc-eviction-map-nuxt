@@ -3,7 +3,7 @@ interface Stored<Value> {
   value: Value;
 }
 
-function useLocalStorage<Value>(key: string, defaultValue: Value) {
+function useLocalStorageRef<Value>(key: string, defaultValue: Value) {
   const data = ref<Value>(init());
 
   function init() {
@@ -32,4 +32,4 @@ function useLocalStorage<Value>(key: string, defaultValue: Value) {
   });
 }
 
-export { useLocalStorage };
+export { useLocalStorageRef };

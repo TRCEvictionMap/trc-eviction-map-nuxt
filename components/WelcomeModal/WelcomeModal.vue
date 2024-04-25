@@ -6,7 +6,7 @@ import CustomH4 from "./CustomH4.vue";
 
 const disclosures = useDisclosures();
 
-const showOnPageLoad = useLocalStorage(
+const showOnPageLoad = useLocalStorageRef(
   "show-on-page-load",
   true
 );

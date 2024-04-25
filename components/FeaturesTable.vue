@@ -117,10 +117,10 @@ const { columns, rows } = dataTableRowsAndCols({
         const { n_filings, filing_rate } = evictions[controls.currentYear];
 
         return {
-          id: featureId.slice(2),
+          id: featureId,
           fields: {
             id: {
-              value: 0,
+              value: featureId as unknown as number,
               text: featureId.slice(2),
             },
             renter_count: {
@@ -190,13 +190,28 @@ function setColumnPin(field: string, pinned: boolean) {
   }
 }
 
-const panelWidth = ref(window.innerWidth / 2);
+const map = await useMap();
+
+onMounted(() => {
+  map.resize();
+})
+
+const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2)
+
+function resizePanelWidth(delta: number) {
+  panelWidth.value += delta;
+  map.resize();
+}
+
+function setSelectedFeatures(rowIds: string[]) {
+  console.log("setSelectedFeatures", rowIds)
+}
 
 </script>
 
 <template>
-  <div class="relative p-2 flex flex-col" :style="{ width: `${panelWidth}px` }">
-    <!-- <TRCResizeX @moveX="delta => panelWidth += delta" /> -->
+  <div class="relative p-2 flex flex-col border-r" :style="{ width: `${panelWidth}px` }">
+    <TRCResizeX @moveX="resizePanelWidth" class="w-2" />
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
     <TRCDataTable
@@ -205,6 +220,7 @@ const panelWidth = ref(window.innerWidth / 2);
       @col:setPin="({ field, pinned }) => setColumnPin(field, pinned)"
       @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
       @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+      @rows:select="rowIds => featureState._features = rowIds"
     />
   </div>
 </template>
