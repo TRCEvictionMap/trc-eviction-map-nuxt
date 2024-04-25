@@ -19,7 +19,7 @@ const { columns, rows } = dataTableRowsAndCols({
     },
     {
       field: "n_filings",
-      width: 80,
+      width: 100,
       headerText: "Filings",
       infoText: `The number of evictions filed against renters living in a given ${controls.currentSourceHumanReadable}`,
     },

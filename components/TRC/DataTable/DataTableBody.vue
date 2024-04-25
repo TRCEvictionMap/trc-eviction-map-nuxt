@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="Field extends string">
-import { useColumns } from "./composables";
+import { useColumns } from "./use-columns";
 import type { DataTableColumn, DataTableRow } from "./data-table-types";
 
 const props = defineProps<{

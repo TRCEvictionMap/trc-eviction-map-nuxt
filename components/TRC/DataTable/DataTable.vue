@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="Field extends string">
 import type { DataTableColumn, DataTableRow } from './data-table-types';
+import { useTableColumns } from './use-columns';
 
 const props = defineProps<{
   columns: DataTableColumn<Field>[];
@@ -13,6 +14,7 @@ const emit = defineEmits<{
   "update:modelValue": [rowIds: string[]];
 }>();
 
+const tableColumns = useTableColumns(props.columns);
 
 const selectedRows = ref<string[]>([]);
 
@@ -31,13 +33,13 @@ function onRowSelect(rowId: string) {
     selectedRows.value.push(rowId);
   }
 }
+
 </script>
 
 <template>
-
-  <div class="overflow-auto relative w-full">
+  <div class="overflow-auto">
     <TRCDataTableHeader
-      :columns="columns"
+      :columns="tableColumns"
       :selectedRows="selectedRows"
       :totalRows="rows.length"
       @rows:selectAll="onRowsSelectAll"
@@ -47,7 +49,7 @@ function onRowSelect(rowId: string) {
       v-for="row in rows"
       :key="row.id"
       :data="row"
-      :columns="columns"
+      :columns="tableColumns"
       :selectedRows="selectedRows"
       @row:mouseleave="$emit('row:mouseleave', $event)"
       @row:mouseover="$emit('row:mouseover', $event)"
@@ -58,7 +60,6 @@ function onRowSelect(rowId: string) {
 </template>
 
 <style>
-
 .dt-cell {
   @apply p-2 flex items-center whitespace-nowrap border;
 }

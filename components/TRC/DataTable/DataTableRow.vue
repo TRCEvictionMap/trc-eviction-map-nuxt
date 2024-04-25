@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="Field extends string">
-import { useColumns } from "./composables";
-import type { DataTableColumn, DataTableRow } from "./data-table-types";
+import type { TableColumns } from "./use-columns";
+import type { DataTableRow } from "./data-table-types";
 
 const props = defineProps<{
   data: DataTableRow<Field>;
-  columns: DataTableColumn<Field>[];
+  columns: TableColumns<Field>;
   selectedRows: string[];
 }>();
 
@@ -14,7 +14,7 @@ const emit = defineEmits<{
   "row:select": [rowId: string];
 }>();
 
-const { colWidths, cols, colsPinned } = useColumns(props.columns);
+const { colWidths, cols, colsPinned, tableWidth } = props.columns;
 
 const isSelected = computed({
   get() {
@@ -29,21 +29,24 @@ const isSelected = computed({
 
 <template>
   <div
-    class="flex hover:bg-trc-blue-200/50 w-full"
+    class="flex"
+    :style="{ width: `${tableWidth}px` }"
     @mouseover="$emit('row:mouseover', data.id)"
     @mouseleave="$emit('row:mouseleave', data.id)"
   >
-    <div class="flex sticky left-0 bg-white">
-      <div class="dt-cell">
-        <TRCCheckbox v-model="isSelected" />
-      </div>
-      <div
-        v-for="col in colsPinned"
-        :key="col.field"
-        class="dt-cell"
-        :style="{ width: `${colWidths[col.field]}px`}"
-      >
-        {{ data.fields[col.field].text || data.fields[col.field].value }}
+    <div class="sticky left-0 bg-white shadow-xl">
+      <div class="flex bg-slate-100/60">
+        <div class="dt-cell">
+          <TRCCheckbox v-model="isSelected" />
+        </div>
+        <div
+          v-for="col in colsPinned"
+          :key="col.field"
+          class="dt-cell"
+          :style="{ width: `${colWidths[col.field]}px`}"
+        >
+          {{ data.fields[col.field].text || data.fields[col.field].value }}
+        </div>
       </div>
     </div>
     <div class="flex">
