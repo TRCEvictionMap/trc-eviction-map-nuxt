@@ -25,7 +25,10 @@ interface RowsAndCols<Field extends string> {
 }
 
 function dataTableRowsAndCols<Field extends string>(options: RowsAndCols<Field>) {
-  return options;
+  return {
+    columns: ref(options.columns),
+    rows: ref(options.rows),
+  };
 }
 
 export { dataTableRowsAndCols };

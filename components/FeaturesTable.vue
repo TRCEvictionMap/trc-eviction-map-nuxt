@@ -25,65 +25,64 @@ const { columns, rows } = dataTableRowsAndCols({
     },
     {
       field: "filing_rate",
-      width: 100,
+      width: 120,
       pinned: false,
       headerText: "Filing Rate",
       infoText: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "renter_count",
-      width: 120,
+      width: 140,
       headerText: "Renter Count",
     },
     {
       field: "renter_rate",
-      width: 100,
+      width: 140,
       headerText: "Renter Rate",
     },
     {
       field: "poverty_rate",
-      width: 120,
+      width: 140,
       headerText: "Poverty Rate",
     },
     {
       field:"pct_ai",
-      width: 140,
+      width: 160,
       headerText: "American Indian",
       headerTitle: "Percent American Indian",
     },
     {
       field:"pct_as",
-      width: 80,
-      pinned: true,
+      width: 100,
       headerText: "Asian",
       headerTitle: "Percent Asian",
     },
     {
-      width: 80,
+      width: 100,
       field:"pct_bl",
       headerText: "Black",
       headerTitle: "Percent Black",
     },
     {
-      width: 140,
+      width: 160,
       field:"pct_multi",
       headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
     },
     {
-      width: 80,
+      width: 100,
       field:"pct_other",
       headerText: "Other",
       headerTitle: "Percent Other",
     },
     {
-      width: 140,
+      width: 160,
       field:"pct_pi",
       headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
     },
     {
-      width: 80,
+      width: 100,
       field:"pct_wh",
       headerText: "White",
       headerTitle: "Percent White",
@@ -182,13 +181,12 @@ const { columns, rows } = dataTableRowsAndCols({
   )
 });
 
-const selectedRows = ref<string[]>([]);
-
-function onSelectRow(rowId: string) {
-  if (selectedRows.value.includes(rowId)) {
-    selectedRows.value = selectedRows.value.filter((x) => x !== rowId);
-  } else {
-    selectedRows.value = selectedRows.value.concat(rowId);
+function setColumnPin(field: string, pinned: boolean) {
+  for (let i = 0; i < columns.value.length; i++) {
+    if (columns.value[i].field === field) {
+      columns.value[i].pinned = pinned;
+      break;
+    }
   }
 }
 
@@ -200,61 +198,10 @@ function onSelectRow(rowId: string) {
     <p>{{ controls.currentYear }}</p>
     <TRCDataTable
       :columns="columns"
-      :rows="rows" v-model="selectedRows"
+      :rows="rows"
+      @col:setPin="({ field, pinned }) => setColumnPin(field, pinned)"
       @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
       @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
     />
-    <!-- <TRCDataTable
-      :columns="columns"
-      :rows="rows" v-model="selectedRows"
-      @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
-      @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
-    >
-      <template #th="{ column }">
-        <th
-          :key="column.field"
-          :title="column.headerTitle"
-          scope="col"
-          class="whitespace-nowrap px-4 bg-slate-100" 
-        >
-          <div class="flex items-center gap-1">
-            <span>{{ column.headerText }}</span>
-            <TRCInfoPopover v-if="column.infoText" iconSize="sm">
-              {{ column.infoText }}
-            </TRCInfoPopover>
-          </div>
-        </th>
-      </template>
-      <template #row="{ row: { fields, id: rowId } }">
-        <tr
-          @mouseover="() => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
-          @mouseleave="() => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
-          class="divide-x divide-y"
-          :class="{
-            'ring-1 ring-black bg-trc-blue-100': featureState.selectedFeatures.includes(`d_${rowId}`)
-          }"
-        >
-          <td>
-            <button
-              role="checkbox"
-              :aria-checked="selectedRows.includes(`d_${rowId}`)"
-              @click="onSelectRow(`d_${rowId}`)"
-            >
-              <IconCheckSquareFill v-if="selectedRows.includes(`d_${rowId}`)" class="text-trc-blue-500" />
-              <IconSquare v-else />
-            </button>
-          </td>
-          <td scope="col" class="sticky z-10 left-0 bg-slate-100 shadow-slate-950 py-2 px-2 border-b">
-              {{ rowId }}
-          </td>
-          <td v-for="{ field } in columns" scope="col" :key="field" class="px-4">
-            <div class="flex justify-between items-end">
-              <span>{{ fields[field].text || fields[field].value }}</span>
-              <span v-if="fields[field].moe" class="text-sm">&plusmn;{{ fields[field].moe }}</span>
-            </div>
-          </td>
-        </tr>
-      </template>
-    </TRCDataTable> -->
   </div>
 </template>
