@@ -3,13 +3,17 @@ import type { TableColumns } from "./use-columns";
 
 const props = defineProps<{
   columns: TableColumns<Field>;
+  sortBy?: Field;
+  sortDirection?: "asc" | "desc";
   totalRows: number;
   selectedRows: string[];
+  enableSelectAll?: boolean;
 }>();
 
 const emit = defineEmits<{
   "rows:selectAll": [selectAll: boolean];
-  "col:setPin": [payload: { field: string, pinned: boolean }];
+  "col:pin": [payload: { field: string, pinned: boolean }];
+  "col:sort": [field: Field];
 }>();
 
 const { colWidths, cols, colsPinned, tableWidth } = props.columns;
@@ -29,19 +33,25 @@ const isSelectAll = computed({
   <div class="flex sticky top-0 z-10" :style="{ width: `${tableWidth}px` }">
     <div class="sticky left-0 top-0 z-10 bg-white">
       <div class="flex bg-slate-300/40">
-        <div class="dt-cell">
-          <TRCCheckbox v-model="isSelectAll" />
+        <div class="dt-cell border-r-transparent">
+          <TRCCheckbox v-if="enableSelectAll" v-model="isSelectAll" />
+          <div v-else class="h-6 w-4"></div>
         </div>
         <div
           v-for="col in colsPinned"
           :key="col.field"
-          class="dt-cell font-bold text-sm justify-between  hover-show-parent"
+          class="dt-cell border-l-transparent font-bold text-sm justify-between hover-show-parent"
           :style="{ width: `${colWidths[col.field]}px`}"
         >
-          <span>
-            {{ col.headerText }}
-          </span>
-          <button class="hover-show-child" @click="$emit('col:setPin', { field: col.field, pinned: !col.pinned })">
+          <button class="flex items-center" @click="$emit('col:sort', col.field)">
+            <span>{{ col.headerText }}</span>
+            <IconChevronDown
+              v-if="sortBy === col.field"
+              class="h-4 transition"
+              :class="{ 'rotate-180': sortDirection === 'asc' }"
+            />
+          </button>
+          <button class="hover-show-child" @click="$emit('col:pin', { field: col.field, pinned: !col.pinned })">
             <IconPinAngleFill v-if="col.pinned" class="h-[14px] w-[14px]" />
             <IconPinAngle v-else class="h-[14px] w-[14px]" />
           </button>
@@ -56,10 +66,15 @@ const isSelectAll = computed({
         class="dt-cell font-bold text-sm justify-between  hover-show-parent"
         :style="{ width: `${colWidths[col.field]}px`}"
       >
-        <span>
-          {{ col.headerText }}
-        </span>
-        <button class="hover-show-child" @click="$emit('col:setPin', { field: col.field, pinned: !col.pinned })">
+        <button class="flex items-center" @click="$emit('col:sort', col.field)">
+          <span>{{ col.headerText }}</span>
+          <IconChevronDown
+            v-if="sortBy === col.field"
+            class="h-4 transition"
+            :class="{ 'rotate-180': sortDirection === 'asc' }"
+          />
+        </button>
+        <button class="hover-show-child" @click="$emit('col:pin', { field: col.field, pinned: !col.pinned })">
           <IconPinAngleFill v-if="col.pinned" class="h-[14px] w-[14px]" />
           <IconPinAngle v-else class="h-[14px] w-[14px]"  />
         </button>
@@ -72,9 +87,6 @@ const isSelectAll = computed({
 .hover-show-child {
   opacity: 0;
   transition: opacity 0.08s;
-}
-
-.hover-show-child:focus {
 }
 
 .hover-show-parent:hover .hover-show-child,

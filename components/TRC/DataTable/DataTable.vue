@@ -5,14 +5,16 @@ import { useTableColumns } from './use-columns';
 const props = defineProps<{
   columns: DataTableColumn<Field>[];
   rows: DataTableRow<Field>[];
+  // sortBy?: [Field, "asc" | "desc"];
   modelValue: string[];
+  enableSelectAll?: boolean;
 }>();
 
 const emit = defineEmits<{
   "row:mouseover": [rowId: string];
   "row:mouseleave": [rowId: string];
   "rows:select": [rowIds: string[]];
-  "col:setPin": [payload: { field: string, pinned: boolean }];
+  "col:pin": [payload: { field: string, pinned: boolean }];
   "update:modelValue": [rowIds: string[]];
 }>();
 
@@ -34,19 +36,60 @@ function onRowSelect(rowId: string) {
   }
 }
 
+function useSortState() {
+  const _directions: ["asc", "desc"] = ["asc", "desc"];
+  
+  const sortBy = ref<Field>();
+  const cursor = ref(-1);
+
+  function handleClick(field: Field) {
+    if (sortBy.value !== field) {
+      sortBy.value = field;
+    }
+    if (cursor.value + 1 < _directions.length - 1) {
+      cursor.value += 1;
+    } else {
+      cursor.value = -1;
+    }
+  }
+
+  const sortDirection = computed(() => _directions[cursor.value]);
+
+  return { sortBy, sortDirection, handleClick }
+}
+
+const { sortBy, sortDirection, handleClick } = useSortState();
+
+const sortedRows = computed(() => {
+  if (sortBy.value) {
+    const field = sortBy.value;
+    return Array
+      .from(props.rows)
+      .sort((a, b) => sortDirection.value === "asc"
+        ? a.fields[field].value - b.fields[field].value
+        : b.fields[field].value - a.fields[field].value
+      );
+  }
+  return props.rows;
+})
+
 </script>
 
 <template>
   <div class="overflow-auto">
     <TRCDataTableHeader
+      :sortBy="sortBy"
+      :sortDirection="sortDirection"
       :columns="tableColumns"
       :selectedRows="modelValue"
-      :totalRows="rows.length"
+      :totalRows="sortedRows.length"
+      :enableSelectAll="enableSelectAll"
       @rows:selectAll="onRowsSelectAll"
-      @col:setPin="$emit('col:setPin', $event)"
+      @col:pin="$emit('col:pin', $event)"
+      @col:sort="handleClick"
     />
     <TRCDataTableRow
-      v-for="row in rows"
+      v-for="row in sortedRows"
       :key="row.id"
       :data="row"
       :columns="tableColumns"

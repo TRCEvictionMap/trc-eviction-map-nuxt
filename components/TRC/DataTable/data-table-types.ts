@@ -1,6 +1,8 @@
 interface DataTableColumn<Field extends string> {
   field: Field;
   width: number;
+  sort?: "asc" | "desc" | undefined;
+  disableSort?: boolean; 
   pinned?: boolean;
   headerText: string;
   headerTitle?: string;

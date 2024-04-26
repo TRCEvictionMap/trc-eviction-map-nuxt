@@ -16,6 +16,7 @@ const { columns, rows } = dataTableRowsAndCols({
       width: 80,
       pinned: true,
       headerText: "ID",
+      disableSort: true,
     },
     {
       field: "n_filings",
@@ -26,7 +27,6 @@ const { columns, rows } = dataTableRowsAndCols({
     {
       field: "filing_rate",
       width: 120,
-      pinned: false,
       headerText: "Filing Rate",
       infoText: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
     },
@@ -197,8 +197,10 @@ onMounted(() => { map.resize() });
 const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2);
 
 function resizePanelWidth(delta: number) {
-  panelWidth.value += delta;
-  map.resize();
+  if (panelWidth.value + delta < window.innerWidth - 50) {
+    panelWidth.value += delta;
+    map.resize();
+  } 
 }
 
 const selectedFeatures = computed({
@@ -210,6 +212,18 @@ const selectedFeatures = computed({
   },
 });
 
+const selectedRows = computed(
+  () => rows.value.filter(
+    (row) => selectedFeatures.value.includes(row.id)
+  )
+);
+
+const deselectedRows = computed(
+  () => rows.value.filter(
+    (row) => !selectedFeatures.value.includes(row.id)
+  )
+);
+
 </script>
 
 <template>
@@ -218,10 +232,12 @@ const selectedFeatures = computed({
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
     <TRCDataTable
+      enableSelectAll
+      class="h-2/3"
       :columns="columns"
       :rows="rows"
       v-model="selectedFeatures"
-      @col:setPin="({ field, pinned }) => setColumnPin(field, pinned)"
+      @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
       @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
       @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
       @rows:select="rowIds => featureState._features = rowIds"
