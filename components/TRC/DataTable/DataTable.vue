@@ -5,6 +5,7 @@ import { useTableColumns } from './use-columns';
 const props = defineProps<{
   columns: DataTableColumn<Field>[];
   rows: DataTableRow<Field>[];
+  modelValue: string[];
 }>();
 
 const emit = defineEmits<{
@@ -17,26 +18,19 @@ const emit = defineEmits<{
 
 const tableColumns = useTableColumns(props.columns);
 
-const selectedRows = ref<string[]>([]);
-
-watch(selectedRows, (selectedRows) => {
-  console.log("asdlkjasdlkj", JSON.stringify(selectedRows))
-  emit("rows:select", selectedRows);
-}, { deep: true });
-
 function onRowsSelectAll(selectAll: boolean) {
   if (selectAll) {
-    selectedRows.value = props.rows.map((row) => row.id);
+    emit("update:modelValue", props.rows.map((row) => row.id));
   } else {
-    selectedRows.value = [];
+    emit("update:modelValue", []);
   }
 }
 
 function onRowSelect(rowId: string) {
-  if (selectedRows.value.includes(rowId)) {
-    selectedRows.value.splice(selectedRows.value.indexOf(rowId), 1);
+  if (props.modelValue.includes(rowId)) {
+    emit("update:modelValue", props.modelValue.filter((x) => x !== rowId));
   } else {
-    selectedRows.value.push(rowId);
+    emit("update:modelValue", props.modelValue.concat(rowId));
   }
 }
 
@@ -46,7 +40,7 @@ function onRowSelect(rowId: string) {
   <div class="overflow-auto">
     <TRCDataTableHeader
       :columns="tableColumns"
-      :selectedRows="selectedRows"
+      :selectedRows="modelValue"
       :totalRows="rows.length"
       @rows:selectAll="onRowsSelectAll"
       @col:setPin="$emit('col:setPin', $event)"
@@ -56,7 +50,7 @@ function onRowSelect(rowId: string) {
       :key="row.id"
       :data="row"
       :columns="tableColumns"
-      :selectedRows="selectedRows"
+      :selectedRows="modelValue"
       @row:mouseleave="$emit('row:mouseleave', $event)"
       @row:mouseover="$emit('row:mouseover', $event)"
       @row:select="onRowSelect"

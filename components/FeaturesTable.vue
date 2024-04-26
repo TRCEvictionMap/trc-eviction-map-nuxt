@@ -91,7 +91,7 @@ const { columns, rows } = dataTableRowsAndCols({
   rows: computed(
     () => featureProperties
       .featureIds["block-group"]
-      .eviction
+      .demographic
       .map((featureId) => {
         const properties = featureProperties.getFeatureProperties("block-group", featureId)!;
         const {
@@ -192,20 +192,23 @@ function setColumnPin(field: string, pinned: boolean) {
 
 const map = await useMap();
 
-onMounted(() => {
-  map.resize();
-})
+onMounted(() => { map.resize() });
 
-const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2)
+const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2);
 
 function resizePanelWidth(delta: number) {
   panelWidth.value += delta;
   map.resize();
 }
 
-function setSelectedFeatures(rowIds: string[]) {
-  console.log("setSelectedFeatures", rowIds)
-}
+const selectedFeatures = computed({
+  get() {
+    return featureState.selectedFeatures;
+  },
+  set(rowIds: string[]) {
+    featureState._features = rowIds;
+  },
+});
 
 </script>
 
@@ -217,6 +220,7 @@ function setSelectedFeatures(rowIds: string[]) {
     <TRCDataTable
       :columns="columns"
       :rows="rows"
+      v-model="selectedFeatures"
       @col:setPin="({ field, pinned }) => setColumnPin(field, pinned)"
       @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
       @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"

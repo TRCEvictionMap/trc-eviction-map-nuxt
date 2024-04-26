@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useSettings } from "./settings-store";
 
 type HoveredFeatureKind = "feature" | "card" | "table-row" | false;
 
@@ -8,11 +9,16 @@ interface FeatureState {
 }
 
 function useSelectedFeatures() {
+    const settings = useSettings();
+
     const _features = ref<string[]>([]);
 
     const selectedFeatures = computed(() => _features.value.reduce(
         (accum: string[], featureId, index) => {
-            if (index >= _features.value.length - 3) {
+            if (
+                settings.options.showDataTable ||
+                index >= _features.value.length - 3
+            ) {
                 accum.push(featureId);
             }
             return accum;
@@ -35,7 +41,10 @@ function useSelectedFeatures() {
             _features.value = _features.value.filter((id) => id !== featureId);
         }
 
-        if (_features.value.length > 3) {
+        if (
+            !settings.options.showDataTable &&
+            _features.value.length > 3
+        ) {
             _features.value.splice(0, _features.value.length - 3);
         }
     }
