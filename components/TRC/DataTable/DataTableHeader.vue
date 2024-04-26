@@ -47,7 +47,7 @@ const isSelectAll = computed({
             <span>{{ col.headerText }}</span>
             <IconChevronDown
               v-if="sortBy === col.field"
-              class="h-4 transition"
+              class="h-[14px] transition"
               :class="{ 'rotate-180': sortDirection === 'asc' }"
             />
           </button>
@@ -70,7 +70,7 @@ const isSelectAll = computed({
           <span>{{ col.headerText }}</span>
           <IconChevronDown
             v-if="sortBy === col.field"
-            class="h-4 transition"
+            class="h-[14px] transition"
             :class="{ 'rotate-180': sortDirection === 'asc' }"
           />
         </button>
