@@ -4,11 +4,6 @@ import {
     DialogTitle,
     DialogDescription,
     DialogPanel,
-    RadioGroup,
-    RadioGroupOption,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
 } from "@headlessui/vue";
 import { useSettings } from "~/stores/settings-store";
 
@@ -27,22 +22,14 @@ const settings = useSettings();
                 Turn some knobs and flick some switches :)
             </DialogDescription>
             <div class="space-y-3">
-                <div>
-                    <button
-                        class="bg-slate-200 px-2 py-1 rounded"
-                        @click="settings.options.verticalDetailCards = !settings.options.verticalDetailCards"
-                    >
-                        {{ settings.options.verticalDetailCards ? "Horizontal" : "Vertical" }} detail cards
-                    </button>
-                </div>
-                <div>
-                    <button
-                        class="bg-slate-200 px-2 py-1 rounded"
-                        @click="settings.options.showAlderDistricts = !settings.options.showAlderDistricts"
-                    >
-                        {{ settings.options.showAlderDistricts ? "Hide" : "Show" }} alder district outlines
-                    </button>
-                </div>
+                <TRCSwitch
+                    :label="`${settings.options.showDataTable ? 'Disable' : 'Enable'} Data Table`"
+                    v-model="settings.options.showDataTable"
+                />
+                <TRCSwitch
+                    :label="`${settings.options.verticalDetailCards ? 'Horizontal' : 'Vertical'} Detail Cards`"
+                    v-model="settings.options.verticalDetailCards"
+                />
             </div>
         </DialogPanel>
     </Dialog>

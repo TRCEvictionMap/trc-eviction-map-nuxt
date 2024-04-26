@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import "mapbox-gl/dist/mapbox-gl.css";
 
+import { nextTick } from "#imports";
 import { Disclosure } from "@headlessui/vue";
 
 import { useMapMeta } from "~/stores/map-meta-store";
@@ -10,6 +11,7 @@ import { useFeatureState } from "~/stores/feature-state-store";
 import { useSettings } from "~/stores/settings-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
+import { useFeatureFlags } from "~/stores/feature-flags";
 
 useHead({
     title: "Eviction Map - Tenant Resource Center"
@@ -21,6 +23,7 @@ const mapMeta = useMapMeta();
 const featureState = useFeatureState();
 const settings = useSettings();
 const disclosures = useDisclosures();
+const flags = useFeatureFlags();
 
 const konami = useKonamiCode();
 
@@ -44,6 +47,16 @@ const unwatch = watchEffect(() => {
 });
 
 onBeforeRouteLeave(unwatch);
+
+// This is meant to force a window resize event to ensure the map
+// never leaves white space unfilled when the the details drawer
+// closes
+watch(() => disclosures.showDetails, async () => {
+    const height = window.innerHeight;
+    window.innerHeight = height - 1;
+    await nextTick();
+    window.innerHeight = height;
+});
 
 function onCloseSettingsMenu() {
     konami.reset();
@@ -70,21 +83,36 @@ await useAsyncData(
 <template>
     <div class="absolute top-0 w-full h-full flex flex-col">
         <TheHeader />
-
-        <ClientOnly>
-            <Disclosure :defaultOpen="disclosures.showDetails">
+        <template v-if="!settings.options.showDataTable">
+            <ClientOnly>
+                <Disclosure :defaultOpen="disclosures.showDetails">
+                    <TheMap>
+                        <MapControls />
+                        <MapLayers />
+                        <MapLegend v-if="!disclosures.showDetails" />
+                        <DetailCardGroup v-if="!disclosures.showDetails && !settings.options.showAlderDistricts" />
+                    </TheMap>
+                    <Transition name="details-drawer">
+                        <DetailDisclosurePanel static v-if="disclosures.showDetails" />
+                    </Transition>
+                </Disclosure>
+                <WelcomeModal />
+            </ClientOnly>
+        </template>
+        <template v-else>
+            <ClientOnly>
                 <TheMap>
-                    <MapControls />
+                    <template #right>
+                        <FeaturesTable />
+                    </template>
                     <MapLayers />
-                    <MapLegend v-if="!disclosures.showDetails" />
-                    <DetailCardGroup v-if="!disclosures.showDetails" />
-                    <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
+                    <MapLegend />
                 </TheMap>
-                <Transition name="details-drawer">
-                    <DetailDisclosurePanel static v-if="disclosures.showDetails" />
-                </Transition>
-            </Disclosure>
-            <WelcomeModal />
+                <WelcomeModal />
+            </ClientOnly>
+        </template>
+        <ClientOnly>
+            <SettingsDialog :open="konami.didKonami || settings.showDialog" @close="onCloseSettingsMenu" />
         </ClientOnly>
     </div>
 </template>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useDisclosures } from '~/stores/disclosures-store';
-import CustomH2 from './CustomH2.vue';
-import CustomH3 from './CustomH3.vue';
+import { useDisclosures } from "~/stores/disclosures-store";
+import CustomH2 from "./CustomH2.vue";
+import CustomH3 from "./CustomH3.vue";
 import CustomH4 from "./CustomH4.vue";
 
 const disclosures = useDisclosures();
 
-const showOnPageLoad = useLocalStorage(
+const showOnPageLoad = useLocalStorageRef(
   "show-on-page-load",
   true
 );

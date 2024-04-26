@@ -161,7 +161,6 @@ function onMouseleave() {
           <span>Percent Pacific Islander</span>
           <span>{{ feature.race.pct_pi }}%</span>
         </li>
-
         <li class="flex justify-between items-center">
           <span>Percent White</span>
           <span>{{ feature.race.pct_wh }}%</span>

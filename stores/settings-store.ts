@@ -6,6 +6,7 @@ const defaultOptions = {
     verticalDetailCards: true,
     showAlderDistricts: false,
     detailCardListUnderlineItems: false,
+    showDataTable: true,
 }
 
 type Options = typeof defaultOptions;

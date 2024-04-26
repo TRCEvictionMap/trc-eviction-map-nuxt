@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
+import { useSettings } from "./settings-store";
 
-type HoveredFeatureKind = "feature" | "card" | false;
+type HoveredFeatureKind = "feature" | "card" | "table-row" | false;
 
 interface FeatureState {
     isHovered: HoveredFeatureKind;
@@ -8,11 +9,16 @@ interface FeatureState {
 }
 
 function useSelectedFeatures() {
+    const settings = useSettings();
+
     const _features = ref<string[]>([]);
 
     const selectedFeatures = computed(() => _features.value.reduce(
         (accum: string[], featureId, index) => {
-            if (index >= _features.value.length - 3) {
+            if (
+                settings.options.showDataTable ||
+                index >= _features.value.length - 3
+            ) {
                 accum.push(featureId);
             }
             return accum;
@@ -35,12 +41,15 @@ function useSelectedFeatures() {
             _features.value = _features.value.filter((id) => id !== featureId);
         }
 
-        if (_features.value.length > 3) {
+        if (
+            !settings.options.showDataTable &&
+            _features.value.length > 3
+        ) {
             _features.value.splice(0, _features.value.length - 3);
         }
     }
 
-    return { selectedFeatures, initSelectedFeatures, clearSelectedFeatures, setIsFeatureSelected };
+    return { selectedFeatures, initSelectedFeatures, clearSelectedFeatures, setIsFeatureSelected, _features };
 }
 
 function useHoveredFeature() {
@@ -66,13 +75,13 @@ function useHoveredFeature() {
 }
 
 const useFeatureState = defineStore("feature-state", () => {
-    const { selectedFeatures, setIsFeatureSelected, clearSelectedFeatures, initSelectedFeatures } = useSelectedFeatures();
+    const { selectedFeatures, setIsFeatureSelected, clearSelectedFeatures, initSelectedFeatures, _features } = useSelectedFeatures();
     const { hoveredFeature, hoveredFeatureKind, setIsFeatureHovered, clearHoveredFeature } = useHoveredFeature();
 
-    function setFeatureState<Key extends keyof FeatureState>(
+    function setFeatureState<State extends keyof FeatureState>(
         featureId: string,
-        key: Key,
-        value: FeatureState[Key]
+        key: State,
+        value: FeatureState[State]
     ) {
         if (key === "isSelected") {
             setIsFeatureSelected(featureId, value as FeatureState["isSelected"]);
@@ -89,7 +98,8 @@ const useFeatureState = defineStore("feature-state", () => {
         setFeatureState,
         clearSelectedFeatures,
         clearHoveredFeature,
-        initSelectedFeatures
+        initSelectedFeatures,
+        _features
     };
 });
 

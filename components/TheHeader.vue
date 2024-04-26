@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useDisclosures } from "~/stores/disclosures-store";
+// import { useFeatureFlags } from "~/stores/feature-flags";
+// import { useSettings } from "~/stores/settings-store";
 
 const disclosures = useDisclosures();
+// const settings = useSettings();
+// const featureFlags = useFeatureFlags();
 
 </script>
 
@@ -16,17 +20,20 @@ const disclosures = useDisclosures();
             />
         </NuxtLink>
         <div class="flex py-1 sm:py-3">
-            <nav>
-                <button @click="disclosures.showWelcomeModal = true" class="">
-                    About
-                </button>
+            <nav class="flex items-center gap-4 divide-x divide-slate-500">
+                <!-- <ClientOnly>
+                    <TRCSwitch
+                        v-if="!featureFlags.disableDataTable"
+                        v-model="settings.options.showDataTable"
+                        :label="`${settings.options.showDataTable ? 'Hide' : 'Show'} Data Table`"
+                    />
+                </ClientOnly> -->
+                <div class="pl-4">
+                    <button @click="disclosures.showWelcomeModal = true">
+                        About
+                    </button>
+                </div>
             </nav>
-            <!-- <NavDrawer class="sm:hidden" />
-            <nav class="hidden sm:block">
-                <button @click="disclosures.showWelcomeModal = true" class="">
-                    About
-                </button>
-            </nav> -->
         </div>
     </header>
 </template>
