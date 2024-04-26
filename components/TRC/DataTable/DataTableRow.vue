@@ -42,7 +42,7 @@ const isSelected = computed({
         <div
           v-for="col in colsPinned"
           :key="col.field"
-          class="dt-cell"
+          class="dt-cell justify-between"
           :style="{ width: `${colWidths[col.field]}px`}"
         >
           {{ data.fields[col.field].text || data.fields[col.field].value }}
@@ -53,10 +53,15 @@ const isSelected = computed({
       <div
         v-for="col in cols"
         :key="col.field"
-        class="dt-cell"
+        class="dt-cell justify-between"
         :style="{ width: `${colWidths[col.field]}px`}"
       >
-        {{ data.fields[col.field].text || data.fields[col.field].value }}
+        <span>
+          {{ data.fields[col.field].text || data.fields[col.field].value }}
+        </span>
+        <span v-if="data.fields[col.field].moe" class="text-sm">
+          &plusmn;{{ data.fields[col.field].moe }}
+        </span>
       </div>
     </div>
   </div>
