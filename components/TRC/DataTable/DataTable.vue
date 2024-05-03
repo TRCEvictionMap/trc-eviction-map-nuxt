@@ -60,6 +60,7 @@ const unselectedRows = computed(
 
 <template>
   <div class="overflow-auto">
+
     <TRCDataTableHeader
       :sortBy="sortBy"
       :sortDirection="sortDirection"
@@ -72,8 +73,9 @@ const unselectedRows = computed(
       @col:sort="setSortState"
     />
     <div
+      role="rowgroup"
       class="sticky top-9 z-10 bg-white shadow-md"
-      :style="{ width: `${tableColumns.tableWidth.value}px` }"
+      :style="{ width: `${tableColumns.tableWidth.value + 34}px` }"
     >
       <TRCDataTableRow
         v-for="row in selectedRows"
@@ -86,16 +88,18 @@ const unselectedRows = computed(
         @row:select="onRowSelect"
       />
     </div>
-    <TRCDataTableRow
-      v-for="row in unselectedRows"
-      :key="row.id"
-      :data="row"
-      :columns="tableColumns"
-      :selectedRows="modelValue"
-      @row:mouseleave="$emit('row:mouseleave', $event)"
-      @row:mouseover="$emit('row:mouseover', $event)"
-      @row:select="onRowSelect"
-    />
+    <div role="rowgroup">
+      <TRCDataTableRow
+        v-for="row in unselectedRows"
+        :key="row.id"
+        :data="row"
+        :columns="tableColumns"
+        :selectedRows="modelValue"
+        @row:mouseleave="$emit('row:mouseleave', $event)"
+        @row:mouseover="$emit('row:mouseover', $event)"
+        @row:select="onRowSelect"
+      />
+    </div>
   </div>
 
 </template>
