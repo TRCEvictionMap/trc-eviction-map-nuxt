@@ -1,11 +1,10 @@
 <script setup lang="ts" generic="Field extends string">
-import type { DataTableColumn, DataTableRow } from './data-table-types';
-import { useTableColumns } from './use-columns';
+import type { DataTableColumn, DataTableRow } from "./data-table-types";
+import { useTableColumns } from "./use-columns";
 
 const props = defineProps<{
   columns: DataTableColumn<Field>[];
   rows: DataTableRow<Field>[];
-  // sortBy?: [Field, "asc" | "desc"];
   modelValue: string[];
   enableSelectAll?: boolean;
 }>();
@@ -36,42 +35,26 @@ function onRowSelect(rowId: string) {
   }
 }
 
-function useSortState() {
-  const _directions: ["asc", "desc"] = ["asc", "desc"];
-  
-  const sortBy = ref<Field>();
-  const cursor = ref(-1);
+const {
+  setSortState,
+  sortBy,
+  sortDirection,
+  data: sortedRows,
+} = useSort<Field, DataTableRow<Field>>(
+  props.rows,
+  (a, b, sortBy, direction) => direction === "asc"
+    ? a.fields[sortBy].value - b.fields[sortBy].value
+    : b.fields[sortBy].value - a.fields[sortBy].value
+);
 
-  function handleClick(field: Field) {
-    if (sortBy.value !== field) {
-      sortBy.value = field;
-    }
-    if (cursor.value + 1 < _directions.length - 1) {
-      cursor.value += 1;
-    } else {
-      cursor.value = -1;
-    }
-  }
+const selectedRows = computed(
+  () => sortedRows.value.filter((row) => props.modelValue.includes(row.id))
+);
 
-  const sortDirection = computed(() => _directions[cursor.value]);
+const unselectedRows = computed(
+  () => sortedRows.value.filter((row) => !props.modelValue.includes(row.id))
+);
 
-  return { sortBy, sortDirection, handleClick }
-}
-
-const { sortBy, sortDirection, handleClick } = useSortState();
-
-const sortedRows = computed(() => {
-  if (sortBy.value) {
-    const field = sortBy.value;
-    return Array
-      .from(props.rows)
-      .sort((a, b) => sortDirection.value === "asc"
-        ? a.fields[field].value - b.fields[field].value
-        : b.fields[field].value - a.fields[field].value
-      );
-  }
-  return props.rows;
-})
 
 </script>
 
@@ -86,10 +69,25 @@ const sortedRows = computed(() => {
       :enableSelectAll="enableSelectAll"
       @rows:selectAll="onRowsSelectAll"
       @col:pin="$emit('col:pin', $event)"
-      @col:sort="handleClick"
+      @col:sort="setSortState"
     />
+    <div
+      class="sticky top-9 z-10 bg-white shadow-md"
+      :style="{ width: `${tableColumns.tableWidth.value}px` }"
+    >
+      <TRCDataTableRow
+        v-for="row in selectedRows"
+        :key="row.id"
+        :data="row"
+        :columns="tableColumns"
+        :selectedRows="modelValue"
+        @row:mouseleave="$emit('row:mouseleave', $event)"
+        @row:mouseover="$emit('row:mouseover', $event)"
+        @row:select="onRowSelect"
+      />
+    </div>
     <TRCDataTableRow
-      v-for="row in sortedRows"
+      v-for="row in unselectedRows"
       :key="row.id"
       :data="row"
       :columns="tableColumns"

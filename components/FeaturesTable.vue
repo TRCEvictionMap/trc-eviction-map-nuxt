@@ -212,18 +212,6 @@ const selectedFeatures = computed({
   },
 });
 
-const selectedRows = computed(
-  () => rows.value.filter(
-    (row) => selectedFeatures.value.includes(row.id)
-  )
-);
-
-const deselectedRows = computed(
-  () => rows.value.filter(
-    (row) => !selectedFeatures.value.includes(row.id)
-  )
-);
-
 </script>
 
 <template>

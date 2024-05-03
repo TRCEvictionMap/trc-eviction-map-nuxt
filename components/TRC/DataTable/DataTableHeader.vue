@@ -4,7 +4,7 @@ import type { TableColumns } from "./use-columns";
 const props = defineProps<{
   columns: TableColumns<Field>;
   sortBy?: Field;
-  sortDirection?: "asc" | "desc";
+  sortDirection?: "asc" | "desc" | null;
   totalRows: number;
   selectedRows: string[];
   enableSelectAll?: boolean;

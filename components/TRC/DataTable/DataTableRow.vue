@@ -45,7 +45,12 @@ const isSelected = computed({
           class="dt-cell justify-between"
           :style="{ width: `${colWidths[col.field]}px`}"
         >
-          {{ data.fields[col.field].text || data.fields[col.field].value }}
+          <span>
+            {{ data.fields[col.field].text || data.fields[col.field].value }}
+          </span>
+          <span v-if="data.fields[col.field].moe" class="text-sm">
+            &plusmn;{{ data.fields[col.field].moe }}
+          </span>
         </div>
       </div>
     </div>
