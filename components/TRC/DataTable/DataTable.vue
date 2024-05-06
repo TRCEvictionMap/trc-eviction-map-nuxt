@@ -74,34 +74,19 @@ function onRowSelect(rowId: string) {
   }
 }
 
-const pageNumberDisplay = computed({
-  get() {
-    return page.value + 1;
-  },
-  set(value) {
-    page.value = value - 1;
-  },
-});
+const pageDisplay = computed(() => page.value + 1);
 
 function handlePageNumberInput(ev: Event) {
-  ev.preventDefault();
   try {
-    const value = Number.parseInt((ev.target as HTMLInputElement).value);
+    const target = (ev.target as HTMLInputElement);
+    const value = Number.parseFloat(target.value);
     if (value > 0 && value <= pageCount.value) {
       page.value = value - 1;
+    } else {
+      target.value = (page.value + 1).toString();
     }
   } catch (_error) {}
 }
-
-onMounted(() => {
-  if (pageNumberInput.value) {
-    pageNumberInput.value.addEventListener("input", handlePageNumberInput);
-  }
-});
-
-onBeforeUnmount(() => {
-  pageNumberInput.value?.removeEventListener("input", handlePageNumberInput);
-});
 
 </script>
 
@@ -119,22 +104,6 @@ onBeforeUnmount(() => {
         @col:pin="$emit('col:pin', $event)"
         @col:sort="setSortState"
       />
-      <!-- <div
-        role="rowgroup"
-        class="sticky top-9 z-10 bg-white shadow-md"
-        :style="{ width: `${tableColumns.tableWidth.value + 34}px` }"
-      >
-        <TRCDataTableRow
-          v-for="row in selectedRows"
-          :key="row.id"
-          :data="row"
-          :columns="tableColumns"
-          :selectedRows="modelValue"
-          @row:mouseleave="$emit('row:mouseleave', $event)"
-          @row:mouseover="$emit('row:mouseover', $event)"
-          @row:select="onRowSelect"
-        />
-      </div> -->
       <div role="rowgroup">
         <TRCDataTableRow
           v-for="row in pageItems"
@@ -151,17 +120,11 @@ onBeforeUnmount(() => {
     <div class="py-2 flex gap-2">
       <button :disabled="!isPrevPage" @click="prevPage" class="button">prev</button>
       <div class="flex items-center gap-2">
-        <!-- <input
-          type="number"
-          v-model="pageNumberDisplay"
-          :min="1"
-          :max="pageCount"
-          class="w-16 p-2"
-        > -->
         <input
+          id="wtf"
           type="number"
-          ref="pageNumberInput"
-          :value="page + 1"
+          :value="pageDisplay"
+          @input="handlePageNumberInput"
           :min="1"
           :max="pageCount"
           class="w-16 p-2"
