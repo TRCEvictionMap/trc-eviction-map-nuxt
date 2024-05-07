@@ -33,34 +33,11 @@ const {
     : b.fields[sortBy].value - a.fields[sortBy].value
 );
 
-const selectedRows = computed(
-  () => sortedRows.value.filter((row) => props.modelValue.includes(row.id))
-);
-
-const unselectedRows = computed(
-  () => sortedRows.value.filter((row) => !props.modelValue.includes(row.id))
-);
-
-const pageNumberInput = ref<HTMLInputElement>();
-
-const {
-  page,
-  pageCount,
-  pageSize,
-  pageItems,
-  isNextPage,
-  isPrevPage,
-  nextPage,
-  prevPage,
-} = usePagination({
-  page: 0,
-  pageSize: 10,
-  items: sortedRows
-});
+const visibleRows: Ref<DataTableRow<Field>[]> = ref([]);
 
 function onRowsSelectAll(selectAll: boolean) {
   if (selectAll) {
-    emit("update:modelValue", pageItems.value.map((row) => row.id));
+    emit("update:modelValue", visibleRows.value.map((row) => row.id));
   } else {
     emit("update:modelValue", []);
   }
@@ -72,20 +49,6 @@ function onRowSelect(rowId: string) {
   } else {
     emit("update:modelValue", props.modelValue.concat(rowId));
   }
-}
-
-const pageDisplay = computed(() => page.value + 1);
-
-function handlePageNumberInput(ev: Event) {
-  try {
-    const target = (ev.target as HTMLInputElement);
-    const value = Number.parseFloat(target.value);
-    if (value > 0 && value <= pageCount.value) {
-      page.value = value - 1;
-    } else {
-      target.value = (page.value + 1).toString();
-    }
-  } catch (_error) {}
 }
 
 </script>
@@ -106,9 +69,9 @@ function handlePageNumberInput(ev: Event) {
       />
       <div role="rowgroup">
         <TRCDataTableRow
-          v-for="row in pageItems"
+          v-for="row in visibleRows"
           :key="row.id"
-          :data="row"
+          :data="(row as DataTableRow<Field>)"
           :columns="tableColumns"
           :selectedRows="modelValue"
           @row:mouseleave="$emit('row:mouseleave', $event)"
@@ -117,22 +80,7 @@ function handlePageNumberInput(ev: Event) {
         />
       </div>
     </div>
-    <div class="py-2 flex gap-2">
-      <button :disabled="!isPrevPage" @click="prevPage" class="button">prev</button>
-      <div class="flex items-center gap-2">
-        <input
-          id="wtf"
-          type="number"
-          :value="pageDisplay"
-          @input="handlePageNumberInput"
-          :min="1"
-          :max="pageCount"
-          class="w-16 p-2"
-        >
-        <span>of {{ pageCount }}</span>
-      </div>
-      <button :disabled="!isNextPage" @click="nextPage" class="button">next</button>
-    </div>
+    <TRCDataTablePagination :items="sortedRows" v-model="visibleRows" />
   </div>
 
 </template>
