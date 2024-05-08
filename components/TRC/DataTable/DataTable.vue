@@ -6,7 +6,7 @@ const props = defineProps<{
   columns: DataTableColumn<Field>[];
   rows: DataTableRow<Field>[];
   modelValue: string[];
-  initialRowsPerPage: number;
+  initalPageSize: number;
   enableSelectAll?: boolean;
   maxSelectableRows?: number;
 }>();
@@ -80,7 +80,11 @@ function onRowSelect(rowId: string) {
         />
       </div>
     </div>
-    <TRCDataTablePagination :items="sortedRows" v-model="visibleRows" />
+    <TRCDataTablePagination
+      :items="sortedRows"
+      :initalPageSize="initalPageSize"
+      v-model="visibleRows"
+    />
   </div>
 
 </template>

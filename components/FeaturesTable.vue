@@ -219,16 +219,19 @@ const selectedFeatures = computed({
     <TRCResizeX @moveX="resizePanelWidth" class="w-2" />
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
-    <TRCDataTable
-      :initialRowsPerPage="20"
-      :columns="columns"
-      :rows="rows"
-      enableSelectAll
-      v-model="selectedFeatures"
-      @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
-      @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
-      @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
-      @rows:select="rowIds => featureState._features = rowIds"
-    />
+    <div>
+      <TRCDataTable
+        class="h-full"
+        :initalPageSize="20"
+        :columns="columns"
+        :rows="rows"
+        enableSelectAll
+        v-model="selectedFeatures"
+        @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
+        @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
+        @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+        @rows:select="rowIds => featureState._features = rowIds"
+      />
+    </div>
   </div>
 </template>
