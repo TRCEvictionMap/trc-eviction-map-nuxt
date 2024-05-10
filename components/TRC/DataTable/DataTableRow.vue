@@ -30,6 +30,7 @@ const isSelected = computed({
 <template>
   <div
     class="flex"
+    role="row"
     :style="{ width: `${tableWidth}px` }"
     @mouseover="$emit('row:mouseover', data.id)"
     @mouseleave="$emit('row:mouseleave', data.id)"
@@ -42,10 +43,20 @@ const isSelected = computed({
         <div
           v-for="col in colsPinned"
           :key="col.field"
-          class="dt-cell justify-between"
+          :aria-label="col.headerText"
           :style="{ width: `${colWidths[col.field]}px`}"
+          role="cell"
+          class="dt-cell justify-between"
         >
-          {{ data.fields[col.field].text || data.fields[col.field].value }}
+          <span>
+            {{ data.fields[col.field].text || data.fields[col.field].value }}
+          </span>
+          <span v-if="data.fields[col.field].moe" class="text-sm">
+            &plusmn;{{ data.fields[col.field].moe }}
+          </span>
+          <span v-if="data.fields[col.field].srOnly" class="sr-only">
+            {{ data.fields[col.field].srOnly }}
+          </span>
         </div>
       </div>
     </div>
@@ -53,14 +64,19 @@ const isSelected = computed({
       <div
         v-for="col in cols"
         :key="col.field"
-        class="dt-cell justify-between"
+        :aria-label="col.headerText"
         :style="{ width: `${colWidths[col.field]}px`}"
+        role="cell"
+        class="dt-cell justify-between"
       >
         <span>
           {{ data.fields[col.field].text || data.fields[col.field].value }}
         </span>
         <span v-if="data.fields[col.field].moe" class="text-sm">
           &plusmn;{{ data.fields[col.field].moe }}
+        </span>
+        <span v-if="data.fields[col.field].srOnly" class="sr-only">
+          {{ data.fields[col.field].srOnly }}
         </span>
       </div>
     </div>

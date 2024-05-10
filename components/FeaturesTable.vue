@@ -212,30 +212,20 @@ const selectedFeatures = computed({
   },
 });
 
-const selectedRows = computed(
-  () => rows.value.filter(
-    (row) => selectedFeatures.value.includes(row.id)
-  )
-);
-
-const deselectedRows = computed(
-  () => rows.value.filter(
-    (row) => !selectedFeatures.value.includes(row.id)
-  )
-);
-
 </script>
 
 <template>
+  <!-- <div class="relative p-2 flex flex-col border-r h-[calc(100vh-60px)]" :style="{ width: `${panelWidth}px` }"> -->
   <div class="relative p-2 flex flex-col border-r" :style="{ width: `${panelWidth}px` }">
     <TRCResizeX @moveX="resizePanelWidth" class="w-2" />
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
     <TRCDataTable
-      enableSelectAll
-      class="h-2/3"
+      class="max-h-[calc(100%-100px)]"
+      :initalPageSize="20"
       :columns="columns"
       :rows="rows"
+      enableSelectAll
       v-model="selectedFeatures"
       @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
       @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
