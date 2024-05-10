@@ -215,23 +215,22 @@ const selectedFeatures = computed({
 </script>
 
 <template>
+  <!-- <div class="relative p-2 flex flex-col border-r h-[calc(100vh-60px)]" :style="{ width: `${panelWidth}px` }"> -->
   <div class="relative p-2 flex flex-col border-r" :style="{ width: `${panelWidth}px` }">
     <TRCResizeX @moveX="resizePanelWidth" class="w-2" />
     <h1>{{ controls.currentSourceHumanReadable }}</h1>
     <p>{{ controls.currentYear }}</p>
-    <div>
-      <TRCDataTable
-        class="h-full"
-        :initalPageSize="20"
-        :columns="columns"
-        :rows="rows"
-        enableSelectAll
-        v-model="selectedFeatures"
-        @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
-        @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
-        @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
-        @rows:select="rowIds => featureState._features = rowIds"
-      />
-    </div>
+    <TRCDataTable
+      class="max-h-[calc(100%-100px)]"
+      :initalPageSize="20"
+      :columns="columns"
+      :rows="rows"
+      enableSelectAll
+      v-model="selectedFeatures"
+      @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
+      @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
+      @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+      @rows:select="rowIds => featureState._features = rowIds"
+    />
   </div>
 </template>

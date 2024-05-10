@@ -55,13 +55,13 @@ function onRowSelect(rowId: string) {
 
 <template>
   <div>
-    <div class="overflow-auto">
+    <div class="h-full overflow-auto">
       <TRCDataTableHeader
         :sortBy="sortBy"
         :sortDirection="sortDirection"
         :columns="tableColumns"
         :selectedRows="modelValue"
-        :totalRows="sortedRows.length"
+        :totalVisibleRows="visibleRows.length"
         :enableSelectAll="enableSelectAll"
         @rows:selectAll="onRowsSelectAll"
         @col:pin="$emit('col:pin', $event)"
@@ -86,7 +86,6 @@ function onRowSelect(rowId: string) {
       v-model="visibleRows"
     />
   </div>
-
 </template>
 
 <style>

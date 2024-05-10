@@ -36,13 +36,24 @@ watch(pageItems, () => {
 
 const pageDisplay = computed(() => page.value + 1);
 
+// function handlePageNumberInput(ev: Event) {
+//   try {
+//     const target = (ev.target as HTMLInputElement);
+//     const value = Number.parseFloat(target.value);
+//     if (value > 0) {
+//       page.value = value - 1;
+//     }
+//     target.value = pageDisplay.value.toString();
+//   } catch (_error) {}
+// }
 function handlePageNumberInput(ev: Event) {
   try {
     const target = (ev.target as HTMLInputElement);
     const value = Number.parseFloat(target.value);
-    if (value > 0 && value <= pageCount.value) {
+    // if (value > 0 && value <= pageCount.value) {
+    if (value > 0) {
       page.value = value - 1;
-    } else {
+    // } else {
       target.value = pageDisplay.value.toString();
     }
   } catch (_error) {}
@@ -58,7 +69,7 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
 <template>
   <div class="py-2 flex items-center gap-2">
     <button :disabled="!isPrevPage" @click="prevPage" class="pagination-button">
-      <IconChevronUp class="-rotate-90 h-4" />
+      <IconChevronUp class="-rotate-90 h-[20px] w-[20px]" />
     </button>
     <div class="flex justify-center items-center gap-2">
       <input
@@ -72,7 +83,7 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
       <span>of {{ pageCount }}</span>
     </div>
     <button :disabled="!isNextPage" @click="nextPage" class="pagination-button">
-      <IconChevronUp class="rotate-90 h-4" />
+      <IconChevronUp class="rotate-90 h-[20px] w-[20px]" />
     </button>
     <TRCSelect v-model="pageSize" :options="rowsPerPage" dropUp />
   </div>
@@ -85,7 +96,7 @@ input[type="number"] {
 }
 
 .pagination-button {
-  @apply rounded ring-1 ring-trc-blue-400 p-1;
+  @apply rounded border  p-1;
 }
 
 </style>

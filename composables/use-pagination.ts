@@ -6,8 +6,24 @@ interface PaginationOptions<T> {
 }
 
 function usePagination<T>(options: PaginationOptions<T>) {
-  const page = ref(options.page);
+ 
+  const _page = ref(options.page);
   const pageSize = ref(options.pageSize);
+
+  const pageCount = computed(() =>
+    Math.ceil((unref(options.items) as T[]).length / pageSize.value)
+  );
+
+  const page = computed({
+    get() {
+      return _page.value;
+    },
+    set(value) {
+      const nextPage = Math.min(value, pageCount.value - 1);
+      console.log("nextPage", nextPage);
+      _page.value = Math.max(1, nextPage);
+    },
+  });
 
   const pageItems = computed(() => {
     const start = page.value * pageSize.value;
@@ -18,9 +34,7 @@ function usePagination<T>(options: PaginationOptions<T>) {
     return options.items.slice(start, end);
   });
   
-  const pageCount = computed(() =>
-    Math.ceil((unref(options.items) as T[]).length / pageSize.value)
-  );
+
 
   const isPrevPage = computed(() => page.value > 0);
   const isNextPage = computed(() =>

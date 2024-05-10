@@ -5,7 +5,7 @@ const props = defineProps<{
   columns: TableColumns<Field>;
   sortBy?: Field;
   sortDirection?: "asc" | "desc" | null;
-  totalRows: number;
+  totalVisibleRows: number;
   selectedRows: string[];
   enableSelectAll?: boolean;
 }>();
@@ -20,7 +20,7 @@ const { colWidths, cols, colsPinned, tableWidth } = props.columns;
 
 const isSelectAll = computed({
   get() {
-    return props.totalRows === props.selectedRows.length;
+    return props.totalVisibleRows === props.selectedRows.length;
   },
   set(selectAll) {
     emit("rows:selectAll", selectAll);
