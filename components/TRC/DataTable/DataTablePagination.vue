@@ -36,26 +36,14 @@ watch(pageItems, () => {
 
 const pageDisplay = computed(() => page.value + 1);
 
-// function handlePageNumberInput(ev: Event) {
-//   try {
-//     const target = (ev.target as HTMLInputElement);
-//     const value = Number.parseFloat(target.value);
-//     if (value > 0) {
-//       page.value = value - 1;
-//     }
-//     target.value = pageDisplay.value.toString();
-//   } catch (_error) {}
-// }
 function handlePageNumberInput(ev: Event) {
   try {
     const target = (ev.target as HTMLInputElement);
     const value = Number.parseFloat(target.value);
-    // if (value > 0 && value <= pageCount.value) {
     if (value > 0) {
       page.value = value - 1;
-    // } else {
-      target.value = pageDisplay.value.toString();
     }
+    target.value = pageDisplay.value.toString();
   } catch (_error) {}
 }
 

@@ -19,9 +19,7 @@ function usePagination<T>(options: PaginationOptions<T>) {
       return _page.value;
     },
     set(value) {
-      const nextPage = Math.min(value, pageCount.value - 1);
-      console.log("nextPage", nextPage);
-      _page.value = Math.max(1, nextPage);
+      _page.value = Math.min(value, pageCount.value - 1);
     },
   });
 
