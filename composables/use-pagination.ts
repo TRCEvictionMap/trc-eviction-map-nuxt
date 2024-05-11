@@ -23,6 +23,10 @@ function usePagination<T>(options: PaginationOptions<T>) {
     },
   });
 
+  watch(pageCount, () => {
+    page.value = page.value;
+  });
+
   const pageItems = computed(() => {
     const start = page.value * pageSize.value;
     const end = start + pageSize.value;
@@ -31,8 +35,6 @@ function usePagination<T>(options: PaginationOptions<T>) {
     }
     return options.items.slice(start, end);
   });
-  
-
 
   const isPrevPage = computed(() => page.value > 0);
   const isNextPage = computed(() =>
