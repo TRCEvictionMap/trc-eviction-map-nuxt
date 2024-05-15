@@ -23,7 +23,7 @@ const settings = useSettings();
             </DialogDescription>
             <div class="space-y-3">
                 <TRCSwitch
-                    :label="`${settings.options.showDataTable ? 'Disable' : 'Enable'} Data Table`"
+                    :label="`${settings.options.showDataTable ? 'Hide' : 'Show'} Data Table`"
                     v-model="settings.options.showDataTable"
                 />
                 <TRCSwitch

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useDisclosures } from "~/stores/disclosures-store";
+import { useFeatureFlags } from "~/stores/feature-flags";
 import { useSettings } from "~/stores/settings-store";
 
 const disclosures = useDisclosures();
 const settings = useSettings();
+const flags = useFeatureFlags();
 
 </script>
 
@@ -21,6 +23,7 @@ const settings = useSettings();
             <nav class="flex items-center gap-4 divide-x divide-slate-500">
                 <ClientOnly>
                     <TRCSwitch
+                        v-if="!flags.disableDataTableHeaderToggle"
                         v-model="settings.options.showDataTable"
                         :label="`${settings.options.showDataTable ? 'Hide' : 'Show'} Data Table`"
                     />
