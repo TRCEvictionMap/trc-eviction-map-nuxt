@@ -35,6 +35,8 @@ const {
 
 const visibleRows: Ref<DataTableRow<Field>[]> = ref([]);
 
+const visibleRowIds = computed(() => visibleRows.value.map((row) => row.id));
+
 function onRowsSelectAll(selectAll: boolean) {
   if (selectAll) {
     emit("update:modelValue", visibleRows.value.map((row) => row.id));
@@ -61,7 +63,7 @@ function onRowSelect(rowId: string) {
         :sortDirection="sortDirection"
         :columns="tableColumns"
         :selectedRows="modelValue"
-        :totalVisibleRows="visibleRows.length"
+        :visibleRows="visibleRowIds"
         :enableSelectAll="enableSelectAll"
         @rows:selectAll="onRowsSelectAll"
         @col:pin="$emit('col:pin', $event)"
