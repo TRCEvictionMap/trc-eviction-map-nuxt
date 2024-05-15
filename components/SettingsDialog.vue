@@ -12,7 +12,7 @@ const settings = useSettings();
 </script>
 
 <template>
-    <Dialog class="absolute top-0 z-10 w-full h-full flex justify-center items-center">
+    <Dialog class="absolute top-0 z-50 w-full h-full flex justify-center items-center">
         <DialogPanel class="w-full max-w-md transform overflow-auto max-h-[80%] border rounded bg-white p-4 text-left align-middle shadow-xl transition-all space-y-4">
             <button class="absolute right-4 top-4 button button-dense" @click="$emit('close')">
                 close

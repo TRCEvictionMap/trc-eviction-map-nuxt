@@ -1,5 +1,9 @@
 {
   "css.customData": [
     ".vscode/tailwind.json"
-  ]
+  ],
+  "vue.complete.casing.props": "autoCamel",
+  "prettier.singleAttributePerLine": true,
+  "editor.defaultFormatter": "Vue.volar",
+  "html.format.wrapAttributes": "force-expand-multiline"
 }

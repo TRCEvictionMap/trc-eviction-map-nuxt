@@ -13,9 +13,9 @@ const { columns, rows } = dataTableRowsAndCols({
   columns: [
     {
       field: "id",
-      width: 80,
+      width: 120,
       pinned: true,
-      headerText: "ID",
+      headerText: controls.currentSourceHumanReadable ?? "ID",
       disableSort: true,
     },
     {
@@ -26,13 +26,13 @@ const { columns, rows } = dataTableRowsAndCols({
     },
     {
       field: "filing_rate",
-      width: 120,
+      width: 130,
       headerText: "Filing Rate",
       infoText: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "renter_count",
-      width: 140,
+      width: 150,
       headerText: "Renter Count",
     },
     {
@@ -42,48 +42,48 @@ const { columns, rows } = dataTableRowsAndCols({
     },
     {
       field: "poverty_rate",
-      width: 140,
+      width: 150,
       headerText: "Poverty Rate",
     },
     {
-      field:"pct_ai",
-      width: 160,
+      field: "pct_ai",
+      width: 170,
       headerText: "American Indian",
       headerTitle: "Percent American Indian",
     },
     {
-      field:"pct_as",
+      field: "pct_as",
       width: 100,
       headerText: "Asian",
       headerTitle: "Percent Asian",
     },
     {
       width: 100,
-      field:"pct_bl",
+      field: "pct_bl",
       headerText: "Black",
       headerTitle: "Percent Black",
     },
     {
       width: 160,
-      field:"pct_multi",
+      field: "pct_multi",
       headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
     },
     {
       width: 100,
-      field:"pct_other",
+      field: "pct_other",
       headerText: "Other",
       headerTitle: "Percent Other",
     },
     {
       width: 160,
-      field:"pct_pi",
+      field: "pct_pi",
       headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
     },
     {
       width: 100,
-      field:"pct_wh",
+      field: "pct_wh",
       headerText: "White",
       headerTitle: "Percent White",
     },
@@ -197,10 +197,13 @@ onMounted(() => { map.resize() });
 const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2);
 
 function resizePanelWidth(delta: number) {
-  if (panelWidth.value + delta < window.innerWidth - 50) {
-    panelWidth.value += delta;
+  const maxWidth = window.innerWidth - 50;
+  const newWidth = panelWidth.value + delta;
+
+  if (newWidth < maxWidth) {
+    panelWidth.value = newWidth;
     map.resize();
-  } 
+  }
 }
 
 const selectedFeatures = computed({
@@ -215,13 +218,19 @@ const selectedFeatures = computed({
 </script>
 
 <template>
-  <!-- <div class="relative p-2 flex flex-col border-r h-[calc(100vh-60px)]" :style="{ width: `${panelWidth}px` }"> -->
-  <div class="relative p-2 flex flex-col border-r" :style="{ width: `${panelWidth}px` }">
-    <TRCResizeX @moveX="resizePanelWidth" class="w-2" />
-    <h1>{{ controls.currentSourceHumanReadable }}</h1>
-    <p>{{ controls.currentYear }}</p>
+  <div
+    class="relative p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden"
+    :style="{ width: `${panelWidth}px` }"
+  >
+    <TRCResizeX
+      @moveX="resizePanelWidth"
+      class="w-2 z-30"
+    />
+    <h1 class="font-bold text-xl mt-2">
+      {{ controls.currentYear }} Eviction and Demographic Data
+    </h1>
     <TRCDataTable
-      class="max-h-[calc(100%-100px)]"
+      class="max-h-[calc(100%-120px)] rounded bg-white"
       :initalPageSize="20"
       :columns="columns"
       :rows="rows"

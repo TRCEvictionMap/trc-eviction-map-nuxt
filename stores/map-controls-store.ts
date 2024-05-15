@@ -31,7 +31,7 @@ const useMapControls = defineStore("map-controls", () => {
 
     const sourceOptions = ref<Option<SourceId>[]>([
         {
-            text: "Census Block Group",
+            text: "Block Group",
             value: "block-group",
         },
     ]);

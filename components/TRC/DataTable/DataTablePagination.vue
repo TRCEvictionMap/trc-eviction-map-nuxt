@@ -4,7 +4,7 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headless
 const props = defineProps<{
   items: T[];
   modelValue: T[];
-  initalPageSize?: number;
+  initalPageSize?: 10 | 20 | 50;
   initialPage?: number;
 }>();
 
@@ -84,7 +84,7 @@ input[type="number"] {
 }
 
 .pagination-button {
-  @apply rounded border  p-1;
+  @apply rounded border p-1;
 }
 
 </style>

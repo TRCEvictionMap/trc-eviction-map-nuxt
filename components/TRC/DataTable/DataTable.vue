@@ -6,7 +6,7 @@ const props = defineProps<{
   columns: DataTableColumn<Field>[];
   rows: DataTableRow<Field>[];
   modelValue: string[];
-  initalPageSize: number;
+  initalPageSize: 10 | 20 | 50;
   enableSelectAll?: boolean;
   maxSelectableRows?: number;
 }>();
@@ -27,7 +27,7 @@ const {
   sortDirection,
   data: sortedRows,
 } = useSort<Field, DataTableRow<Field>>(
-  props.rows,
+  computed(() => props.rows),
   (a, b, sortBy, direction) => direction === "asc"
     ? a.fields[sortBy].value - b.fields[sortBy].value
     : b.fields[sortBy].value - a.fields[sortBy].value
