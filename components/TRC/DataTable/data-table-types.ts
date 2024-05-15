@@ -6,7 +6,7 @@ interface DataTableColumn<Field extends string> {
   pinned?: boolean;
   headerText: string;
   headerTitle?: string;
-  infoText?: string;
+  description?: string;
 }
 
 type DataTableRow<Field extends string> = {

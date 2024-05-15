@@ -2,17 +2,6 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { useFloating, autoPlacement, autoUpdate } from "@floating-ui/vue";
 
-interface Props {
-  iconSize: "sm" | "md";
-}
-
-withDefaults(
-  defineProps<Props>(),
-  {
-    iconSize: "md",
-  }
-);
-
 const reference = ref(null);
 const floating = ref(null);
 
@@ -30,21 +19,18 @@ const { floatingStyles } = useFloating(
 </script>
 
 <template>
-  <Popover class="relative">
-    <PopoverButton ref="reference" class="flex">
-      <IconInformationCircle :class="{
-        'h-[18px] w-[18px]': iconSize === 'sm',
-        'h-5 w-5': iconSize === 'md',
-      }" />
+  <Popover class="relative" #="{ open }: { open: boolean }">
+    <PopoverButton ref="reference" class="flex rounded">
+      <slot name="button" v-bind="{ open }"></slot>
     </PopoverButton>
-    <Teleport to="body">
+    <!-- <Teleport to="body"> -->
       <PopoverPanel
         ref="floating"
         :style="floatingStyles"
-        class="p-4 bg-white shadow-lg border rounded max-w-xs z-10"
+        class="p-4 bg-white shadow-lg border rounded max-w-xs z-30"
       >
-        <slot></slot>
+        <slot v-bind="{ open }"></slot>
       </PopoverPanel>
-    </Teleport>
+    <!-- </Teleport> -->
   </Popover>
 </template>

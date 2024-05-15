@@ -43,7 +43,19 @@ const isSelectAll = computed({
           :style="{ width: `${colWidths[col.field]}px`}"
           class="dt-cell border-l-transparent font-bold text-sm justify-between hover-show-parent"
         >
-          <button class="flex items-center" @click="$emit('col:sort', col.field)">
+          <span role="columnheader">{{ col.headerText }}</span>
+          <IconChevronDown
+            v-if="!col.disableSort"
+            class="h-[14px] transition"
+            stroke-width="3"
+            :stroke-opacity="sortBy === col.field ? 1 : 0.3"
+            :class="{
+              'rotate-180': sortDirection === 'asc',
+              'hover-show-child': sortBy !== col.field,
+            }"
+          />
+          <TRCDataTableColumnPopover :data="col" @col:pin="$emit('col:pin', $event)" />
+          <!-- <button class="flex items-center" @click="$emit('col:sort', col.field)">
             <span role="columnheader">{{ col.headerText }}</span>
             <IconChevronDown
               v-if="!col.disableSort"
@@ -59,7 +71,7 @@ const isSelectAll = computed({
           <button class="hover-show-child" @click="$emit('col:pin', { field: col.field, pinned: !col.pinned })">
             <IconPinAngleFill v-if="col.pinned" class="h-[14px] w-[14px]" />
             <IconPinAngle v-else class="h-[14px] w-[14px]" />
-          </button>
+          </button> -->
         </div>
       </div>
 
@@ -93,7 +105,7 @@ const isSelectAll = computed({
   </div>
 </template>
 
-<style scoped>
+<!-- <style>
 .hover-show-child {
   opacity: 0;
   transition: opacity 0.08s;
@@ -103,4 +115,4 @@ const isSelectAll = computed({
 .hover-show-child:focus {
   opacity: 1;
 }
-</style>
+</style> -->

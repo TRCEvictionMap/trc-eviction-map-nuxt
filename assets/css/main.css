@@ -8,6 +8,19 @@
     }
 }
 
+@layer utilities {
+    .hover-show-child {
+        opacity: 0;
+        transition: opacity 0.08s;
+    }
+    
+    .hover-show-parent:hover .hover-show-child,
+    .hover-show-child:focus,
+    button:focus .hover-show-child {
+        opacity: 1;
+    }
+}
+
 @layer components {
     .button {
         @apply

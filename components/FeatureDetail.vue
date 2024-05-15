@@ -89,7 +89,10 @@ function onMouseleave() {
               <span>
                 MOE
               </span>
-              <TRCInfoPopover iconSize="sm">
+              <TRCPopover>
+                <template #button>
+                  <IconInformationCircle class="h-[18px] w-[18px]" />
+                </template>
                 <h2 class="font-semibold">
                   Margin of Error (MOE)
                 </h2>
@@ -105,7 +108,7 @@ function onMouseleave() {
                   </NuxtLink>
                   from the U.S. Census Bureau.
                 </p>
-              </TRCInfoPopover>
+              </TRCPopover>
             </th>
           </tr>
         </thead>

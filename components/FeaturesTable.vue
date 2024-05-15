@@ -22,13 +22,16 @@ const { columns, rows } = dataTableRowsAndCols({
       field: "n_filings",
       width: 100,
       headerText: "Filings",
-      infoText: `The number of evictions filed against renters living in a given ${controls.currentSourceHumanReadable}`,
+      description: `
+      The number of evictions filed against renters living in a given 
+
+      ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "filing_rate",
       width: 130,
       headerText: "Filing Rate",
-      infoText: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
+      description: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "renter_count",

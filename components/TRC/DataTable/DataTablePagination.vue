@@ -73,7 +73,7 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
     <button :disabled="!isNextPage" @click="nextPage" class="pagination-button">
       <IconChevronUp class="rotate-90 h-[20px] w-[20px]" />
     </button>
-    <TRCSelect v-model="pageSize" :options="rowsPerPage" dropUp />
+    <TRCSelect v-model="pageSize" :options="rowsPerPage" class="z-20" dropUp />
   </div>
 </template>
 
