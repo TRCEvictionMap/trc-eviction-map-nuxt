@@ -89,7 +89,7 @@ function onMouseleave() {
               <span>
                 MOE
               </span>
-              <TRCPopover>
+              <TRCPopover isFloating>
                 <template #button>
                   <IconInformationCircle class="h-[18px] w-[18px]" />
                 </template>

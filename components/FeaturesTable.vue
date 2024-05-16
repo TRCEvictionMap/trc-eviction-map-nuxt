@@ -20,7 +20,7 @@ const { columns, rows } = dataTableRowsAndCols({
     },
     {
       field: "n_filings",
-      width: 100,
+      width: 90,
       headerText: "Filings",
       description: `
       The number of evictions filed against renters living in a given 
@@ -29,63 +29,63 @@ const { columns, rows } = dataTableRowsAndCols({
     },
     {
       field: "filing_rate",
-      width: 130,
+      width: 115,
       headerText: "Filing Rate",
       description: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "renter_count",
-      width: 150,
+      width: 135,
       headerText: "Renter Count",
     },
     {
       field: "renter_rate",
-      width: 140,
+      width: 125,
       headerText: "Renter Rate",
     },
     {
       field: "poverty_rate",
-      width: 150,
+      width: 135,
       headerText: "Poverty Rate",
     },
     {
       field: "pct_ai",
-      width: 170,
+      width: 155,
       headerText: "American Indian",
       headerTitle: "Percent American Indian",
     },
     {
       field: "pct_as",
-      width: 100,
+      width: 80,
       headerText: "Asian",
       headerTitle: "Percent Asian",
     },
     {
-      width: 100,
+      width: 80,
       field: "pct_bl",
       headerText: "Black",
       headerTitle: "Percent Black",
     },
     {
-      width: 160,
+      width: 140,
       field: "pct_multi",
       headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
     },
     {
-      width: 100,
+      width: 80,
       field: "pct_other",
       headerText: "Other",
       headerTitle: "Percent Other",
     },
     {
-      width: 160,
+      width: 150,
       field: "pct_pi",
       headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
     },
     {
-      width: 100,
+      width: 80,
       field: "pct_wh",
       headerText: "White",
       headerTitle: "Percent White",
