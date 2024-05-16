@@ -233,7 +233,7 @@ const selectedFeatures = computed({
       {{ controls.currentYear }} Eviction and Demographic Data
     </h1>
     <TRCDataTable
-      class="max-h-[calc(100%-120px)] rounded bg-white"
+      class="max-h-[calc(100%-140px)] rounded bg-white"
       :initalPageSize="20"
       :columns="columns"
       :rows="rows"

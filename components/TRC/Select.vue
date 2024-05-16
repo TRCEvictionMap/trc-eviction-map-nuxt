@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends number | string, O extends TRCSelectOption<T>">
+<script setup lang="ts" generic="T extends number | string | null, O extends TRCSelectOption<T>">
 import {
 	Listbox,
 	ListboxButton,
@@ -8,7 +8,7 @@ import {
 } from "@headlessui/vue";
 
 export interface TRCSelectOption<T> {
-	value: T;
+	value: T | null;
 	text?: string;
 	key?: string | number;
 }
@@ -83,7 +83,7 @@ const buttonText = computed(() => {
 					'top-[2px]': !dropUp,
 				}"
 			>
-				<ListboxOption v-for="option in normalizedOptions" :key="option.key ?? option.value" :value="option.value"
+				<ListboxOption v-for="option, i in normalizedOptions" :key="option.key ?? option.value ?? i" :value="option.value"
 					v-slot="props">
 					<div class="cursor-pointer flex items-center rounded py-1 px-2 hover:bg-trc-blue-100" :class="{
 						'bg-trc-blue-200 hover:bg-trc-blue-300': props.selected,

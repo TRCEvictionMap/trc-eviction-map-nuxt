@@ -1,22 +1,28 @@
 
+
+interface SetSortStateOptions<Field> {
+  field: Field | null;
+  direction: SortDirection;
+}
+
 const DIRECTIONS = ["desc", "asc"] as const;
 
 type SortDirection = typeof DIRECTIONS[number];
 
 function useSortState<Field>() {
-  const cursor = ref(-1);
+  const cursor = ref(0);
 
-  const sortBy = ref<Field>();
+  const sortBy: Ref<Field | null> = ref(null);
   const sortDirection = computed(() => DIRECTIONS[cursor.value]);
 
-  function setSortState(options: { field: Field, direction: SortDirection }) {
-    cursor.value = DIRECTIONS.indexOf(options.direction);
-    sortBy.value = options.field;
+  function setSortState({ field, direction }: SetSortStateOptions<Field>) {
+    cursor.value = DIRECTIONS.indexOf(direction);
+    sortBy.value = field;
   }
 
   function clearSortState() {
     cursor.value = -1;
-    sortBy.value = undefined;
+    sortBy.value = null;
   }
 
   function incrementSortState(field: Field) {

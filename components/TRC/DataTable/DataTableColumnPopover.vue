@@ -34,7 +34,7 @@ function sortDirection(close: () => void, direction: SortDirection) {
       </div>
     </template>
     <template #="{ open, close }">
-      <div class="flex flex-col w-44 gap-2">
+      <div class="flex flex-col w-44 gap-2 font-semibold text-slate-800">
         <div>
           <button
             @click="$emit('col:pin', { field: data.field, pinned: !data.pinned })"

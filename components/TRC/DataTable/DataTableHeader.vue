@@ -3,7 +3,7 @@ import type { TableColumns } from "./use-columns";
 
 const props = defineProps<{
   columns: TableColumns<Field>;
-  sortBy?: Field;
+  sortBy: Field | null;
   sortDirection?: SortDirection | null;
   visibleRows: string[];
   selectedRows: string[];

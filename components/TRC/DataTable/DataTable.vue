@@ -59,6 +59,12 @@ function onRowSelect(rowId: string) {
 
 <template>
   <div>
+    <TRCDataTableTop
+      :columns="columns"
+      :sortBy="sortBy"
+      :sortDirection="sortDirection"
+      @col:sort:direction="setSortState"
+    />
     <div class="h-full overflow-auto">
       <TRCDataTableHeader
         :sortBy="sortBy"
