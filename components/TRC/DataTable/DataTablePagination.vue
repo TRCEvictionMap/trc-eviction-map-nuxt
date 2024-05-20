@@ -60,6 +60,7 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
       <IconChevronUp class="-rotate-90 h-[20px] w-[20px]" />
     </button>
     <div class="flex justify-center items-center gap-2">
+      Page
       <input
         type="number"
         :value="pageDisplay"
@@ -79,7 +80,14 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
 
 <style scoped>
 
-input[type="number"] {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+  -moz-appearance:textfield; /* Firefox */
   appearance: textfield;
 }
 

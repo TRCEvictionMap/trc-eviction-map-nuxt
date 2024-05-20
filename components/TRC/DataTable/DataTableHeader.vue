@@ -59,6 +59,8 @@ const isSelectAll = computed({
         >
           <TRCDataTableColumnPopover
             :data="col"
+            :sortBy="(sortBy as Field)"
+            :sortDirection="sortDirection"
             @col:pin="$emit('col:pin', $event)"
             @col:sort:increment="$emit('col:sort:increment', $event)"
             @col:sort:direction="$emit('col:sort:direction', $event)"
@@ -76,6 +78,8 @@ const isSelectAll = computed({
       >
         <TRCDataTableColumnPopover
           :data="col"
+          :sortBy="(sortBy as Field)"
+          :sortDirection="sortDirection"
           @col:pin="$emit('col:pin', $event)"
           @col:sort:increment="$emit('col:sort:increment', $event)"
           @col:sort:direction="$emit('col:sort:direction', $event)"

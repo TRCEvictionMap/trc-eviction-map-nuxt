@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-import { useFloating, autoPlacement, autoUpdate } from "@floating-ui/vue";
+import { useFloating, autoPlacement, autoUpdate, type Alignment, type Placement } from "@floating-ui/vue";
 
-defineProps<{ isFloating?: boolean }>();
+const props = defineProps<{
+  isFloating?: boolean;
+  alignment?: Alignment;
+  allowedPlacements?: Placement[]
+}>();
 
 const reference = ref(null);
 const floating = ref(null);
@@ -13,7 +17,10 @@ const { floatingStyles } = useFloating(
   {
     whileElementsMounted: autoUpdate,
     middleware: [
-      autoPlacement(),
+      autoPlacement({
+        alignment: props.alignment,
+        allowedPlacements: props.allowedPlacements
+      }),
     ],
   }
 );

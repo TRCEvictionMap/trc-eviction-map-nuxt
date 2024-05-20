@@ -4,6 +4,7 @@ interface DataTableColumn<Field extends string> {
   sort?: "asc" | "desc" | undefined;
   disableSort?: boolean; 
   pinned?: boolean;
+  disablePin?: boolean;
   headerText: string;
   headerTitle?: string;
   description?: string;

@@ -17,15 +17,13 @@ const { columns, rows } = dataTableRowsAndCols({
       pinned: true,
       headerText: controls.currentSourceHumanReadable ?? "ID",
       disableSort: true,
+      description: controls.currentSourceDesicription
     },
     {
       field: "n_filings",
       width: 90,
       headerText: "Filings",
-      description: `
-      The number of evictions filed against renters living in a given 
-
-      ${controls.currentSourceHumanReadable}`,
+      description: `The number of evictions filed against renters living in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "filing_rate",
@@ -37,11 +35,13 @@ const { columns, rows } = dataTableRowsAndCols({
       field: "renter_count",
       width: 135,
       headerText: "Renter Count",
+      description: `The number of renter-occupied households estimated to be in a given ${controls.currentSourceHumanReadable}`,
     },
     {
       field: "renter_rate",
       width: 125,
       headerText: "Renter Rate",
+      description: `A ratio representing the number of renter-occupied vs owner-occupied households estimated to be in a given ${controls.currentDemographicMetric}`,
     },
     {
       field: "poverty_rate",
@@ -230,7 +230,7 @@ const selectedFeatures = computed({
       class="w-2 z-30"
     />
     <h1 class="font-bold text-xl mt-2">
-      {{ controls.currentYear }} Eviction and Demographic Data
+      Eviction and Demographic Data
     </h1>
     <TRCDataTable
       class="max-h-[calc(100%-140px)] rounded bg-white"

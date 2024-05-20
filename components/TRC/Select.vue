@@ -70,7 +70,7 @@ const buttonText = computed(() => {
 				{{ label }}
 			</ListboxLabel>
 			<ListboxButton class="px-2 py-1 border rounded text-start whitespace-nowrap text-sm">
-				<slot name="button">
+				<slot name="button" v-bind="{ buttonText }">
 					{{ buttonText }}
 				</slot>
 			</ListboxButton>

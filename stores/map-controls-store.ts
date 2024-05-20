@@ -24,7 +24,7 @@ function isDemographicMetric(data: unknown): data is DemographicMetric {
     return DEMOGRAPHIC_METRICS.includes(data as DemographicMetric);
 }
 
-type Option<Value> = { text?: string; value: Value; };
+type Option<Value> = { text?: string; value: Value; description?: string };
 
 const useMapControls = defineStore("map-controls", () => {
     const yearOptions = ref<Option<string>[]>([]); 
@@ -33,6 +33,7 @@ const useMapControls = defineStore("map-controls", () => {
         {
             text: "Block Group",
             value: "block-group",
+            description: "A statistical geographic unit used by the U.S. Census to organize data it publishes"
         },
     ]);
 
@@ -79,6 +80,10 @@ const useMapControls = defineStore("map-controls", () => {
         sourceOptions.value.find((opt) => opt.value === currentSource.value)?.text
     );
 
+    const currentSourceDesicription = computed(() =>
+        sourceOptions.value.find((opt) => opt.value === currentSource.value)?.description 
+    );
+
     return {
         yearOptions,
         sourceOptions,
@@ -86,6 +91,7 @@ const useMapControls = defineStore("map-controls", () => {
         demographicMetricOptions,
         currentSource,
         currentSourceHumanReadable,
+        currentSourceDesicription,
         currentYear,
         currentEvictionMetric,
         currentDemographicMetric,
