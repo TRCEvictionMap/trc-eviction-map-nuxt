@@ -78,9 +78,9 @@ const description = computed(() =>
           <DisclosureButton class="flex justify-between">
             <span> Description</span>
             <div class="relative">
-              <IconMinus class="absolute right-0 h-4" />
+              <IconMinus class="absolute right-0 h-[18px] w-[18px]" />
               <IconMinus
-                class="absolute right-0 transition-transform h-4"
+                class="absolute right-0 transition-transform h-[18px] w-[18px]"
                 :class="{
                   'rotate-0': open,
                   'rotate-90': !open
