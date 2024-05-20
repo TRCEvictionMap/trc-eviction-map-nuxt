@@ -11,7 +11,7 @@ const featureState = useFeatureState();
 const currentSourceHumanReadable = computed(() => controls.currentSourceHumanReadable?.toLowerCase())
 
 function racePercentageDescription(race: string) {
-  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table P1, published by the U.S. Census Bureau for the Decennial Census.`;
+  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table P1 published by the U.S. Census Bureau for the 2020 Decennial Census.`;
 }
 
 
