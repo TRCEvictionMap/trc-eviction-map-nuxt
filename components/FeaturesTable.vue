@@ -11,11 +11,7 @@ const featureState = useFeatureState();
 const currentSourceHumanReadable = computed(() => controls.currentSourceHumanReadable?.toLowerCase())
 
 function racePercentageDescription(race: string) {
-  return `
-    The percentage of households in a given ${currentSourceHumanReadable.value} occupied by persons identifying their race as "${race}."
-    
-    This data comes from table P1 published by the U.S. Census Bureau as part of the 2020 Decennial Census.
-  `;
+  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table P1, published by the U.S. Census Bureau for the Decennial Census.`;
 }
 
 
