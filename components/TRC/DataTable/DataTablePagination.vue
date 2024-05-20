@@ -60,6 +60,7 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
       <IconChevronUp class="-rotate-90 h-[20px] w-[20px]" />
     </button>
     <div class="flex justify-center items-center gap-2">
+      Page
       <input
         type="number"
         :value="pageDisplay"
@@ -73,13 +74,20 @@ const rowsPerPage = [10, 20, 50].map((value) => ({
     <button :disabled="!isNextPage" @click="nextPage" class="pagination-button">
       <IconChevronUp class="rotate-90 h-[20px] w-[20px]" />
     </button>
-    <TRCSelect v-model="pageSize" :options="rowsPerPage" dropUp />
+    <TRCSelect v-model="pageSize" :options="rowsPerPage" class="z-20" dropUp />
   </div>
 </template>
 
 <style scoped>
 
-input[type="number"] {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+  -moz-appearance:textfield; /* Firefox */
   appearance: textfield;
 }
 

@@ -22,7 +22,9 @@ const emit = defineEmits<{
 const tableColumns = useTableColumns(props.columns);
 
 const {
+  incrementSortState,
   setSortState,
+  clearSortState,
   sortBy,
   sortDirection,
   data: sortedRows,
@@ -57,6 +59,12 @@ function onRowSelect(rowId: string) {
 
 <template>
   <div>
+    <TRCDataTableTop
+      :columns="columns"
+      :sortBy="sortBy"
+      :sortDirection="sortDirection"
+      @col:sort:direction="setSortState"
+    />
     <div class="h-full overflow-auto">
       <TRCDataTableHeader
         :sortBy="sortBy"
@@ -67,7 +75,8 @@ function onRowSelect(rowId: string) {
         :enableSelectAll="enableSelectAll"
         @rows:selectAll="onRowsSelectAll"
         @col:pin="$emit('col:pin', $event)"
-        @col:sort="setSortState"
+        @col:sort:increment="incrementSortState"
+        @col:sort:direction="setSortState"
       />
       <div role="rowgroup">
         <TRCDataTableRow

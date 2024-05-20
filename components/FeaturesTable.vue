@@ -8,6 +8,16 @@ const controls = useMapControls();
 const featureProperties = useFeatureProperties();
 const featureState = useFeatureState();
 
+const currentSourceHumanReadable = computed(() => controls.currentSourceHumanReadable?.toLowerCase())
+
+function racePercentageDescription(race: string) {
+  return `
+    The percentage of households in a given ${currentSourceHumanReadable.value} occupied by persons identifying their race as "${race}."
+    
+    This data comes from table P1 published by the U.S. Census Bureau as part of the 2020 Decennial Census.
+  `;
+}
+
 
 const { columns, rows } = dataTableRowsAndCols({
   columns: [
@@ -17,75 +27,90 @@ const { columns, rows } = dataTableRowsAndCols({
       pinned: true,
       headerText: controls.currentSourceHumanReadable ?? "ID",
       disableSort: true,
+      description: controls.currentSourceDesicription
     },
     {
       field: "n_filings",
-      width: 100,
+      width: 90,
       headerText: "Filings",
-      infoText: `The number of evictions filed against renters living in a given ${controls.currentSourceHumanReadable}`,
+      description: `The number of evictions filed against renters living in a given ${currentSourceHumanReadable.value}`,
     },
     {
       field: "filing_rate",
-      width: 130,
+      width: 115,
       headerText: "Filing Rate",
-      infoText: `A ratio representing the number of evictions filed for every 100 renters living in a given ${controls.currentSourceHumanReadable}`,
+      description: `A ratio representing the number of evictions filed for every 100 renters living in a given ${currentSourceHumanReadable.value}`,
     },
     {
       field: "renter_count",
-      width: 150,
+      width: 135,
       headerText: "Renter Count",
+      description: `The number of renter-occupied households estimated to be in a given ${currentSourceHumanReadable.value}`,
     },
     {
       field: "renter_rate",
-      width: 140,
+      width: 125,
       headerText: "Renter Rate",
+      description: `A ratio representing the number of renter-occupied vs owner-occupied households estimated to be in a given ${controls.currentDemographicMetric}`,
     },
     {
       field: "poverty_rate",
-      width: 150,
+      width: 135,
       headerText: "Poverty Rate",
+      description: `
+        Estimates of the percentage of families in a given ${currentSourceHumanReadable.value} whose income in the past 12 months was below poverty level.
+      
+        This data comes from Table B17010 published by the U.S. Census Bureau as part of the 2022 American Community Survey.
+      `,
     },
     {
       field: "pct_ai",
-      width: 170,
+      width: 155,
       headerText: "American Indian",
       headerTitle: "Percent American Indian",
+      description: racePercentageDescription("American Indian"),
     },
     {
       field: "pct_as",
-      width: 100,
+      width: 80,
       headerText: "Asian",
       headerTitle: "Percent Asian",
+      description: racePercentageDescription("Asian"),
     },
     {
-      width: 100,
+      width: 80,
       field: "pct_bl",
       headerText: "Black",
       headerTitle: "Percent Black",
+      description: racePercentageDescription("Black"),
     },
     {
-      width: 160,
+      width: 140,
       field: "pct_multi",
       headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
+      description: racePercentageDescription("Multiple Races"),
     },
     {
-      width: 100,
+      width: 80,
       field: "pct_other",
       headerText: "Other",
       headerTitle: "Percent Other",
+      description: racePercentageDescription("Other"),
     },
     {
-      width: 160,
+      width: 150,
       field: "pct_pi",
       headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
+      description: racePercentageDescription("Pacific Islander"),
     },
     {
-      width: 100,
+      width: 80,
       field: "pct_wh",
       headerText: "White",
       headerTitle: "Percent White",
+      description: racePercentageDescription("White"),
     },
   ],
   rows: computed(
@@ -227,10 +252,10 @@ const selectedFeatures = computed({
       class="w-2 z-30"
     />
     <h1 class="font-bold text-xl mt-2">
-      {{ controls.currentYear }} Eviction and Demographic Data
+      Eviction and Demographic Data
     </h1>
     <TRCDataTable
-      class="max-h-[calc(100%-120px)] rounded bg-white"
+      class="max-h-[calc(100%-140px)] rounded bg-white"
       :initalPageSize="20"
       :columns="columns"
       :rows="rows"

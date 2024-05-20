@@ -6,8 +6,17 @@ type SortFn<Item, SortBy> = (
   direction: SortDirection
 ) => number;
 
-function useSort<SortBy, Item>(items: ComputedRef<Item[]>, sortFn: SortFn<Item, SortBy>) {
-  const { setSortState, sortBy, sortDirection } = useSortState<SortBy>();
+function useSort<SortBy, Item>(
+  items: ComputedRef<Item[]>,
+  sortFn: SortFn<Item, SortBy>
+) {
+  const {
+    incrementSortState,
+    sortBy,
+    sortDirection,
+    setSortState,
+    clearSortState
+  } = useSortState<SortBy>();
 
   const data = computed(() => {
     if (sortBy.value) {
@@ -24,7 +33,14 @@ function useSort<SortBy, Item>(items: ComputedRef<Item[]>, sortFn: SortFn<Item, 
     return Array.from(items.value);
   });
 
-  return { data, setSortState, sortBy, sortDirection };
+  return {
+    data,
+    incrementSortState,
+    sortBy,
+    sortDirection,
+    setSortState,
+    clearSortState
+  };
 }
 
 export { useSort };
