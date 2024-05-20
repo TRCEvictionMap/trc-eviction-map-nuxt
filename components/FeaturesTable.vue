@@ -35,13 +35,17 @@ const { columns, rows } = dataTableRowsAndCols({
       field: "filing_rate",
       width: 115,
       headerText: "Filing Rate",
-      description: `A ratio representing the number of evictions filed for every 100 renters living in a given ${currentSourceHumanReadable.value}.`,
+      description: `A ratio representing the number of evictions filed for every 100 renter-occupied households in a given ${currentSourceHumanReadable.value}.`,
     },
     {
       field: "renter_count",
       width: 135,
       headerText: "Renter Count",
-      description: `The number of renter-occupied households estimated to be in a given ${currentSourceHumanReadable.value}.`,
+      description: `
+        The number of renter-occupied households estimated to be in a given ${currentSourceHumanReadable.value}.
+        
+        This data comes from Table B25008 published by the U.S. Census Bureau as part of the 2022 American Community Survey.
+      `,
     },
     {
       field: "renter_rate",
