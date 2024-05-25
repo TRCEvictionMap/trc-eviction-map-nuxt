@@ -6,261 +6,261 @@ import type { MapboxMouseEvent, SourceId } from "~/utils/types";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
 
 function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
-    const {
-        evictionsLayerId,
-        demographicsLayerId,
-        demographicsShadingLayerId,
-        demographicsBorderLayerId,
-    } = useLayerIds(source);
+  const {
+    evictionsLayerId,
+    demographicsLayerId,
+    demographicsShadingLayerId,
+    demographicsBorderLayerId,
+  } = useLayerIds(source);
 
-    return [
-        {
-            source,
-            id: demographicsLayerId,
-            type: "fill",
-            paint: {
-                "fill-opacity": 0,
-            },
-            filter: ["==", "$type", "Polygon"]
-        },
-        {
-            source,
-            id: demographicsShadingLayerId,
-            type: "fill",
-            paint: {
-                "fill-opacity": 0.8,
-            }
-        },
-        {
-            source,
-            id: demographicsBorderLayerId,
-            type: "line",
-            filter: ["==", "$type", "Polygon"],
-            paint: {
-                "line-width": [
-                    "case",
-                    ["boolean", ["feature-state", "isSelected"], false],
-                    4,
-                    1,
-                ],
-                "line-color": [
-                    "case",
-                    ["boolean", ["feature-state", "isHovered"], false],
-                    "black",
-                    "gray"
-                ]
-            }
-        },
-        {
-            source,
-            id: evictionsLayerId,
-            type: "circle",
-            paint: {
-                "circle-color": CIRCLE_COLOR,
-                "circle-opacity": 0.8,
-                "circle-stroke-color": "black",
-                "circle-stroke-width": 1
-            },
-            filter: ["==", "$type", "Point"],
-        },
-    ];
+  return [
+    {
+      source,
+      id: demographicsLayerId,
+      type: "fill",
+      paint: {
+        "fill-opacity": 0,
+      },
+      filter: ["==", "$type", "Polygon"]
+    },
+    {
+      source,
+      id: demographicsShadingLayerId,
+      type: "fill",
+      paint: {
+        "fill-opacity": 0.8,
+      }
+    },
+    {
+      source,
+      id: demographicsBorderLayerId,
+      type: "line",
+      filter: ["==", "$type", "Polygon"],
+      paint: {
+        "line-width": [
+          "case",
+          ["boolean", ["feature-state", "isSelected"], false],
+          4,
+          1,
+        ],
+        "line-color": [
+          "case",
+          ["boolean", ["feature-state", "isHovered"], false],
+          "black",
+          "gray"
+        ]
+      }
+    },
+    {
+      source,
+      id: evictionsLayerId,
+      type: "circle",
+      paint: {
+        "circle-color": CIRCLE_COLOR,
+        "circle-opacity": 0.8,
+        "circle-stroke-color": "black",
+        "circle-stroke-width": 1
+      },
+      filter: ["==", "$type", "Point"],
+    },
+  ];
 }
 
 function useMapLayers(map: mapboxgl.Map) {
 
-    const controls = useMapControls();
-    const featureState = useFeatureState();
-    const featureProperties = useFeatureProperties();
-    const interpolated = useInterpolatedColorValues();
+  const controls = useMapControls();
+  const featureState = useFeatureState();
+  const featureProperties = useFeatureProperties();
+  const interpolated = useInterpolatedColorValues();
 
-    const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
+  const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
 
-    watch(
-        () => featureState.selectedFeatures,
-        updateSelectedFeatures,
-        { immediate: true }
+  watch(
+    () => featureState.selectedFeatures,
+    updateSelectedFeatures,
+    { immediate: true }
+  );
+
+  watch(
+    [
+      () => controls.currentEvictionMetric,
+      () => controls.currentYear,
+    ],
+    updateEvictionsPaintProperties,
+    { immediate: true }
+  );
+
+  watch(
+    [
+      () => controls.currentDemographicMetric,
+    ],
+    updateDemographicsPaintProperties,
+    { immediate: true }
+  );
+
+  watch(() => featureState.hoveredFeature, (current, prev) => {
+    if (prev) {
+      map.setFeatureState(
+        { source: controls.currentSource, id: prev },
+        { isHovered: false }
+      );
+    }
+    if (current) {
+      map.setFeatureState(
+        { source: controls.currentSource, id: current },
+        { isHovered: true }
+      );
+    }
+  });
+
+  const layers = createLayers(controls.currentSource);
+
+  function updateIsSelected(featureId: string, isSelected: boolean) {
+    map.setFeatureState(
+      { source: controls.currentSource, id: featureId },
+      { isSelected },
     );
+  }
 
-    watch(
-        [
-            () => controls.currentEvictionMetric,
-            () => controls.currentYear,
-        ],
-        updateEvictionsPaintProperties,
-        { immediate: true }
-    );
+  function updateSelectedFeatures(current: string[], previous?: string[]) {
+    previous
+      ?.filter((featureId) => !current.includes(featureId))
+      .forEach((featureId) => {
+        updateIsSelected(featureId, false);
+      });
 
-    watch(
-        [
-            () => controls.currentDemographicMetric,
-        ],
-        updateDemographicsPaintProperties,
-        { immediate: true }
-    );
+    current
+      .filter((featureId) => !previous?.includes(featureId))
+      .forEach((featureId) => {
+        updateIsSelected(featureId, true);
+      });
+  }
 
-    watch(() => featureState.hoveredFeature, (current, prev) => {
-        if (prev) {
-            map.setFeatureState(
-                { source: controls.currentSource, id: prev },
-                { isHovered: false }
-            );
-        }
-        if (current) {
-            map.setFeatureState(
-                { source: controls.currentSource, id: current },
-                { isHovered: true }
-            );
-        }
-    });
+  const interpolatedDemographicValues = computed(
+    (): Record<DemographicMetric, (number | string)[]> => ({
+      none: [],
+      renter_count: Object.entries(interpolated.renter_count).flatMap(
+        ([step, color]) => [Number.parseFloat(step), color]
+      ),
+      renter_rate: Object.entries(interpolated.renter_rate).flatMap(
+        ([step, color]) => [Number.parseFloat(step), color]
+      ),
+      poverty_rate: Object.entries(interpolated.poverty_rate).flatMap(
+        ([step, color]) => [Number.parseFloat(step), color]
+      ),
+    })
+  );
 
-    const layers = createLayers(controls.currentSource);
+  const interpolatedEvictionValues = computed(
+    (): Record<EvictionMetric, (number | string)[]> => ({
+      none: [],
+      filing_rate: Object.entries(interpolated.filing_rate).flatMap(
+        ([step, size]) => [Number.parseFloat(step), size]
+      ),
+      n_filings: Object.entries(interpolated.n_filings).flatMap(
+        ([step, size]) => [Number.parseFloat(step), size]
+      ),
+    })
+  )
 
-    function updateIsSelected(featureId: string, isSelected: boolean) {
-        map.setFeatureState(
-            { source: controls.currentSource, id: featureId },
-            { isSelected },
+  function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
+    if (map.getLayer(demographicsShadingLayerId)) {
+      if (metric !== "none") {
+        map.setLayoutProperty(demographicsShadingLayerId, "visibility", "visible");
+        map.setPaintProperty(
+          demographicsShadingLayerId,
+          "fill-color",
+          [
+            "interpolate",
+            ["linear"],
+            ["number", ["get", metric, ["properties"]]],
+            ...interpolatedDemographicValues.value[metric]
+          ],
         );
+      }
+      else {
+        map.setLayoutProperty(demographicsShadingLayerId, "visibility", "none");
+      }
     }
+  }
 
-    function updateSelectedFeatures(current: string[], previous?: string[]) {
-        previous
-            ?.filter((featureId) => !current.includes(featureId))
-            .forEach((featureId) => {
-                updateIsSelected(featureId, false);
-            });
+  function updateEvictionsPaintProperties([metric, year]: [EvictionMetric, string]) {
+    if (map.getLayer(evictionsLayerId)) {
+      if (metric !== "none") {
+        map.setLayoutProperty(evictionsLayerId, "visibility", "visible");
+        map.setPaintProperty(
+          evictionsLayerId,
+          "circle-radius",
+          [
+            "interpolate",
+            ["linear"],
+            ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
+            ...interpolatedEvictionValues.value[metric]
+          ]
+        );
+      }
+      else {
+        map.setLayoutProperty(evictionsLayerId, "visibility", "none");
+      }
 
-        current
-            .filter((featureId) => !previous?.includes(featureId))
-            .forEach((featureId) => {
-                updateIsSelected(featureId, true);
-            });
     }
+  }
 
-    const interpolatedDemographicValues = computed(
-        (): Record<DemographicMetric, (number | string)[]> => ({
-            none: [],
-            renter_count: Object.entries(interpolated.renter_count).flatMap(
-                ([step, color]) => [Number.parseFloat(step), color]
-            ),
-            renter_rate: Object.entries(interpolated.renter_rate).flatMap(
-                ([step, color]) => [Number.parseFloat(step), color]
-            ),
-            poverty_rate: Object.entries(interpolated.poverty_rate).flatMap(
-                ([step, color]) => [Number.parseFloat(step), color]
-            ),
-        })
-    );
-
-    const interpolatedEvictionValues = computed(
-        (): Record<EvictionMetric, (number | string)[]> => ({
-            none: [],
-            filing_rate: Object.entries(interpolated.filing_rate).flatMap(
-                ([step, size]) => [Number.parseFloat(step), size]
-            ),
-            n_filings: Object.entries(interpolated.n_filings).flatMap(
-                ([step, size]) => [Number.parseFloat(step), size]
-            ),
-        })
-    )
-
-    function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
-        if (map.getLayer(demographicsShadingLayerId)) {
-            if (metric !== "none") {
-                map.setLayoutProperty(demographicsShadingLayerId, "visibility", "visible");
-                map.setPaintProperty(
-                    demographicsShadingLayerId,
-                    "fill-color",
-                    [
-                        "interpolate",
-                        ["linear"],
-                        ["number", ["get", metric, ["properties"]]],
-                        ...interpolatedDemographicValues.value[metric]
-                    ],
-                );
-            }
-            else {
-                map.setLayoutProperty(demographicsShadingLayerId, "visibility", "none");
-            }
-        }
+  function handleMapClick(ev: MapboxMouseEvent<true>) {
+    if (ev.features && ev.features.length > 0) {
+      const justClicked = ev.features[0].id?.toString() ?? "";
+      featureState.setFeatureState(
+        justClicked,
+        "isSelected",
+        !featureState.selectedFeatures.includes(justClicked)
+      );
     }
+  }
 
-    function updateEvictionsPaintProperties([metric, year]: [EvictionMetric, string]) {
-        if (map.getLayer(evictionsLayerId)) {
-            if (metric !== "none") {
-                map.setLayoutProperty(evictionsLayerId, "visibility", "visible");
-                map.setPaintProperty(
-                    evictionsLayerId,
-                    "circle-radius",
-                    [
-                        "interpolate",
-                        ["linear"],
-                        ["number", ["get", metric, ["get", year, ["get", "evictions", ["properties"]]]]],
-                        ...interpolatedEvictionValues.value[metric]
-                    ]
-                );
-            }
-            else {
-                map.setLayoutProperty(evictionsLayerId, "visibility", "none");
-            }
-        
-        }
+  function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
+    featureState.clearHoveredFeature();
+  }
+
+  function handleMapMousemove(ev: MapboxMouseEvent<true>) {
+    if (ev.features && ev.features.length > 0) {
+      const hovered = ev.features[0].id?.toString() ?? "";
+      featureState.setFeatureState(hovered, "isHovered", "feature");
     }
+  }
 
-    function handleMapClick(ev: MapboxMouseEvent<true>) {
-        if (ev.features && ev.features.length > 0) {
-            const justClicked = ev.features[0].id?.toString() ?? "";
-            featureState.setFeatureState(
-                justClicked,
-                "isSelected",
-                !featureState.selectedFeatures.includes(justClicked)
-            );
-        }
-    }
-
-    function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
-        featureState.clearHoveredFeature();
-    }
-
-    function handleMapMousemove(ev: MapboxMouseEvent<true>) {
-        if (ev.features && ev.features.length > 0) {
-            const hovered = ev.features[0].id?.toString() ?? "";
-            featureState.setFeatureState(hovered, "isHovered", "feature");
-        }
-    }
-
-    onMounted(() => {
-        layers.forEach((layer) => {
-            map.addLayer(layer);
-        });
-
-        updateEvictionsPaintProperties([
-            controls.currentEvictionMetric,
-            controls.currentYear
-        ]);
-
-        updateDemographicsPaintProperties([
-            controls.currentDemographicMetric
-        ]);
-
-        map.on("click", demographicsLayerId, handleMapClick);
-        map.on("mousemove", demographicsLayerId, handleMapMousemove);
-        map.on("mouseleave", demographicsLayerId, handleMapMouseleave);
+  onMounted(() => {
+    layers.forEach((layer) => {
+      map.addLayer(layer);
     });
-    
-    onBeforeUnmount(() => {
-        layers.forEach((layer) => {
-            map.removeLayer(layer.id);
-        });
 
-        updateSelectedFeatures([], featureState.selectedFeatures);
+    updateEvictionsPaintProperties([
+      controls.currentEvictionMetric,
+      controls.currentYear
+    ]);
 
-        featureState.clearSelectedFeatures();
-        featureState.clearHoveredFeature();
+    updateDemographicsPaintProperties([
+      controls.currentDemographicMetric
+    ]);
 
-        map.off("click", demographicsLayerId, handleMapClick);
-        map.off("mousemove", demographicsLayerId, handleMapMousemove);
-        map.off("mouseleave", demographicsLayerId, handleMapMouseleave);
+    map.on("click", demographicsLayerId, handleMapClick);
+    map.on("mousemove", demographicsLayerId, handleMapMousemove);
+    map.on("mouseleave", demographicsLayerId, handleMapMouseleave);
+  });
+
+  onBeforeUnmount(() => {
+    layers.forEach((layer) => {
+      map.removeLayer(layer.id);
     });
+
+    updateSelectedFeatures([], featureState.selectedFeatures);
+
+    featureState.clearSelectedFeatures();
+    featureState.clearHoveredFeature();
+
+    map.off("click", demographicsLayerId, handleMapClick);
+    map.off("mousemove", demographicsLayerId, handleMapMousemove);
+    map.off("mouseleave", demographicsLayerId, handleMapMouseleave);
+  });
 }
 
 
@@ -484,17 +484,17 @@ function useMapLayers(map: mapboxgl.Map) {
 //         map.on("mousemove", areaSourceId, handleMapMousemove);
 //         map.on("mouseleave", areaSourceId, handleMapMouseleave);
 //     });
-    
+
 //     onBeforeUnmount(() => {
 //         layers.forEach((layer) => {
 //             map.removeLayer((layer as mapboxgl.AnyLayer).id);
 //         });
-        
+
 //         updateSelectedFeatures([], featureState.selectedFeatures);
 
 //         featureState.clearSelectedFeatures();
 //         featureState.clearHoveredFeature();
-        
+
 //         map.off("click", areaSourceId, handleMapClick);
 //         map.off("mousemove", areaSourceId, handleMapMousemove);
 //         map.off("mouseleave", areaSourceId, handleMapMouseleave);
