@@ -14,6 +14,7 @@ import { useSettings } from "~/stores/settings-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
 import { useFeatureFlags } from "~/stores/feature-flags";
+import type mapboxgl from "mapbox-gl";
 
 useHead({
   title: "Eviction Map - Tenant Resource Center"
@@ -69,42 +70,107 @@ await useAsyncData(
   () => queryContent("/welcome-modal-content").findOne()
 );
 
+const showDetailCards = computed(() =>
+  !disclosures.showDetails &&
+  !settings.options.showAlderDistricts &&
+  !settings.options.showDataTable
+);
+
+// function onEnter(el: Element, done: () => void) {
+//   const panelWidth = unref(useLocalStorageRef(
+//     "table-panel-width",
+//     window.innerWidth / 2
+//   ));
+
+//   animate({
+//     done,
+//     duration: 200,
+//     start: 0,
+//     dest: panelWidth,
+//     callback(value) {
+//       (el as HTMLElement).style.width = `${value}px`;
+//     }
+//   });
+// }
+
+// function onLeave(el: Element, done: () => void) {
+//   const panelWidth = unref(useLocalStorageRef(
+//     "table-panel-width",
+//     window.innerWidth / 2
+//   ));
+
+//   animate({
+//     done,
+//     duration: 200,
+//     start: panelWidth,
+//     dest: 0,
+//     callback(value) {
+//       (el as HTMLElement).style.width = `${value}px`;
+//     }
+//   });
+// }
+
+// interface AnimateOptions {
+//   duration: number;
+//   done: () => void;
+//   callback: (easedValue: number) => void;
+//   start: number;
+//   dest: number;
+// }
+
+// function animate(options: AnimateOptions) {
+//   const { duration, done, callback, start, dest } = options;
+//   const startTime = Date.now();
+//   const endTime = startTime + duration;
+
+//   let easedValue = start;
+
+//   function doAnimation() {
+//     const currentTime = Date.now();
+
+//     if (currentTime > endTime) {
+//       callback(easedValue);
+//       return done();
+//     }
+
+//     const progress = currentTime - startTime;
+
+//     easedValue = easeInOutExpo(
+//       progress,
+//       start,
+//       dest - start,
+//       duration
+//     );
+    
+//     callback(easedValue);
+
+//     window.requestAnimationFrame(doAnimation);
+//   }
+
+//   doAnimation();
+// }
 
 </script>
 
 <template>
   <div class="absolute top-0 w-full h-full flex flex-col">
     <TheHeader />
-    <template v-if="!settings.options.showDataTable">
-      <ClientOnly>
-        <Disclosure :defaultOpen="disclosures.showDetails">
-          <TheMap>
-            <MapControls position="center" />
-            <MapLayers />
-            <MapLegend v-if="!disclosures.showDetails" />
-            <DetailCardGroup v-if="!disclosures.showDetails && !settings.options.showAlderDistricts" />
-          </TheMap>
-          <Transition name="details-drawer">
-            <DetailDisclosurePanel static v-if="disclosures.showDetails" />
-          </Transition>
-        </Disclosure>
-        <WelcomeModal />
-      </ClientOnly>
-    </template>
-    <template v-else>
-      <ClientOnly>
+    <ClientOnly>
+      <Disclosure :defaultOpen="disclosures.showDetails">
         <TheMap>
           <template #right>
-            <FeaturesTable />
+            <FeaturesTableDrawer />
           </template>
-          <MapControls position="left" />
+          <MapControls :position="settings.options.showDataTable ? 'left' : 'center' " />
           <MapLayers />
-          <MapLegend />
+          <MapLegend v-if="!disclosures.showDetails" />
+          <DetailCardGroup v-if="showDetailCards" />
         </TheMap>
-        <WelcomeModal />
-      </ClientOnly>
-    </template>
-    <ClientOnly>
+        <Transition name="details-drawer">
+          <DetailDisclosurePanel static v-if="disclosures.showDetails" />
+        </Transition>
+      </Disclosure>
+      <WelcomeModal />
       <SettingsDialog
         :open="konami.didKonami || settings.showDialog"
         @close="onCloseSettingsMenu"
@@ -126,7 +192,6 @@ await useAsyncData(
   from {
     height: 0;
   }
-
   to {
     height: 50%;
   }

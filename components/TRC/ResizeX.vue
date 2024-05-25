@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-const emit = defineEmits<{ "moveX": [delta: number] }>();
+const emit = defineEmits<{ "resize": [delta: number] }>();
 
 const currentX = ref(-1);
 
 function onMousemove(ev: MouseEvent) {
     const delta = ev.clientX - currentX.value;
     currentX.value = ev.clientX;
-    emit("moveX", delta);
+    emit("resize", delta);
 }
 
 function onMouseup(ev: MouseEvent) {
