@@ -79,7 +79,7 @@ const showDetailCards = computed(() =>
     <ClientOnly>
       <TheMapProvider>
         <template #right>
-          <div class="bg-white h-full  ">
+          <div class="bg-white h-full">
             Hello from the right panel
             <div class="flex flex-col gap-2">
               <section v-for="n in 20" :key="n" class="w-full border h-32 rounded bg-slate-100"></section>

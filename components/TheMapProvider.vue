@@ -14,6 +14,10 @@ provide("map", map);
 const sidePanelWidth = useLocalStorageRef("side-panel-width", 400);
 const bottomPanelHeight = useLocalStorageRef("bottom-panel-height", 400);
 
+watch(sidePanelWidth, () => {
+  map.value?.resize();
+});
+
 </script>
 
 <template>
@@ -23,15 +27,44 @@ const bottomPanelHeight = useLocalStorageRef("bottom-panel-height", 400);
         v-if="settings.options.showDataTable"
         key="right"
         class="relative z-20 bg-white border-r max-h-[calc(100vh-60px)] p-4 overflow-auto"
+        :style="{ width: `${sidePanelWidth}px` }"
       >
+        <TRCResize
+          :min="300"
+          :max="600"
+          v-model="sidePanelWidth"
+          direction="horizontal"
+          position="right"
+        />
         <slot name="right"></slot>
       </div>
-      <div class="flex flex-col flex-1 max-h-[calc(100vh-60px)]" key="main">
-        <div class="relative z-10 flex flex-1 ">
-          <div id="map-container" class="flex-1"></div>
+      <div
+        key="main"
+        class="flex flex-col flex-1 max-h-[calc(100vh-60px)]"
+      >
+        <div
+          key="map-content"
+          class="relative z-10 flex flex-1"
+        >
+          <div
+            id="map-container"
+            class="flex-1"
+          ></div>
           <slot name="map-overlay"></slot>
         </div>
-        <div class="relative z-20 p-2 border-t">
+        <div
+          v-if="settings.options.showBottomPanel"
+          key="bottom-panel"
+          class="relative z-20 p-2 border-t bg-white w-full"
+          :style="{ height: `${bottomPanelHeight}px` }"
+        >
+          <TRCResize
+            :min="300"
+            :max="600"
+            v-model="bottomPanelHeight"
+            direction="vertical"
+            position="top"
+          />
           <slot name="bottom"></slot>
         </div>
       </div>
@@ -43,7 +76,7 @@ const bottomPanelHeight = useLocalStorageRef("bottom-panel-height", 400);
 .side-drawer-move,
 .side-drawer-enter-active,
 .side-drawer-leave-active {
-  transition: transform 75ms ease-in-out;
+  transition: all 75ms ease-in-out;
 }
 
 .side-drawer-enter-from,
