@@ -2,6 +2,10 @@
 import { useMapControls } from "~/stores/map-controls-store";
 import { interpolateFillRGBA } from "~/composables/use-interpolated-color-values";
 
+defineProps<{
+    position: Position
+}>();
+
 const interpolated = useInterpolatedColorValues();
 const controls = useMapControls();
 
@@ -37,9 +41,15 @@ const evictionStopSizes = computed(() =>
     <div
         v-if="controls.currentDemographicMetric !== 'none' || controls.currentEvictionMetric !== 'none'"
         class="
-            absolute bottom-8 right-2 self-end shadow-xl border rounded bg-white text-xs p-2 min-h-[90px]
-            sm:bottom-6 sm:p-4 sm:text-sm sm:min-h-[118px]
+            absolute self-end shadow-xl border rounded bg-white text-xs p-2 min-h-[90px]
+            sm:p-4 sm:text-sm sm:min-h-[118px]
         "
+        :class="{
+            'bottom-8 right-2 sm:bottom-6': position === 'bottom-right',
+            'top-2 left-2': position === 'top-left',
+            'top-2 right-2': position === 'top-right',
+            'bottom-9 left-2 sm:bottom-8': position === 'bottom-left',
+        }"
     >
 
         <div class="flex space-x-4">

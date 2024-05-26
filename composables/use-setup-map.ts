@@ -8,7 +8,14 @@ import { useFeatureState } from "~/stores/feature-state-store";
 import type { EvictionFeatureCollection } from "~/utils/types";
 import { useDisclosures } from "~/stores/disclosures-store";
 
-function useSetupMap(containerId: string) {
+interface SetupMapOptions {
+  containerId: string;
+  navControlPosition?: Position;
+}
+
+function useSetupMap(options: SetupMapOptions) {
+  const { containerId, navControlPosition } = options;
+  
   const map = ref<mapboxgl.Map>();
 
   const config = useRuntimeConfig();
@@ -35,7 +42,7 @@ function useSetupMap(containerId: string) {
       new mapboxgl.NavigationControl({
         visualizePitch: true,
       }),
-      "top-right"
+      navControlPosition ?? "top-right"
     );
 
     mapMeta.lngLat = _lngLat;

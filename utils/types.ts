@@ -57,6 +57,9 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
     } & mapboxgl.EventData
     : mapboxgl.MapMouseEvent & mapboxgl.EventData;
 
+
+type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left";
+
 export { isSourceId };
 export type {
     EvictionFeatureCollection,
@@ -64,5 +67,6 @@ export type {
     DemographicFeatureProperties,
     SourceId,
     FeatureId,
-    MapboxMouseEvent
+    MapboxMouseEvent,
+    Position
 };

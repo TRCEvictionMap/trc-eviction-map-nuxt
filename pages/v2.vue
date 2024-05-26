@@ -12,7 +12,6 @@ import { useDisclosures } from "~/stores/disclosures-store";
 import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
 import { useFeatureFlags } from "~/stores/feature-flags";
 
-
 useHead({
   title: "Eviction Map - Tenant Resource Center"
 });
@@ -75,47 +74,26 @@ const showDetailCards = computed(() =>
 </script>
 
 <template>
-  <div class="absolute top-0 w-full h-full flex flex-col">
+  <div class="min-h-screen flex flex-col">
     <TheHeader />
     <ClientOnly>
-      <Disclosure :defaultOpen="disclosures.showDetails">
-        <TheMap>
-          <template #right>
-            <FeaturesTableDrawer />
-          </template>
-          <MapControls :position="settings.options.showDataTable ? 'left' : 'center' " />
+      <TheMapProvider>
+        <template #right>
+          <div class="bg-white h-full  ">
+            Hello from the right panel
+            <div class="flex flex-col gap-2">
+              <section v-for="n in 20" :key="n" class="w-full border h-32 rounded bg-slate-100"></section>
+            </div>
+          </div>
+        </template>
+        <template #map-overlay>
           <MapLayers />
-          <MapLegend v-if="!disclosures.showDetails" position="bottom-right" />
-          <DetailCardGroup v-if="showDetailCards" />
-        </TheMap>
-        <Transition name="details-drawer">
-          <DetailDisclosurePanel static v-if="disclosures.showDetails" />
-        </Transition>
-      </Disclosure>
-      <WelcomeModal />
-      <SettingsDialog
-        :open="konami.didKonami || settings.showDialog"
-        @close="onCloseSettingsMenu"
-      />
+          <MapLegend position="bottom-right" />
+        </template>
+        <template #bottom>
+          <div>Heller</div>
+        </template>
+      </TheMapProvider>
     </ClientOnly>
   </div>
 </template>
-
-<style scoped>
-.details-drawer-enter-active {
-  animation: details-drawer-open 0.1s;
-}
-
-.details-drawer-leave-active {
-  animation: details-drawer-open 0.1s reverse;
-}
-
-@keyframes details-drawer-open {
-  from {
-    height: 0;
-  }
-  to {
-    height: 50%;
-  }
-}
-</style>

@@ -356,14 +356,16 @@ function animate(options: AnimateOptions) {
 </script>
 
 <template>
-  <Transition
+  <!-- <Transition
     :css="false"
     @enter="onEnter"
     @leave="onLeave"
-  >
+  > -->
+  <TRCDrawer>
     <div v-if="settings.options.showDataTable" class="relative flex">
+      <!-- class="absolute top-0 bottom-0 p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden" -->
       <div
-        class="absolute top-0 bottom-0 p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden"
+        class="p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden"
         :style="{ width: `${panelWidth}px` }"
       >
         <TRCResizeX
@@ -387,6 +389,10 @@ function animate(options: AnimateOptions) {
         />
       </div>
     </div>
-  </Transition>
+  </TRCDrawer>
 
 </template>
+
+<style>
+
+</style>
