@@ -12,31 +12,39 @@ const map = useSetupMap({
 provide("map", map);
 
 const sidePanelWidth = useLocalStorageRef("side-panel-width", 400);
+const resizeActive = ref(false);
+
 const bottomPanelHeight = useLocalStorageRef("bottom-panel-height", 400);
 
-watch(sidePanelWidth, () => {
+watch(sidePanelWidth, resizeMap);
+
+function resizeMap() {
   map.value?.resize();
-});
+}
 
 </script>
 
 <template>
-  <div class="flex flex-1">
-    <TransitionGroup name="side-drawer">
+  <div class="relative flex flex-1">
+    <TransitionGroup :name="resizeActive ? 'disabled-transition' : 'side-drawer'" @afterLeave="resizeMap">
       <div
         v-if="settings.options.showDataTable"
         key="right"
-        class="relative z-20 bg-white border-r max-h-[calc(100vh-60px)] p-4 overflow-auto"
+        class="relative z-20 bg-white border-r  "
         :style="{ width: `${sidePanelWidth}px` }"
       >
         <TRCResize
           :min="300"
-          :max="600"
+          :max="800"
           v-model="sidePanelWidth"
           direction="horizontal"
           position="right"
+          @mousedown="resizeActive = true"
+          @mouseup="resizeActive = false"
         />
-        <slot name="right"></slot>
+        <div class="p-4 overflow-auto max-h-[calc(100vh-60px)]">
+          <slot name="right"></slot>
+        </div>
       </div>
       <div
         key="main"

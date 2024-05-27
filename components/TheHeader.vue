@@ -28,6 +28,7 @@ const flags = useFeatureFlags();
         <ClientOnly>
           <div class="flex gap-4">
             <TRCSwitch
+              v-if="true"
               v-model="settings.options.showBottomPanel"
               :label="`${settings.options.showBottomPanel ? 'Hide' : 'Show'} Bottom Panel`"
             />

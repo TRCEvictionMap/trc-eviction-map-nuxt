@@ -7,7 +7,11 @@ const props = defineProps<{
   min: number;
 }>();
 
-const emit = defineEmits<{ "update:modelValue": [value: number] }>();
+const emit = defineEmits<{
+  "update:modelValue": [value: number];
+  "mousedown": [];
+  "mouseup": [];
+}>();
 
 const tracked = ref(-1);
 
@@ -37,6 +41,7 @@ function onMousemove(ev: MouseEvent) {
 
 function onMouseup() {
   // console.log("[Resize] onMouseup");
+  emit("mouseup");
   tracked.value = -1;
   window.removeEventListener("selectstart", onSelectStart);
   window.removeEventListener("mousemove", onMousemove);
@@ -45,6 +50,7 @@ function onMouseup() {
 
 function onMousedown(ev: MouseEvent) {
   // console.log("[Resize] onMousedown");
+  emit("mousedown");
   tracked.value = props.direction === "horizontal" ? ev.clientX : ev.clientY;
   window.addEventListener("selectstart", onSelectStart);
   window.addEventListener("mousemove", onMousemove);
@@ -62,14 +68,15 @@ function onSelectStart(ev: Event) {
   <div
     @mousedown="onMousedown"
     role="button"
-    class="absolute transition hover:bg-trc-blue-400"
+    class="absolute transition hover:bg-trc-blue-400 z-40"
     :class="{
-      'top-0 bottom-0 w-[6px] cursor-ew-resize': direction === 'horizontal',
-      'left-0 right-0 h-[6px] cursor-ns-resize': direction === 'vertical',
+      'top-0 bottom-0 w-2 cursor-ew-resize': direction === 'horizontal',
+      'left-0 right-0 h-2 cursor-ns-resize': direction === 'vertical',
       'right-0': position === 'right',
       'left-0': position === 'left',
       'top-0': position === 'top',
       'bottom-0': position === 'bottom',
+      'bg-trc-blue-400': tracked > -1
     }"
   ></div>
 </template>

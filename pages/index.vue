@@ -81,7 +81,7 @@ const showDetailCards = computed(() =>
       <Disclosure :defaultOpen="disclosures.showDetails">
         <TheMap>
           <template #right>
-            <FeaturesTableDrawer />
+            <FeaturesTable />
           </template>
           <MapControls :position="settings.options.showDataTable ? 'left' : 'center' " />
           <MapLayers />

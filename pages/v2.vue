@@ -79,11 +79,13 @@ const showDetailCards = computed(() =>
     <ClientOnly>
       <TheMapProvider>
         <template #right>
-          <div class="bg-white h-full">
-            Hello from the right panel
-            <div class="flex flex-col gap-2">
-              <section v-for="n in 20" :key="n" class="w-full border h-32 rounded bg-slate-100"></section>
-            </div>
+          <FeaturesTable class="h-[700px]" />
+          <div class="flex flex-col gap-4">
+            <TransitionGroup name="features">
+              <section v-for="feature in featureState.selectedFeatures" :key="feature" class="bg-slate-100 rounded border p-2">
+                {{ feature }}
+              </section>
+            </TransitionGroup>
           </div>
         </template>
         <template #map-overlay>
@@ -97,3 +99,5 @@ const showDetailCards = computed(() =>
     </ClientOnly>
   </div>
 </template>
+
+<style></style>

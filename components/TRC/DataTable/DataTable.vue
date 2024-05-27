@@ -58,7 +58,7 @@ function onRowSelect(rowId: string) {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col">
     <TRCDataTableTop
       :columns="columns"
       :sortBy="sortBy"
