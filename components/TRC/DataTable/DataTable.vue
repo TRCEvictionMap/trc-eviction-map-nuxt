@@ -65,7 +65,7 @@ function onRowSelect(rowId: string) {
       :sortDirection="sortDirection"
       @col:sort:direction="setSortState"
     />
-    <div class="h-full overflow-auto">
+    <div class="h-full overflow-auto flex-1">
       <TRCDataTableHeader
         :sortBy="sortBy"
         :sortDirection="sortDirection"

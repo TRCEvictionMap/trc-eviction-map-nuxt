@@ -11,12 +11,15 @@ const map = useSetupMap({
 
 provide("map", map);
 
-const sidePanelWidth = useLocalStorageRef("side-panel-width", 400);
 const resizeActive = ref(false);
 
+const sidePanelWidth = useLocalStorageRef("side-panel-width", 400);
 const bottomPanelHeight = useLocalStorageRef("bottom-panel-height", 400);
 
+const mainPanelWidth = computed(() => window.innerWidth - sidePanelWidth.value);
+
 watch(sidePanelWidth, resizeMap);
+watch(bottomPanelHeight, resizeMap);
 
 function resizeMap() {
   map.value?.resize();
@@ -30,7 +33,7 @@ function resizeMap() {
       <div
         v-if="settings.options.showDataTable"
         key="right"
-        class="relative z-20 bg-white border-r  "
+        class="relative z-20 bg-white border-r"
         :style="{ width: `${sidePanelWidth}px` }"
       >
         <TRCResize
@@ -49,6 +52,7 @@ function resizeMap() {
       <div
         key="main"
         class="flex flex-col flex-1 max-h-[calc(100vh-60px)]"
+        :style="{ width: `${mainPanelWidth}px` }"
       >
         <div
           key="map-content"
@@ -63,7 +67,7 @@ function resizeMap() {
         <div
           v-if="settings.options.showBottomPanel"
           key="bottom-panel"
-          class="relative z-20 p-2 border-t bg-white w-full"
+          class="relative z-20 border-t bg-white"
           :style="{ height: `${bottomPanelHeight}px` }"
         >
           <TRCResize
@@ -73,7 +77,10 @@ function resizeMap() {
             direction="vertical"
             position="top"
           />
-          <slot name="bottom"></slot>
+          <div class="p-4 overflow-auto w-full flex flex-col">
+
+            <slot name="bottom" v-bind="{ height: bottomPanelHeight }"></slot>
+          </div>
         </div>
       </div>
     </TransitionGroup>

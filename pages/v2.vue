@@ -79,7 +79,7 @@ const showDetailCards = computed(() =>
     <ClientOnly>
       <TheMapProvider>
         <template #right>
-          <FeaturesTable class="h-[700px]" />
+          <!-- <FeaturesTable class="h-full" /> -->
           <div class="flex flex-col gap-4">
             <TransitionGroup name="features">
               <section v-for="feature in featureState.selectedFeatures" :key="feature" class="bg-slate-100 rounded border p-2">
@@ -92,12 +92,28 @@ const showDetailCards = computed(() =>
           <MapLayers />
           <MapLegend position="bottom-right" />
         </template>
-        <template #bottom>
-          <div>Heller</div>
+        <template #bottom="{ height }">
+          <FeaturesTable :style="{ height: `${height - 30}px` }" />
         </template>
       </TheMapProvider>
     </ClientOnly>
   </div>
 </template>
 
-<style></style>
+<style>
+.features-move,
+.features-enter-active,
+.features-leave-active {
+  transition: all 150ms ease-in-out;
+}
+
+.features-enter-from,
+.features-leave-to {
+  opacity: 0;
+  /* transform: scale(-100%); */
+}
+
+.features-leave-active {
+  position: absolute;
+}
+</style>

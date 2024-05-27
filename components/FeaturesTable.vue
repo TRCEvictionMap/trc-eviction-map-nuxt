@@ -364,15 +364,15 @@ const selectedFeatures = computed({
   <TRCDrawer>
     <!-- <div class="relative flex"> -->
       <!-- class="absolute top-0 bottom-0 p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden" -->
-      <div class="flex flex-col gap-4 overflow-hidden">
+      <!-- <div class="flex flex-col gap-4 overflow-hidden"> -->
         <!-- :style="{ width: `${panelWidth}px` }" -->
         <!-- <TRCResizeX
           @resize="resizePanelWidth"
           class="w-2 z-30"
         /> -->
-        <h1 class="font-bold text-xl mt-2">
+        <!-- <h1 class="font-bold text-xl mt-2">
           Eviction and Demographic Data
-        </h1>
+        </h1> -->
         <TRCDataTable
           class="max-h-[calc(100%-140px)] rounded bg-white"
           :initalPageSize="20"
@@ -385,7 +385,7 @@ const selectedFeatures = computed({
           @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
           @rows:select="rowIds => featureState._features = rowIds"
         />
-      </div>
+      <!-- </div> -->
     <!-- </div> -->
   </TRCDrawer>
 
