@@ -7,7 +7,8 @@ const defaultOptions = {
     showAlderDistricts: false,
     detailCardListUnderlineItems: false,
     showDataTable: false,
-    showBottomPanel: false,
+    showBottomPanel: true,
+    showLeftPanel: true,
 }
 
 type Options = typeof defaultOptions;

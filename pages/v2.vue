@@ -74,15 +74,17 @@ const showDetailCards = computed(() =>
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="absolute w-full min-h-screen flex flex-col">
     <TheHeader />
     <ClientOnly>
       <TheMapProvider>
         <template #right>
-          <!-- <FeaturesTable class="h-full" /> -->
-          <div class="flex flex-col gap-4">
+          <div class="sticky top-0">
+            hello
+          </div>
+          <div class="space-y-4">
             <TransitionGroup name="features">
-              <section v-for="feature in featureState.selectedFeatures" :key="feature" class="bg-slate-100 rounded border p-2">
+              <section v-for="feature in featureState.selectedFeatures" :key="feature" class="bg-slate-100 rounded border p-2 w-full">
                 {{ feature }}
               </section>
             </TransitionGroup>
@@ -96,6 +98,7 @@ const showDetailCards = computed(() =>
           <FeaturesTable :style="{ height: `${height - 30}px` }" />
         </template>
       </TheMapProvider>
+      <WelcomeModal />
     </ClientOnly>
   </div>
 </template>
@@ -110,7 +113,7 @@ const showDetailCards = computed(() =>
 .features-enter-from,
 .features-leave-to {
   opacity: 0;
-  /* transform: scale(-100%); */
+  transform: translateX(-100%);
 }
 
 .features-leave-active {

@@ -25,10 +25,7 @@ function onMousemove(ev: MouseEvent) {
     emit("update:modelValue", max);
   }
 
-  console.log("YAAHAHAHs", modelValue, min)
-
   if (modelValue < min) {
-    
     emit("update:modelValue", min);
   }
 

@@ -31,7 +31,7 @@ function resizeMap() {
   <div class="relative flex flex-1">
     <TransitionGroup :name="resizeActive ? 'disabled-transition' : 'side-drawer'" @afterLeave="resizeMap">
       <div
-        v-if="settings.options.showDataTable"
+        v-if="settings.options.showLeftPanel"
         key="right"
         class="relative z-20 bg-white border-r"
         :style="{ width: `${sidePanelWidth}px` }"

@@ -25,10 +25,10 @@ const flags = useFeatureFlags();
     </NuxtLink>
     <div class="flex py-1 sm:py-3">
       <nav class="flex items-center gap-4 divide-x divide-slate-500">
-        <ClientOnly>
+        <!-- <ClientOnly>
           <div class="flex gap-4">
             <TRCSwitch
-              v-if="true"
+              v-if="false"
               v-model="settings.options.showBottomPanel"
               :label="`${settings.options.showBottomPanel ? 'Hide' : 'Show'} Bottom Panel`"
             />
@@ -38,7 +38,7 @@ const flags = useFeatureFlags();
               :label="`${settings.options.showDataTable ? 'Hide' : 'Show'} Data Table`"
             />
           </div>
-        </ClientOnly>
+        </ClientOnly> -->
         <div class="pl-4">
           <button @click="disclosures.showWelcomeModal = true">
             About
