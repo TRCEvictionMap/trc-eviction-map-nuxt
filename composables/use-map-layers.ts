@@ -41,7 +41,12 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
           "case",
           ["boolean", ["feature-state", "isSelected"], false],
           4,
-          1,
+          [
+            "case",
+            ["boolean", ["feature-state", "isHovered"], false],
+            2,
+            1
+          ]
         ],
         "line-color": [
           "case",

@@ -6,6 +6,7 @@ const props = defineProps<{
   data: DataTableRow<Field>;
   columns: TableColumns<Field>;
   selectedRows: string[];
+  hoveredRow?: string;
 }>();
 
 const emit = defineEmits<{
@@ -29,15 +30,18 @@ const isSelected = computed({
 
 <template>
   <div
-    class="flex"
+    class="relative flex "
+    :class="{
+      'bg-slate-100/50 ring-1 ring-slate-400 z-10': hoveredRow === data.id
+    }"
     role="row"
     :style="{ width: `${tableWidth}px` }"
     @mouseover="$emit('row:mouseover', data.id)"
     @mouseleave="$emit('row:mouseleave', data.id)"
   >
-    <div class="sticky left-0 bg-white shadow-xl">
+    <div class="sticky left-0 bg-white">
       <div class="flex bg-slate-100/60">
-        <div class="dt-cell">
+        <div class="dt-cell ">
           <TRCCheckbox v-model="isSelected" />
         </div>
         <div
@@ -46,7 +50,7 @@ const isSelected = computed({
           :aria-label="col.headerText"
           :style="{ width: `${colWidths[col.field]}px`}"
           role="cell"
-          class="dt-cell justify-between"
+          class="dt-cell  justify-between"
         >
           <span>
             {{ data.fields[col.field].text || data.fields[col.field].value }}

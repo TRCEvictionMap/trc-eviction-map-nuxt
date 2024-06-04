@@ -242,14 +242,18 @@ function setColumnPin(field: string, pinned: boolean) {
 //   }
 // }
 
-const selectedFeatures = computed({
-  get() {
-    return featureState.selectedFeatures;
-  },
-  set(rowIds: string[]) {
-    featureState._features = rowIds;
-  },
-});
+// const MAX_SELECTED_FEATURES = 4;
+
+// const selectedFeatures = computed({
+//   get() {
+//     return featureState.selectedFeatures;
+//   },
+//   set(rowIds: string[]) {
+//     featureState._features = rowIds.length > MAX_SELECTED_FEATURES
+//       ? rowIds.slice(rowIds.length - MAX_SELECTED_FEATURES)
+//       : rowIds;
+//   },
+// });
 
 // function onBeforeEnter(el: Element) {
 //   const panelWidth = unref(useLocalStorageRef(
@@ -378,11 +382,11 @@ const selectedFeatures = computed({
           :initalPageSize="20"
           :columns="columns"
           :rows="rows"
-          enableSelectAll
-          v-model="selectedFeatures"
+          :hoveredRow="featureState.hoveredFeature"
+          v-model="featureState.selectedFeatures"
           @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
-          @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
-          @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
+          @row:mouseleave="rowId => featureState.setFeatureState(rowId, 'isHovered', false)"
+          @row:mouseover="rowId => featureState.setFeatureState(rowId, 'isHovered', 'card')"
           @rows:select="rowIds => featureState._features = rowIds"
         />
       <!-- </div> -->

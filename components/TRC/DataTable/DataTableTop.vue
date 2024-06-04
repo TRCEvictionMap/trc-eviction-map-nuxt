@@ -39,12 +39,12 @@ const _sortBy = computed({
 
 const sortDirectionOptions: TRCSelectOption<SortDirection>[] = [
   {
-    value: "asc",
-    text: "low to high",
-  },
-  {
     value: "desc",
     text: "high to low",
+  },
+  {
+    value: "asc",
+    text: "low to high",
   },
 ];
 

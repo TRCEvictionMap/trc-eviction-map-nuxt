@@ -36,7 +36,7 @@ const { floatingStyles } = useFloating(
       <PopoverPanel
         ref="floating"
         :style="floatingStyles"
-        class="p-4 bg-white shadow-lg border rounded max-w-xs z-30"
+        class="bg-white shadow-lg border rounded max-w-xs z-30"
       >
         <slot v-bind="{ open, close }"></slot>
       </PopoverPanel>

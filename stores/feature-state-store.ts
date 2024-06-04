@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useSettings } from "./settings-store";
 
 type HoveredFeatureKind = "feature" | "card" | "table-row" | false;
 
@@ -8,23 +7,21 @@ interface FeatureState {
     isSelected: boolean;
 }
 
-function useSelectedFeatures() {
-    const settings = useSettings();
+const MAX_SELECTED_FEATURES = 4;
 
+function useSelectedFeatures() {
     const _features = ref<string[]>([]);
 
-    const selectedFeatures = computed(() => _features.value.reduce(
-        (accum: string[], featureId, index) => {
-            if (
-                settings.options.showDataTable ||
-                index >= _features.value.length - 3
-            ) {
-                accum.push(featureId);
-            }
-            return accum;
+    const selectedFeatures = computed({
+        get() {
+            return _features.value;
         },
-        []
-    ));
+        set(features) {
+            _features.value = features.length > MAX_SELECTED_FEATURES
+                ? features.slice(features.length - MAX_SELECTED_FEATURES)
+                : features;
+        }
+    })
 
     function initSelectedFeatures(features: string[]) {
         _features.value = features;
@@ -36,16 +33,9 @@ function useSelectedFeatures() {
 
     function setIsFeatureSelected(featureId: string, isSelected: boolean) {
         if (isSelected) {
-            _features.value = _features.value.concat(featureId);
+            selectedFeatures.value = selectedFeatures.value.concat(featureId);
         } else {
-            _features.value = _features.value.filter((id) => id !== featureId);
-        }
-
-        if (
-            !settings.options.showDataTable &&
-            _features.value.length > 3
-        ) {
-            _features.value.splice(0, _features.value.length - 3);
+            selectedFeatures.value = selectedFeatures.value.filter((id) => id !== featureId);
         }
     }
 
@@ -80,13 +70,13 @@ const useFeatureState = defineStore("feature-state", () => {
 
     function setFeatureState<State extends keyof FeatureState>(
         featureId: string,
-        key: State,
+        state: State,
         value: FeatureState[State]
     ) {
-        if (key === "isSelected") {
+        if (state === "isSelected") {
             setIsFeatureSelected(featureId, value as FeatureState["isSelected"]);
         }
-        if (key === "isHovered") {
+        if (state === "isHovered") {
             setIsFeatureHovered(featureId, value as FeatureState["isHovered"]);
         }
     }

@@ -33,7 +33,7 @@ const isSelectAll = computed({
 <template>
   <div
     role="row"
-    class="flex sticky top-0 z-10"
+    class="flex sticky top-0 z-20"
     :style="{ width: `${tableWidth}px` }"
   >
     <div class="sticky left-0 top-0 z-10 bg-white">

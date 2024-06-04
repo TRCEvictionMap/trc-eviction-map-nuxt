@@ -9,6 +9,7 @@ const props = defineProps<{
   initalPageSize: 10 | 20 | 50;
   enableSelectAll?: boolean;
   maxSelectableRows?: number;
+  hoveredRow?: string;
 }>();
 
 const emit = defineEmits<{
@@ -24,7 +25,6 @@ const tableColumns = useTableColumns(props.columns);
 const {
   incrementSortState,
   setSortState,
-  clearSortState,
   sortBy,
   sortDirection,
   data: sortedRows,
@@ -85,6 +85,7 @@ function onRowSelect(rowId: string) {
           :data="(row as DataTableRow<Field>)"
           :columns="tableColumns"
           :selectedRows="modelValue"
+          :hoveredRow="hoveredRow"
           @row:mouseleave="$emit('row:mouseleave', $event)"
           @row:mouseover="$emit('row:mouseover', $event)"
           @row:select="onRowSelect"

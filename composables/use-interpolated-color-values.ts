@@ -5,7 +5,7 @@ const STEPS = [0, 0.1, 0.5, 0.9];
 
 const FILL_RGB = [120, 151, 181];
 
-const RADIUS = 20;
+const RADIUS = 16;
 
 const CIRCLE_COLOR = "#F48545";
 

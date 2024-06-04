@@ -31,7 +31,11 @@ const description = computed(() =>
 </script>
 
 <template>
-  <TRCPopover alignment="start" :allowedPlacements="['bottom', 'bottom-start', 'bottom-end']">
+  <TRCPopover
+    isFloating
+    alignment="start"
+    :allowedPlacements="['bottom', 'bottom-start', 'bottom-end', 'top', 'top-end', 'top-start']"
+  >
     <template #button="{ open, close }">
       <div class="flex justify-between items-center w-full">
         <span role="columnheader">{{ data.headerText }}</span>
@@ -41,7 +45,7 @@ const description = computed(() =>
       </div>
     </template>
     <template #="{ open, close }">
-      <div class="flex flex-col w-52 gap-2 font-semibold text-slate-800">
+      <div class="flex flex-col w-52 gap-2 font-semibold text-slate-800 text-sm p-2">
         <div class="space-y-1">
           <button
             @click="$emit('col:pin', { field: data.field, pinned: !data.pinned })"
@@ -55,26 +59,32 @@ const description = computed(() =>
               <IconPinAngle class="h-[14px] w-[14px]" /> Pin column
             </template>
           </button>
-          <button
-            class="menu-button"
-            :class="{
-              'menu-button--selected': sortBy === data.field && sortDirection === 'asc'
-            }"
-            @click="onSortDirection(close, 'asc')"
-          >
-            <IconChevronUp class="h-[14px] w-[14px]" /> Sort low to high
-          </button>
-          <button
-            class="menu-button"
-            :class="{
-              'menu-button--selected': sortBy === data.field && sortDirection === 'desc'
-            }"
-            @click="onSortDirection(close, 'desc')"
-          >
-            <IconChevronDown class="h-[14px] w-[14px]" /> Sort high to low
-          </button>
+          <template v-if="!data.disableSort">
+            <button
+              class="menu-button"
+              :class="{
+                'menu-button--selected': sortBy === data.field && sortDirection === 'asc'
+              }"
+              @click="onSortDirection(close, 'asc')"
+            >
+              <IconChevronUp class="h-[14px] w-[14px]" /> Sort low to high
+            </button>
+            <button
+              class="menu-button"
+              :class="{
+                'menu-button--selected': sortBy === data.field && sortDirection === 'desc'
+              }"
+              @click="onSortDirection(close, 'desc')"
+            >
+              <IconChevronDown class="h-[14px] w-[14px]" /> Sort high to low
+            </button>
+          </template>
         </div>
-        <Disclosure #="{ open }: { open: boolean }" as="div" class="flex flex-col gap-2 p-2">
+        <Disclosure
+          #="{ open }: { open: boolean }"
+          as="div"
+          class="flex flex-col gap-2 p-2"
+        >
           <DisclosureButton class="flex justify-between">
             <span> Description</span>
             <div class="relative">
@@ -101,6 +111,7 @@ const description = computed(() =>
 .menu-button {
   @apply p-1 px-2 rounded w-full hover:bg-slate-100 flex items-center gap-2;
 }
+
 .menu-button--selected {
   @apply bg-slate-800 text-white hover:bg-slate-800/90 focus:bg-slate-800/90;
 }
