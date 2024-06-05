@@ -60,15 +60,7 @@ const description = computed(() =>
             </template>
           </button>
           <template v-if="!data.disableSort">
-            <button
-              class="menu-button"
-              :class="{
-                'menu-button--selected': sortBy === data.field && sortDirection === 'asc'
-              }"
-              @click="onSortDirection(close, 'asc')"
-            >
-              <IconChevronUp class="h-[14px] w-[14px]" /> Sort low to high
-            </button>
+
             <button
               class="menu-button"
               :class="{
@@ -78,25 +70,35 @@ const description = computed(() =>
             >
               <IconChevronDown class="h-[14px] w-[14px]" /> Sort high to low
             </button>
+            <button
+              class="menu-button"
+              :class="{
+                'menu-button--selected': sortBy === data.field && sortDirection === 'asc'
+              }"
+              @click="onSortDirection(close, 'asc')"
+            >
+              <IconChevronUp class="h-[14px] w-[14px]" /> Sort low to high
+            </button>
           </template>
         </div>
+        <div class="border-b mx-2"></div>
         <Disclosure
           #="{ open }: { open: boolean }"
           as="div"
           class="flex flex-col gap-2 p-2"
         >
-          <DisclosureButton class="flex justify-between">
-            <span> Description</span>
-            <div class="relative">
-              <IconMinus class="absolute right-0 h-[18px] w-[18px]" />
+          <DisclosureButton class="flex gap-2">
+            <div class="relative w-4 translate-y-[1px]">
+              <IconMinus class="absolute left-0 h-[18px] w-[18px]" />
               <IconMinus
-                class="absolute right-0 transition-transform h-[18px] w-[18px]"
+                class="absolute left-0 transition-transform h-[18px] w-[18px]"
                 :class="{
                   'rotate-0': open,
                   'rotate-90': !open
                 }"
               />
             </div>
+            <span>Description</span>
           </DisclosureButton>
           <DisclosurePanel class="whitespace-pre-line font-normal">
             {{ description ?? "No description" }}

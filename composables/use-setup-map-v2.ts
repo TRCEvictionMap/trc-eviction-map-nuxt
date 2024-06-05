@@ -1,33 +1,37 @@
 import mapboxgl from "mapbox-gl";
 
-import blockGroupJson from "~/geojson/block-group.json";
 // import bgDemographicsJson from "~/geojson/block-group-demographics.json";
 // import bgHeatmapJson from "~/geojson/block-group-heatmap.json";
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
-import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { useFeatureState } from "~/stores/feature-state-store";
 import type { EvictionFeatureCollection } from "~/utils/types";
 import { useDisclosures } from "~/stores/disclosures-store";
+import { useFeaturePropertiesV2 } from "~/stores/feature-properties-store-v2";
 
 interface SetupMapOptions {
   containerId: string;
   navControlPosition?: Position;
 }
 
-function useSetupMap(options: SetupMapOptions) {
+async function fetchGeoJson(filename: string) {
+  const response = await fetch(`/${filename}.json`);
+  return await response.json();
+}
+
+function useSetupMapV2(options: SetupMapOptions) {
   const { containerId, navControlPosition } = options;
-  
+
   const map = ref<mapboxgl.Map>();
 
   const config = useRuntimeConfig();
   const mapMeta = useMapMeta();
   const controls = useMapControls();
-  const featureProperties = useFeatureProperties();
+  const featureProperties = useFeaturePropertiesV2();
   const featureState = useFeatureState();
   const disclosures = useDisclosures();
 
-  onMounted(() => {
+  onMounted(async () => {
     const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features, _showDetails } = useInitialQueryParams();
 
     map.value = markRaw(
@@ -67,27 +71,32 @@ function useSetupMap(options: SetupMapOptions) {
       mapMeta.zoom = ev.target.getZoom();
     });
 
-    map.value.on("load", () => {
-      const _map = map.value as mapboxgl.Map;
-      _map.addSource("block-group", {
-        type: "geojson",
-        promoteId: "id",
-        data: blockGroupJson as unknown as string,
-      });
+    map.value.on("load", async () => {
+
+      const [bgDemographicsJson, bgHeatmapJson] = await Promise.all([
+        fetchGeoJson("block-group-demographics"),
+        fetchGeoJson("block-group-heatmap")
+      ]);
+
+      console.log(bgDemographicsJson)
+
+      map.value
+        ?.addSource("block-group", {
+          type: "geojson",
+          promoteId: "id",
+          data: bgDemographicsJson,
+        })
+        .addSource("block-group-heatmap", {
+          type: "geojson",
+          promoteId: "id",
+          data: bgHeatmapJson,
+        });
     });
-
-    const years = featureProperties.loadData(
-      "block-group",
-      blockGroupJson as unknown as EvictionFeatureCollection
-    );
-
-    controls.yearOptions = years
-      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-      .map((year) => ({ value: year }));
 
   });
 
   return map;
+
 }
 
-export { useSetupMap };
+export { useSetupMapV2 };

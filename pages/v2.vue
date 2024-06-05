@@ -65,11 +65,6 @@ await useAsyncData(
   () => queryContent("/welcome-modal-content").findOne()
 );
 
-const showDetailCards = computed(() =>
-  !disclosures.showDetails &&
-  !settings.options.showAlderDistricts &&
-  !settings.options.showDataTable
-);
 
 </script>
 
@@ -77,21 +72,34 @@ const showDetailCards = computed(() =>
   <div class="absolute w-full min-h-screen flex flex-col">
     <TheHeader />
     <ClientOnly>
-      <TheMapProvider>
+      <TheMapProviderV2 v-if="true">
         <template #right>
-          <div class="sticky top-0">
-            hello
-          </div>
           <div class="space-y-4">
             <TransitionGroup name="features">
-              <section v-for="feature in featureState.selectedFeatures" :key="feature" class="bg-slate-100 rounded border p-2 w-full">
-                {{ feature }}
-              </section>
+              <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
             </TransitionGroup>
           </div>
         </template>
         <template #map-overlay>
           <MapLayers />
+          <MapControls position="left" />
+          <MapLegend position="bottom-right" />
+        </template>
+        <template #bottom="{ height }">
+          <FeaturesTable :style="{ height: `${height - 30}px` }" />
+        </template>
+      </TheMapProviderV2>
+      <TheMapProvider v-else>
+        <template #right>
+          <div class="space-y-4">
+            <TransitionGroup name="features">
+              <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
+            </TransitionGroup>
+          </div>
+        </template>
+        <template #map-overlay>
+          <MapLayers />
+          <MapControls position="left" />
           <MapLegend position="bottom-right" />
         </template>
         <template #bottom="{ height }">

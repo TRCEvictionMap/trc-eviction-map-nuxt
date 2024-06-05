@@ -9,7 +9,6 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
   const {
     evictionsLayerId,
     demographicsLayerId,
-    demographicsShadingLayerId,
     demographicsBorderLayerId,
   } = useLayerIds(source);
 
@@ -19,17 +18,10 @@ function createLayers(source: SourceId): mapboxgl.AnyLayer[] {
       id: demographicsLayerId,
       type: "fill",
       paint: {
-        "fill-opacity": 0,
+        "fill-opacity": 0.8,
       },
       filter: ["==", "$type", "Polygon"]
-    },
-    {
-      source,
-      id: demographicsShadingLayerId,
-      type: "fill",
-      paint: {
-        "fill-opacity": 0.8,
-      }
+
     },
     {
       source,
@@ -78,7 +70,7 @@ function useMapLayers(map: mapboxgl.Map) {
   const featureProperties = useFeatureProperties();
   const interpolated = useInterpolatedColorValues();
 
-  const { demographicsLayerId, demographicsShadingLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
+  const { demographicsLayerId, evictionsLayerId } = useLayerIds(controls.currentSource);
 
   watch(
     () => featureState.selectedFeatures,
@@ -169,11 +161,11 @@ function useMapLayers(map: mapboxgl.Map) {
   )
 
   function updateDemographicsPaintProperties([metric]: [DemographicMetric]) {
-    if (map.getLayer(demographicsShadingLayerId)) {
+    if (map.getLayer(demographicsLayerId)) {
       if (metric !== "none") {
-        map.setLayoutProperty(demographicsShadingLayerId, "visibility", "visible");
+        map.setLayoutProperty(demographicsLayerId, "visibility", "visible");
         map.setPaintProperty(
-          demographicsShadingLayerId,
+          demographicsLayerId,
           "fill-color",
           [
             "interpolate",
@@ -184,7 +176,7 @@ function useMapLayers(map: mapboxgl.Map) {
         );
       }
       else {
-        map.setLayoutProperty(demographicsShadingLayerId, "visibility", "none");
+        map.setLayoutProperty(demographicsLayerId, "visibility", "none");
       }
     }
   }

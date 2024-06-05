@@ -221,178 +221,21 @@ function setColumnPin(field: string, pinned: boolean) {
   }
 }
 
-// const map = await useMap();
-
-// onMounted(() => { map.resize() });
-
-// const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2);
-
-// function resizePanelWidth(delta: number) {
-//   const maxWidth = window.innerWidth - 600;
-
-//   if (panelWidth.value > maxWidth) {
-//     panelWidth.value = maxWidth;
-//   }
-
-//   const newWidth = panelWidth.value + delta;
-
-//   if (newWidth <= maxWidth) {
-//     panelWidth.value = newWidth;
-//     map.resize();
-//   }
-// }
-
-// const MAX_SELECTED_FEATURES = 4;
-
-// const selectedFeatures = computed({
-//   get() {
-//     return featureState.selectedFeatures;
-//   },
-//   set(rowIds: string[]) {
-//     featureState._features = rowIds.length > MAX_SELECTED_FEATURES
-//       ? rowIds.slice(rowIds.length - MAX_SELECTED_FEATURES)
-//       : rowIds;
-//   },
-// });
-
-// function onBeforeEnter(el: Element) {
-//   const panelWidth = unref(useLocalStorageRef(
-//     "table-panel-width",
-//     window.innerWidth / 2
-//   ));
-  
-//   // (el as HTMLElement).style.width = `0px`;
-//   // (el as HTMLElement).style.width = `${panelWidth}px`;
-//   (el as HTMLElement).style.transform = `translateX(-${panelWidth + 20}px)`;
-// }
-
-// function onEnter(el: Element, done: () => void) {
-//   const panelWidth = unref(useLocalStorageRef(
-//     "table-panel-width",
-//     window.innerWidth / 2
-//   ));
-
-//   animate({
-//     onComplete() {
-//       map.resize();
-//       done();
-//     },
-//     duration: 400,
-//     // start: 0,
-//     // dest: panelWidth,
-//     start: -(panelWidth + 20),
-//     dest: 0,
-//     callback(value) {
-//       // (el as HTMLElement).style.width = `${Math.round(value)}px`;
-//       (el as HTMLElement).style.transform = `translateX(${Math.round(value)}px)`;
-//       map.resize();
-
-//     }
-//   });
-// }
-
-// function onLeave(el: Element, done: () => void) {
-//   const panelWidth = unref(useLocalStorageRef(
-//     "table-panel-width",
-//     window.innerWidth / 2
-//   ));
-
-//   animate({
-//     onComplete() {
-//       console.log("onLeave animate complete")
-//       done();
-//       map.resize();
-//     },
-//     duration: 400,
-//     // start: panelWidth,
-//     // dest: 0,
-//     start: 0,
-//     dest: -(panelWidth + 20),
-//     callback(value) {
-//       console.log("onLeave callback", `translateX(${Math.round(value)})px`);
-//       // (el as HTMLElement).style.width = `${Math.round(value)}px`;
-//       (el as HTMLElement).style.transform = `translateX(${Math.round(value)}px)`;
-//       map.resize();
-//     }
-//   });
-// }
-
-// interface AnimateOptions {
-//   duration: number;
-//   onComplete: () => void;
-//   callback: (easedValue: number) => void;
-//   start: number;
-//   dest: number;
-// }
-
-// function animate(options: AnimateOptions) {
-//   const { duration, onComplete, callback, start, dest } = options;
-//   const startTime = Date.now();
-//   const endTime = startTime + duration;
-
-//   let easedValue = start;
-
-//   function doAnimation() {
-//     const currentTime = Date.now();
-
-//     if (currentTime > endTime) {
-//       callback(dest);
-//       return onComplete();
-//     }
-
-//     const progress = currentTime - startTime;
-
-//     easedValue = easeInOutExpo(
-//       progress,
-//       start,
-//       dest - start,
-//       duration
-//     );
-
-//     callback(easedValue);
-
-//     window.requestAnimationFrame(doAnimation);
-//   }
-
-//   doAnimation();
-// }
-
 </script>
 
 <template>
-  <!-- <Transition
-    :css="false"
-    @enter="onEnter"
-    @leave="onLeave"
-  > -->
-  <TRCDrawer>
-    <!-- <div class="relative flex"> -->
-      <!-- class="absolute top-0 bottom-0 p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden" -->
-      <!-- <div class="flex flex-col gap-4 overflow-hidden"> -->
-        <!-- :style="{ width: `${panelWidth}px` }" -->
-        <!-- <TRCResizeX
-          @resize="resizePanelWidth"
-          class="w-2 z-30"
-        /> -->
-        <!-- <h1 class="font-bold text-xl mt-2">
-          Eviction and Demographic Data
-        </h1> -->
-        <TRCDataTable
-          class="max-h-[calc(100%-140px)] rounded bg-white"
-          :initalPageSize="20"
-          :columns="columns"
-          :rows="rows"
-          :hoveredRow="featureState.hoveredFeature"
-          v-model="featureState.selectedFeatures"
-          @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
-          @row:mouseleave="rowId => featureState.setFeatureState(rowId, 'isHovered', false)"
-          @row:mouseover="rowId => featureState.setFeatureState(rowId, 'isHovered', 'card')"
-          @rows:select="rowIds => featureState._features = rowIds"
-        />
-      <!-- </div> -->
-    <!-- </div> -->
-  </TRCDrawer>
-
+  <TRCDataTable
+    class="max-h-[calc(100%-140px)] rounded bg-white"
+    :initalPageSize="20"
+    :columns="columns"
+    :rows="rows"
+    :hoveredRow="featureState.hoveredFeature"
+    v-model="featureState.selectedFeatures"
+    @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
+    @row:mouseleave="rowId => featureState.setFeatureState(rowId, 'isHovered', false)"
+    @row:mouseover="rowId => featureState.setFeatureState(rowId, 'isHovered', 'card')"
+    @rows:select="rowIds => featureState._features = rowIds"
+  />
 </template>
 
 <style>

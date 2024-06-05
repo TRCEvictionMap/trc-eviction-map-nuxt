@@ -1,8 +1,8 @@
 
-type SourceId = "alder-district" | "block-group";
+type SourceId =  "block-group";
 
 const SOURCE_OPTIONS: SourceId[] = [
-    "alder-district",
+    // "alder-district",
     "block-group",
 ];
 
@@ -14,6 +14,41 @@ function isSourceId(data: unknown): data is SourceId {
 }
 
 type Region = "Block Group";
+
+interface DemographicFeaturePropertiesV2 {
+    id: string;
+    region: Region;
+    /** renter count */
+    rc: number;
+    /** renter count margin of error */
+    rcm: number;
+    /** renter rate */
+    rr: number;
+    /** renter rate margin of error */
+    rrm: number;
+    /** poverty rate */
+    pr: number;
+    /** poverty rate margin of error */
+    prm: number;
+    race: {
+        pct_wh: number;
+        pct_bl: number;
+        pct_ai: number;
+        pct_as: number;
+        pct_pi: number;
+        pct_other: number;
+        pct_multi: number;
+    };
+}
+
+interface HeatmapFeatureProperties {
+    region_id: string;
+    count: number;
+    /** year */
+    y: number;
+    /** month */
+    m: number;
+}
 
 interface DemographicFeatureProperties {
     id: string;
@@ -44,6 +79,9 @@ interface EvictionFeatureProperties {
     }>;
 }
 
+type DemographicsFeatureCollectionV2 = GeoJSON.FeatureCollection<any, DemographicFeaturePropertiesV2>;
+type HeatmapFeatureCollection = GeoJSON.FeatureCollection<any, HeatmapFeatureProperties>;
+
 type EvictionFeatureCollection = GeoJSON.FeatureCollection<
     any,
     EvictionFeatureProperties | DemographicFeatureProperties
@@ -65,6 +103,10 @@ export type {
     EvictionFeatureCollection,
     EvictionFeatureProperties,
     DemographicFeatureProperties,
+    DemographicFeaturePropertiesV2,
+    DemographicsFeatureCollectionV2,
+    HeatmapFeatureProperties,
+    HeatmapFeatureCollection,
     SourceId,
     FeatureId,
     MapboxMouseEvent,

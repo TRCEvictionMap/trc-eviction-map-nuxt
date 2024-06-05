@@ -7,7 +7,7 @@ interface FeatureState {
     isSelected: boolean;
 }
 
-const MAX_SELECTED_FEATURES = 4;
+const MAX_SELECTED_FEATURES = 3;
 
 function useSelectedFeatures() {
     const _features = ref<string[]>([]);

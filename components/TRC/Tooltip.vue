@@ -30,7 +30,6 @@ const floatingArrowStyles = computed((): CSSProperties => {
   const placement = middlewareData.value.offset?.placement
 
   const marginAndBorder = ((): CSSProperties => {
-    console.log(placement)
     if (placement?.startsWith("bottom")) {
       return {
         borderStyle: "solid",
