@@ -147,14 +147,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
         map.addLayer(layer);
       });
     }
-
-  })
-
-  onMounted(() => {
-
-
-
-  })
+  });
 }
 
 export { useMapLayersV2 };
