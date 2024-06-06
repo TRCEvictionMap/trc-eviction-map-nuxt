@@ -78,7 +78,15 @@ function useSetupMapV2(options: SetupMapOptions) {
         fetchGeoJson("block-group-heatmap")
       ]);
 
-      console.log(bgDemographicsJson)
+      featureProperties.loadDemographics(
+        controls.currentSource,
+        bgDemographicsJson
+      );
+
+      featureProperties.loadHeatmap(
+        controls.currentSource,
+        bgHeatmapJson
+      );
 
       map.value
         ?.addSource("block-group", {

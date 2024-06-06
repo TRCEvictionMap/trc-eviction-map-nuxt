@@ -114,6 +114,26 @@ function createLayers<S extends SourceId>(source: S): Layers {
   }
 }
 
+interface AddLayersContext {
+  loaded: Set<string>;
+  ev: mapboxgl.MapSourceDataEvent & mapboxgl.EventData;
+  map: mapboxgl.Map;
+}
+
+function addLayers(
+  context: AddLayersContext,
+  source: string,
+  layers: mapboxgl.AnyLayer[]
+) {
+  const { loaded, map, ev: { sourceId, isSourceLoaded} } = context;
+
+  if (!loaded.has(sourceId) && sourceId === source && isSourceLoaded) {
+    layers.forEach((layer) => {
+      map.addLayer(layer);
+    });
+  }
+}
+
 function useMapLayersV2(map: mapboxgl.Map) {
   const controls = useMapControls();
   const featureState = useFeatureState();
@@ -123,31 +143,18 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   const {  } = useLayerIds(controls.currentSource);
 
-  const loadedSources = new Set<string>();
+  const loaded = new Set<string>();
 
   map.on("sourcedata", (ev) => {
-    if (
-      !loadedSources.has(ev.sourceId) &&
-      ev.sourceId === "block-group" &&
-      ev.isSourceLoaded
-    ) {
-      loadedSources.add(ev.sourceId);
-      demographicsLayers.forEach((layer) => {
-        map.addLayer(layer);
-      });
-    }
+    const context = { map, ev, loaded };
 
-    if (
-      !loadedSources.has(ev.sourceId) &&
-      ev.sourceId === "block-group-heatmap" &&
-      ev.isSourceLoaded
-    ) {
-      loadedSources.add(ev.sourceId);
-      heatmapLayers.forEach((layer) => {
-        map.addLayer(layer);
-      });
-    }
+    addLayers(context, "block-group", demographicsLayers);
+    addLayers(context, "block-group-heatmap", heatmapLayers);
   });
+
+  onBeforeUnmount(() => {
+
+  })
 }
 
 export { useMapLayersV2 };
