@@ -1,13 +1,10 @@
 import mapboxgl from "mapbox-gl";
 
-// import bgDemographicsJson from "~/geojson/block-group-demographics.json";
-// import bgHeatmapJson from "~/geojson/block-group-heatmap.json";
 import { useMapMeta } from "~/stores/map-meta-store";
-import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureState } from "~/stores/feature-state-store";
-import type { EvictionFeatureCollection } from "~/utils/types";
 import { useDisclosures } from "~/stores/disclosures-store";
 import { useFeaturePropertiesV2 } from "~/stores/feature-properties-store-v2";
+import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 interface SetupMapOptions {
   containerId: string;
@@ -26,7 +23,7 @@ function useSetupMapV2(options: SetupMapOptions) {
 
   const config = useRuntimeConfig();
   const mapMeta = useMapMeta();
-  const controls = useMapControls();
+  const controls = useMapControlsV2();
   const featureProperties = useFeaturePropertiesV2();
   const featureState = useFeatureState();
   const disclosures = useDisclosures();
@@ -54,9 +51,9 @@ function useSetupMapV2(options: SetupMapOptions) {
     mapMeta.lngLat = _lngLat;
     mapMeta.zoom = _zoom;
     controls.currentSource = _source;
-    controls.currentYear = _year;
-    controls.currentDemographicMetric = _d_metric;
-    controls.currentEvictionMetric = _e_metric;
+    controls.currentYear = Number.parseInt(_year);
+    controls.currentChoroplethMetric = _d_metric;
+    // controls.currentEvictionMetric = _e_metric;
 
     featureState.initSelectedFeatures(_features);
 
@@ -74,8 +71,8 @@ function useSetupMapV2(options: SetupMapOptions) {
     map.value.on("load", async () => {
 
       const [bgDemographicsJson, bgHeatmapJson] = await Promise.all([
-        fetchGeoJson("block-group-demographics"),
-        fetchGeoJson("block-group-heatmap")
+        fetchGeoJson("block-group-demographics") as Promise<DemographicsFeatureCollectionV2>,
+        fetchGeoJson("block-group-heatmap") as Promise<HeatmapFeatureCollection>
       ]);
 
       featureProperties.loadDemographics(
@@ -87,6 +84,10 @@ function useSetupMapV2(options: SetupMapOptions) {
         controls.currentSource,
         bgHeatmapJson
       );
+
+      console.log(bgHeatmapJson)
+
+      controls.loadAvailableMonths(bgHeatmapJson);
 
       map.value
         ?.addSource("block-group", {

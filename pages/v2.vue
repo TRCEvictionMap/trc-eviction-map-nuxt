@@ -82,7 +82,7 @@ await useAsyncData(
         </template>
         <template #map-overlay>
           <MapLayers />
-          <MapControls position="left" />
+          <MapControlsV2 position="left" />
           <MapLegend position="bottom-right" />
         </template>
         <template #bottom="{ height }">

@@ -44,8 +44,11 @@ function createLayers<S extends SourceId>(source: S): Layers {
           "line-color": [
             "case",
             ["boolean", ["feature-state", "isHovered"], false],
-            "black",
-            "gray"
+            // "black",
+            // "gray"
+
+            "#333",
+            "#333"
           ]
         }
       }
@@ -166,14 +169,14 @@ function useMapLayersV2(map: mapboxgl.Map) {
     const context = { map, ev, loaded };
 
     addLayers(context, "block-group", choroplethLayers);
-    // addLayers(context, "block-group-heatmap", heatmapLayers);
+    addLayers(context, "block-group-heatmap", heatmapLayers);
 
     updateChoroplethPaintProperties(controls.currentChoroplethMetric);
   });
 
   onBeforeUnmount(() => {
     removeLayers(map, choroplethLayers);
-    // removeLayers(map, heatmapLayers);
+    removeLayers(map, heatmapLayers);
 
   });
 

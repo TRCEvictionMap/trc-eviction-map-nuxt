@@ -3,6 +3,21 @@
 import { defineStore } from "pinia";
 import type { SourceId } from "~/utils/types";
 
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const CHOROPLETH_METRICS = [
   "n_filings",
   "renter_count",
@@ -50,6 +65,17 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
   }
 ];
 
+const timeIntervalOptions: Option<"month" | "year">[] = [
+  {
+    text: "Year",
+    value: "year",
+  },
+  {
+    text: "Month",
+    value: "month",
+  },
+];
+
 
 function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
   return CHOROPLETH_METRICS.includes(data as ChoroplethMetric);
@@ -57,7 +83,9 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 
 
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
-  const yearOptions = ref<Option<string>[]>([]);
+
+  // const _availableMonths = ref<{ y: number; m: number; }[]>([]);
+  const _availableMonths = ref<Set<{ y: number; m: number }>>(new Set());
 
   const currentTimeInterval = ref<"month" | "year">("year");
   const currentYear = ref(2023);
@@ -65,6 +93,43 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
   const currentSource = ref<SourceId>("block-group");
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
+
+  const yearOptions = computed((): Option<number>[] => {
+ 
+    const years: number[] = Array.from(
+      new Set(
+        _availableMonths.value.map(({ y }) => y).sort()
+      )
+    );
+
+    // return years.map((year) => ({ value: year }));
+
+  });
+
+
+  const monthOptions = computed((): Option<number>[] => {
+    // const months: number[] = Array.from(
+    //   new Set(
+    //     _availableMonths
+    //       .value
+    //       .filter(({ y }) => y === currentYear.value)
+    //       .map(({ m }) => m)
+    //   )
+    // );
+
+    return Array
+      .from(_availableMonths.value)
+      .filter(({ y }) => y === currentYear.value)
+      .map(({ m }) => ({
+        value: m,
+        text: MONTHS[m - 1]
+      }))
+
+    // return months.map((month) => ({
+    //   value: month,
+    //   text: MONTHS[month - 1]
+    // }));
+  });
 
   const currentSourceHumanReadable = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.text
@@ -74,10 +139,28 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     sourceOptions.find((opt) => opt.value === currentSource.value)?.description
   );
 
+  function loadAvailableMonths(heatmapFeatureCollection: HeatmapFeatureCollection) {
+    heatmapFeatureCollection.features.forEach(({ properties: { y, m } }) => {
+      _availableMonths.value.add({ y, m });
+    });
+    // const data = heatmapFeatureCollection.features.reduce(
+    //   (accum: Set<{ y: number; m: number }>, { properties: { y, m }}) => {
+    //     accum.add({ y, m });
+    //     return accum;
+    //   },
+    //   new Set<{ y: number; m: number }>()
+    // );
+
+    // _availableMonths.value = Array.from(data.entries()).flat();
+  }
+
   return {
+    loadAvailableMonths,
     yearOptions,
+    monthOptions,
     sourceOptions,
     choroplethMetricOptions,
+    timeIntervalOptions,
     currentSource,
     currentSourceHumanReadable,
     currentSourceDesicription,
