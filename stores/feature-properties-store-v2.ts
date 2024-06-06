@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useMapControlsV2, type ChoroplethMetric } from "./map-controls-store-v2";
 
 function roundPercent(value: number) {
   return value < 10 ? value : Math.round(value);
@@ -13,7 +14,17 @@ function getProperties(featureCollection: GeoJSON.FeatureCollection) {
 }
 
 const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
+  const controls = useMapControlsV2();
+  
   const bgDemographics: Ref<Record<string, DemographicFeaturePropertiesV2>> = ref({});
+  const bgHeatmap: Ref<Record<string, HeatmapFeatureProperties>> = ref({});
+
+  /**
+   * Aggregate eviction counts by block-group and filter by date/time
+   */
+  const bgHeatmapByDateTime = computed(() => {
+
+  });
 
   function loadDemographics(
     source: SourceId,
@@ -23,8 +34,6 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
       bgDemographics.value = getProperties(featureCollection)
     }
   }
-
-  const bgHeatmap: Ref<Record<string, HeatmapFeatureProperties>> = ref({});
 
   function loadHeatmap(
     source: SourceId,

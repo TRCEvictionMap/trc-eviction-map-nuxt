@@ -1,32 +1,33 @@
 import mapboxgl from "mapbox-gl";
 import { useFeatureState } from "~/stores/feature-state-store";
-import { useMapControls } from "~/stores/map-controls-store";
+import { useMapControlsV2, type ChoroplethMetric} from "~/stores/map-controls-store-v2";
+import { useInterpolatedColors } from "~/stores/interpolated-color-values-store";
 
 interface Layers {
-  demographicsLayers: mapboxgl.AnyLayer[];
+  choroplethLayers: mapboxgl.AnyLayer[];
   heatmapLayers: mapboxgl.AnyLayer[];
 }
 
 function createLayers<S extends SourceId>(source: S): Layers {
   const {
-    demographicsLayerId,
-    demographicsBorderLayerId,
+    choroplethLayerId,
+    choroplethBorderLayerId,
     heatmapLayerId,
   } = useLayerIds(source);
 
   return {
-    demographicsLayers: [
+    choroplethLayers: [
       {
         source,
-        id: demographicsLayerId,
+        id: choroplethLayerId,
         type: "fill",
         paint: {
-          "fill-opacity": 0.8,
+          "fill-opacity": 0.5,
         }
       },
       {
         source,
-        id: demographicsBorderLayerId,
+        id: choroplethBorderLayerId,
         type: "line",
         paint: {
           "line-width": [
@@ -62,14 +63,17 @@ function createLayers<S extends SourceId>(source: S): Layers {
             type: "exponential",
             stops: [
               [1, 0],
-              [8, 1]
+              [2, 0.2],
+              [4, 0.4],
+              [6, 1],
             ]
           },
           // increase intensity as zoom level increases
           "heatmap-intensity": {
             stops: [
-              [11, 1],
-              [15, 3]
+              [2, 1],
+              [4, 2],
+              [6, 3]
             ]
           },
           // assign color values be applied to points depending on their density
@@ -128,33 +132,72 @@ function addLayers(
   const { loaded, map, ev: { sourceId, isSourceLoaded} } = context;
 
   if (!loaded.has(sourceId) && sourceId === source && isSourceLoaded) {
+    loaded.add(sourceId);
     layers.forEach((layer) => {
       map.addLayer(layer);
     });
   }
 }
 
+function removeLayers(map: mapboxgl.Map, layers: mapboxgl.AnyLayer[]) {
+  layers.forEach((layer) => {
+    map.removeLayer(layer.id);
+  });
+}
+
+const CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP: Partial<Record<ChoroplethMetric, keyof DemographicFeaturePropertiesV2>> = {
+  renter_count: "rc",
+  renter_rate: "rr",
+  poverty_rate: "pr",
+};
+
 function useMapLayersV2(map: mapboxgl.Map) {
-  const controls = useMapControls();
+  const controls = useMapControlsV2();
   const featureState = useFeatureState();
-  const interpolated = useInterpolatedColorValues();
+  const interpolated = useInterpolatedColors()
 
-  const { demographicsLayers, heatmapLayers } = createLayers(controls.currentSource);
+  const { choroplethLayers, heatmapLayers } = createLayers(controls.currentSource);
 
-  const {  } = useLayerIds(controls.currentSource);
+  const { choroplethLayerId } = useLayerIds(controls.currentSource);
 
   const loaded = new Set<string>();
 
-  map.on("sourcedata", (ev) => {
+  map.on("sourcedata", async (ev) => {
     const context = { map, ev, loaded };
 
-    addLayers(context, "block-group", demographicsLayers);
-    addLayers(context, "block-group-heatmap", heatmapLayers);
+    addLayers(context, "block-group", choroplethLayers);
+    // addLayers(context, "block-group-heatmap", heatmapLayers);
+
+    updateChoroplethPaintProperties(controls.currentChoroplethMetric);
   });
 
   onBeforeUnmount(() => {
+    removeLayers(map, choroplethLayers);
+    // removeLayers(map, heatmapLayers);
 
-  })
+  });
+
+  function updateChoroplethPaintProperties(metric: ChoroplethMetric) {
+    if (!map.getLayer(choroplethLayerId)) {
+      return;
+    }
+
+    if (metric !== "none") {
+      map.setLayoutProperty(choroplethLayerId, "visibility", "visible");
+      map.setPaintProperty(
+        choroplethLayerId,
+        "fill-color",
+        [
+          "interpolate",
+          ["linear"],
+          ["number", ["get", CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP[metric], ["properties"]]],
+          ...interpolated.choropleth[metric]
+        ]
+      );
+    } else {
+      map.setLayoutProperty(choroplethLayerId, "visibility", "none");
+    }
+  }
 }
 
 export { useMapLayersV2 };

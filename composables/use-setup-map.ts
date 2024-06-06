@@ -1,8 +1,6 @@
 import mapboxgl from "mapbox-gl";
 
 import blockGroupJson from "~/geojson/block-group.json";
-// import bgDemographicsJson from "~/geojson/block-group-demographics.json";
-// import bgHeatmapJson from "~/geojson/block-group-heatmap.json";
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";

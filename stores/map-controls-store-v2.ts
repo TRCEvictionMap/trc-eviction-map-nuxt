@@ -56,10 +56,12 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 }
 
 
-const useMapControlsV2 = defineStore("map-controls", () => {
+const useMapControlsV2 = defineStore("map-controls-v2", () => {
   const yearOptions = ref<Option<string>[]>([]);
 
-  const currentYear = ref<string>("2023");
+  const currentTimeInterval = ref<"month" | "year">("year");
+  const currentYear = ref(2023);
+  const currentMonth = ref(1);
   const currentSource = ref<SourceId>("block-group");
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
@@ -79,7 +81,9 @@ const useMapControlsV2 = defineStore("map-controls", () => {
     currentSource,
     currentSourceHumanReadable,
     currentSourceDesicription,
+    currentTimeInterval,
     currentYear,
+    currentMonth,
     currentChoroplethMetric,
   };
 });
