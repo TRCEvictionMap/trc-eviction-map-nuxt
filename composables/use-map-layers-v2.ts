@@ -15,6 +15,8 @@ function createLayers<S extends SourceId>(source: S): Layers {
     heatmapLayerId,
   } = useLayerIds(source);
 
+  const interpolated = useInterpolatedColors();
+
   return {
     choroplethLayers: [
       {
@@ -57,59 +59,50 @@ function createLayers<S extends SourceId>(source: S): Layers {
         type: "heatmap",
         maxzoom: 20,
         paint: {
-          // increase weight as diameter breast height increases
+          // increase weight as count increases
           "heatmap-weight": {
             property: "count",
-            type: "exponential",
-            stops: [
-              [1, 0],
-              [2, 0.2],
-              [4, 0.4],
-              [6, 1],
-            ]
+            type: "interval",
+            stops: interpolated.heatmap
           },
-          // increase intensity as zoom level increases
-          "heatmap-intensity": {
-            stops: [
-              [2, 1],
-              [4, 2],
-              [6, 3]
-            ]
-          },
+          // // increase intensity as zoom level increases
+          // "heatmap-intensity": {
+          //   stops: [
+          //     [2, 1],
+          //     [4, 2],
+          //     [6, 3]
+          //   ]
+          // },
           // assign color values be applied to points depending on their density
           "heatmap-color": [
             "interpolate",
             ["linear"],
             ["heatmap-density"],
             0,
-            interpolateOrange(0),
-            // "rgba(236,222,239,0)",
+            "rgba(0,0,0,0)",
             0.2,
-            interpolateOrange(0.2),
-            // "rgb(208,209,230)",
+            "#ffffb2",
             0.4,
-            interpolateOrange(0.4),
-            // "rgb(166,189,219)",
+            "#fecc5c",
             0.6,
-            interpolateOrange(0.6),
-            // "rgb(103,169,207)",
+            "#fd8d3c",
             0.8,
-            interpolateOrange(0.8),
-            // "rgb(28,144,153)"
+            "#e31a1c",
           ],
           // increase radius as zoom increases
           "heatmap-radius": {
             stops: [
-              [11, 15],
-              [15, 20]
+              [9, 10],
+              [12, 15],
+              [15, 50]
             ]
           },
           // decrease opacity to transition into the circle layer
           "heatmap-opacity": {
-            default: 1,
+            default: 0.5,
             stops: [
-              [14, 1],
-              [15, 0]
+              [14, 0.75],
+              [15, 0.75]
             ]
           }
         }
@@ -154,11 +147,11 @@ const CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP: Partial<Record<ChoroplethMetric, k
 function useMapLayersV2(map: mapboxgl.Map) {
   const controls = useMapControlsV2();
   const featureState = useFeatureState();
-  const interpolated = useInterpolatedColors()
+  const interpolated = useInterpolatedColors();
 
   const { choroplethLayers, heatmapLayers } = createLayers(controls.currentSource);
 
-  const { choroplethLayerId } = useLayerIds(controls.currentSource);
+  const { choroplethLayerId, heatmapLayerId } = useLayerIds(controls.currentSource);
 
   const loaded = new Set<string>();
 
@@ -169,8 +162,12 @@ function useMapLayersV2(map: mapboxgl.Map) {
     addLayers(context, "block-group-heatmap", heatmapLayers);
 
     updateChoroplethPaintProperties(controls.currentChoroplethMetric);
-    
     updateSelectedFeatures(featureState.selectedFeatures);
+    updateHeatmapTimeFilter([
+      controls.currentTimeInterval,
+      controls.currentYear,
+      controls.currentMonth,
+    ]);
 
     map.on("click", choroplethLayerId, handleMapClick);
     map.on("mousemove", choroplethLayerId, handleMapMousemove);
@@ -218,6 +215,16 @@ function useMapLayersV2(map: mapboxgl.Map) {
     }
   });
 
+  watch(
+    [
+      () => controls.currentTimeInterval,
+      () => controls.currentYear,
+      () => controls.currentMonth,
+    ],
+    updateHeatmapTimeFilter,
+    { immediate: true }
+  );
+
   function updateChoroplethPaintProperties(metric: ChoroplethMetric) {
     if (!map.getLayer(choroplethLayerId)) {
       return;
@@ -237,6 +244,18 @@ function useMapLayersV2(map: mapboxgl.Map) {
       );
     } else {
       map.setLayoutProperty(choroplethLayerId, "visibility", "none");
+    }
+  }
+
+  function updateHeatmapTimeFilter([timeUnit, year, month]: ["month" | "year", number, number]) {
+    if (timeUnit === "year") {
+      map.setFilter(heatmapLayerId, ["==", ["get", "y"], year]);
+    } else {
+      map.setFilter(heatmapLayerId, [
+        "all",
+        ["==", ["get", "y"], year],
+        ["==", ["get", "m"], month],
+      ]);
     }
   }
 

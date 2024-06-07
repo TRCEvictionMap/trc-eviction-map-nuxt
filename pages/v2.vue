@@ -11,13 +11,14 @@ import { useSettings } from "~/stores/settings-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
 import { useFeatureFlags } from "~/stores/feature-flags";
+import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 useHead({
   title: "Eviction Map - Tenant Resource Center"
 });
 
 const router = useRouter();
-const mapControls = useMapControls();
+const mapControls = useMapControlsV2();
 const mapMeta = useMapMeta();
 const featureState = useFeatureState();
 const settings = useSettings();
@@ -30,8 +31,7 @@ const unwatch = watchEffect(() => {
     query: {
       source: mapControls.currentSource,
       year: mapControls.currentYear,
-      e_metric: mapControls.currentEvictionMetric,
-      d_metric: mapControls.currentDemographicMetric,
+      d_metric: mapControls.currentChoroplethMetric,
       zoom: mapMeta.zoom,
       center: mapMeta.lngLat
         ? mapMeta.lngLat.join(",")
@@ -83,7 +83,7 @@ await useAsyncData(
         <template #map-overlay>
           <MapLayers />
           <MapControlsV2 position="left" />
-          <MapLegend position="bottom-right" />
+          <MapLegendV2 position="bottom-right" />
         </template>
         <template #bottom="{ height }">
           <FeaturesTableV2 :style="{ height: `${height - 30}px` }" />

@@ -132,10 +132,6 @@ const { columns, rows } = dataTableRowsAndCols({
           }
           return accum;
         },
-        // (accum: Record<string, number>, { region_id, count }) => ({
-        //   ...accum,
-        //   [region_id]: accum[region_id] ?? 0 + count
-        // }),
         {}
       );
 
@@ -160,16 +156,6 @@ const { columns, rows } = dataTableRowsAndCols({
               pct_wh,
             }
           } = featureProperties.bgDemographics[featureId];
-
-          // const n_filings = Object.values(featureProperties.bgHeatmap)
-          //   .filter(({ region_id, y, m }) => (
-          //     region_id === featureId &&
-          //     y === controls.currentYear &&
-          //     controls.currentTimeInterval === "month"
-          //       ? m === controls.currentMonth
-          //       : true
-          //   ))
-          //   .reduce((accum: number, { count }) => accum + count, 0);
 
           return {
             id: featureId,
