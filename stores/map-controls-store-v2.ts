@@ -83,8 +83,6 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 
 
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
-
-  // const _availableMonths = ref<{ y: number; m: number; }[]>([]);
   const _availableMonths = ref<Set<{ y: number; m: number }>>(new Set());
 
   const currentTimeInterval = ref<"month" | "year">("year");
@@ -94,42 +92,30 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
 
-  const yearOptions = computed((): Option<number>[] => {
- 
-    const years: number[] = Array.from(
-      new Set(
-        _availableMonths.value.map(({ y }) => y).sort()
+  const yearOptions = computed((): Option<number>[] =>
+    Array
+      .from(
+        new Set(
+          Array.from(_availableMonths.value).map(({ y }) => y)
+        )
       )
-    );
+      .map((year) => ({ value: year }))
+      .sort((a, b) => b.value - a.value)
+  );
 
-    // return years.map((year) => ({ value: year }));
-
-  });
-
-
-  const monthOptions = computed((): Option<number>[] => {
-    // const months: number[] = Array.from(
-    //   new Set(
-    //     _availableMonths
-    //       .value
-    //       .filter(({ y }) => y === currentYear.value)
-    //       .map(({ m }) => m)
-    //   )
-    // );
-
-    return Array
-      .from(_availableMonths.value)
-      .filter(({ y }) => y === currentYear.value)
-      .map(({ m }) => ({
-        value: m,
-        text: MONTHS[m - 1]
-      }))
-
-    // return months.map((month) => ({
-    //   value: month,
-    //   text: MONTHS[month - 1]
-    // }));
-  });
+  const monthOptions = computed((): Option<number>[] =>
+    Array
+      .from(
+        new Set(
+          Array
+            .from(_availableMonths.value.keys())
+            .filter(({ y }) => y === currentYear.value)
+            .map(({ m }) => m)
+        )
+      )
+      .map((month) => ({ value: month, text: MONTHS[month - 1] }))
+      .sort((a, b) => a.value - b.value)
+  );
 
   const currentSourceHumanReadable = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.text
@@ -139,19 +125,12 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     sourceOptions.find((opt) => opt.value === currentSource.value)?.description
   );
 
-  function loadAvailableMonths(heatmapFeatureCollection: HeatmapFeatureCollection) {
-    heatmapFeatureCollection.features.forEach(({ properties: { y, m } }) => {
-      _availableMonths.value.add({ y, m });
-    });
-    // const data = heatmapFeatureCollection.features.reduce(
-    //   (accum: Set<{ y: number; m: number }>, { properties: { y, m }}) => {
-    //     accum.add({ y, m });
-    //     return accum;
-    //   },
-    //   new Set<{ y: number; m: number }>()
-    // );
-
-    // _availableMonths.value = Array.from(data.entries()).flat();
+  function loadAvailableMonths(featureCollection: HeatmapFeatureCollection) {
+    featureCollection
+      .features
+      .forEach(({ properties: { y, m } }) => {
+        _availableMonths.value.add({ y, m });
+      });
   }
 
   return {

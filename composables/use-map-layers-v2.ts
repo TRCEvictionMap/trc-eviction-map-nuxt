@@ -44,11 +44,8 @@ function createLayers<S extends SourceId>(source: S): Layers {
           "line-color": [
             "case",
             ["boolean", ["feature-state", "isHovered"], false],
-            // "black",
-            // "gray"
-
-            "#333",
-            "#333"
+            "black",
+            "#656565"
           ]
         }
       }
@@ -132,7 +129,7 @@ function addLayers(
   source: string,
   layers: mapboxgl.AnyLayer[]
 ) {
-  const { loaded, map, ev: { sourceId, isSourceLoaded} } = context;
+  const { loaded, map, ev: { sourceId, isSourceLoaded } } = context;
 
   if (!loaded.has(sourceId) && sourceId === source && isSourceLoaded) {
     loaded.add(sourceId);
@@ -172,12 +169,53 @@ function useMapLayersV2(map: mapboxgl.Map) {
     addLayers(context, "block-group-heatmap", heatmapLayers);
 
     updateChoroplethPaintProperties(controls.currentChoroplethMetric);
+    
+    updateSelectedFeatures(featureState.selectedFeatures);
+
+    map.on("click", choroplethLayerId, handleMapClick);
+    map.on("mousemove", choroplethLayerId, handleMapMousemove);
+    map.on("mouseleave", choroplethLayerId, handleMapMouseleave);
   });
 
   onBeforeUnmount(() => {
     removeLayers(map, choroplethLayers);
     removeLayers(map, heatmapLayers);
 
+    updateSelectedFeatures([], featureState.selectedFeatures);
+
+    featureState.clearSelectedFeatures();
+    featureState.clearHoveredFeature();
+
+    map.off("click", choroplethLayerId, handleMapClick);
+    map.off("mousemove", choroplethLayerId, handleMapMousemove);
+    map.off("mouseleave", choroplethLayerId, handleMapMouseleave);
+  });
+
+  watch(
+    () => featureState.selectedFeatures,
+    updateSelectedFeatures,
+    { immediate: true }
+  );
+
+  watch(
+    () => controls.currentChoroplethMetric,
+    updateChoroplethPaintProperties,
+    { immediate: true }
+  );
+
+  watch(() => featureState.hoveredFeature, (current, prev) => {
+    if (prev) {
+      map.setFeatureState(
+        { source: controls.currentSource, id: prev },
+        { isHovered: false }
+      );
+    }
+    if (current) {
+      map.setFeatureState(
+        { source: controls.currentSource, id: current },
+        { isHovered: true }
+      );
+    }
   });
 
   function updateChoroplethPaintProperties(metric: ChoroplethMetric) {
@@ -199,6 +237,56 @@ function useMapLayersV2(map: mapboxgl.Map) {
       );
     } else {
       map.setLayoutProperty(choroplethLayerId, "visibility", "none");
+    }
+  }
+
+  function updateIsSelected(featureId: string, isSelected: boolean) {
+    map.setFeatureState(
+      { source: controls.currentSource, id: featureId },
+      { isSelected },
+    );
+  }
+
+  function updateSelectedFeatures(current: string[], previous?: string[]) {
+    previous
+      ?.filter((featureId) => !current.includes(featureId))
+      .forEach((featureId) => {
+        updateIsSelected(featureId, false);
+      });
+
+    current
+      .filter((featureId) => !previous?.includes(featureId))
+      .forEach((featureId) => {
+        updateIsSelected(featureId, true);
+      });
+  }
+
+  // TODO: `clickLock` is a hack that breaks sometimes when dev-server reloads – likely
+  // related to component mounting and unmounting while Promise is pending...Issue not
+  // observed in any other context so far...
+  let clickLock = false;
+  async function handleMapClick(ev: MapboxMouseEvent<true>) {
+    if (!clickLock && ev.features && ev.features.length) {
+      clickLock = true;
+      const justClicked = ev.features[0].id?.toString() ?? "";
+      featureState.setFeatureState(
+        justClicked,
+        "isSelected",
+        !featureState.selectedFeatures.includes(justClicked)
+      );
+    }
+    await nextTick();
+    clickLock = false;
+  }
+
+  function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
+    featureState.clearHoveredFeature();
+  }
+
+  function handleMapMousemove(ev: MapboxMouseEvent<true>) {
+    if (ev.features && ev.features.length > 0) {
+      const hovered = ev.features[0].id?.toString() ?? "";
+      featureState.setFeatureState(hovered, "isHovered", "feature");
     }
   }
 }

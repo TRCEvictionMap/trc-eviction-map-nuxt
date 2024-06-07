@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useFeatureProperties, type FeatureProperties } from "~/stores/feature-properties-store";
+import { useFeaturePropertiesV2 } from "~/stores/feature-properties-store-v2";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useMapControls } from "~/stores/map-controls-store";
 
@@ -7,22 +8,11 @@ const { featureId } = defineProps<{ featureId: string }>();
 
 const controls = useMapControls();
 const featureState = useFeatureState();
-const featureProperties = useFeatureProperties();
+const featureProperties = useFeaturePropertiesV2();
 
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
 
-const data = computed(() => {
-  const { evictions, id, ...properties } = featureProperties.getFeatureProperties(
-    controls.currentSource,
-    featureId
-  ) as FeatureProperties;
-
-  return {
-    ...properties,
-    evictions,
-    id: id.replace(/\w_/, ""),
-  };
-});
+const data = computed(() => featureProperties.bgDemographics[featureId]);
 
 function deselectFeature() {
   if (featureId) {
@@ -55,6 +45,11 @@ function onMouseleave() {
         <IconXMark class="text-slate-500" />
       </TRCButton>
     </div>
-    {{ data }}
+    <div v-if="data">
+      {{ data }}
+    </div>
+    <div v-else>
+      ...loading
+    </div>
   </div>
 </template>

@@ -86,7 +86,7 @@ await useAsyncData(
           <MapLegend position="bottom-right" />
         </template>
         <template #bottom="{ height }">
-          <FeaturesTable :style="{ height: `${height - 30}px` }" />
+          <FeaturesTableV2 :style="{ height: `${height - 30}px` }" />
         </template>
       </TheMapProviderV2>
       <TheMapProvider v-else>

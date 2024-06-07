@@ -53,7 +53,6 @@ function useSetupMapV2(options: SetupMapOptions) {
     controls.currentSource = _source;
     controls.currentYear = Number.parseInt(_year);
     controls.currentChoroplethMetric = _d_metric;
-    // controls.currentEvictionMetric = _e_metric;
 
     featureState.initSelectedFeatures(_features);
 
@@ -84,8 +83,6 @@ function useSetupMapV2(options: SetupMapOptions) {
         controls.currentSource,
         bgHeatmapJson
       );
-
-      console.log(bgHeatmapJson)
 
       controls.loadAvailableMonths(bgHeatmapJson);
 
