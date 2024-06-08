@@ -122,14 +122,23 @@ const { columns, rows } = dataTableRowsAndCols({
             accum[region_id] = 0;
           }
           if (
+            controls.currentTimeInterval === "month" &&
             controls.currentYear === y &&
-            (
-              controls.currentTimeInterval === "month" &&
-              controls.currentMonth === m
-            )
+            controls.currentMonth === m
           ) {
             accum[region_id] += count;
+          } else if (controls.currentYear === y) {
+            accum[region_id] += count;
           }
+          // if (
+          //   controls.currentYear === y &&
+          //   (
+          //     controls.currentTimeInterval === "month" &&
+          //     controls.currentMonth === m
+          //   )
+          // ) {
+          //   accum[region_id] += count;
+          // }
           return accum;
         },
         {}

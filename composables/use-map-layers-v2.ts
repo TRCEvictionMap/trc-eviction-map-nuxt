@@ -248,6 +248,10 @@ function useMapLayersV2(map: mapboxgl.Map) {
   }
 
   function updateHeatmapTimeFilter([timeUnit, year, month]: ["month" | "year", number, number]) {
+    if (!map.getLayer(heatmapLayerId)) {
+      return;
+    }
+
     if (timeUnit === "year") {
       map.setFilter(heatmapLayerId, ["==", ["get", "y"], year]);
     } else {
