@@ -39,6 +39,12 @@ function useSetupMapV2(options: SetupMapOptions) {
         style: config.public.mapboxStyleUrlLight,
         center: _lngLat,
         zoom: _zoom,
+        minZoom: 7,
+        maxZoom: 17,
+        maxBounds: new mapboxgl.LngLatBounds(
+          new mapboxgl.LngLat(-91, 42),
+          new mapboxgl.LngLat(-87, 44),
+        )
       })
     );
 

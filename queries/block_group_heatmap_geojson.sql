@@ -1,4 +1,3 @@
-
 with bg as (
   select * from census_block_groups where county_fp = '025'
 ),
@@ -36,7 +35,7 @@ features as (
   from (
     select
       filing.*,
-      dap.row_number::text || '_' || filing.m::text || '_' || filing.y::text  place_id
+      dap.row_number::text || '_' || filing.m::text || '_' || filing.y::text place_id
     from filing
     join bg
       on st_contains(bg.shape, filing.defendant_address_point)

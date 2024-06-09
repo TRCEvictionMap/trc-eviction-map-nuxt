@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useMapControls } from "./map-controls-store";
 import { useFeaturePropertiesV2 } from "./feature-properties-store-v2";
 import { useMapControlsV2, type ChoroplethMetric } from "./map-controls-store-v2";
 
@@ -14,18 +13,6 @@ const BLUE = [
   "#08519c",
   "#08306b",
 ];
-
-const YELLOW_TO_RED = [
-  "#ffffcc",
-  "#ffeda0",
-  "#fed976",
-  "#feb24c",
-  "#fd8d3c",
-  "#fc4e2a",
-  "#e31a1c",
-  "#bd0026",
-  "#800026",
-]
 
 function interpolateColor(maxValue: number, gradient: string[]) {
   return gradient.flatMap((color, step) => [Math.round(maxValue * (step / gradient.length)), color])
@@ -59,7 +46,6 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
     );
     
     return interpolateRange(maxFilings, [0, 0.2, 0.4, 0.6, 0.8]);
-    return interpolateRange(maxFilings, [0, 0.4, 0.8]);
   });
 
   const choropleth = computed(
@@ -78,10 +64,8 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
         { maxRenterCount: 0, maxRenterRate: 0, maxPovertyRate: 0 }
       );
 
-
       return {
         none: [],
-        n_filings: [],
         renter_count: interpolateColor(maxRenterCount, BLUE),
         renter_rate: interpolateColor(maxRenterRate, BLUE),
         poverty_rate: interpolateColor(maxPovertyRate, BLUE),

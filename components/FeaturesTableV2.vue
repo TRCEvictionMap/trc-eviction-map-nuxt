@@ -115,35 +115,7 @@ const { columns, rows } = dataTableRowsAndCols({
   ],
   rows: computed(
     () => {
-
-      // const filingsByRegion = Object.values(featureProperties.bgHeatmap).reduce(
-      //   (accum: Record<string, number>, { c, m, y }) => {
-      //     if (!accum[region_id]) {
-      //       accum[region_id] = 0;
-      //     }
-      //     if (
-      //       controls.currentTimeInterval === "month" &&
-      //       controls.currentYear === y &&
-      //       controls.currentMonth === m
-      //     ) {
-      //       accum[region_id] += count;
-      //     } else if (controls.currentYear === y) {
-      //       accum[region_id] += count;
-      //     }
-      //     // if (
-      //     //   controls.currentYear === y &&
-      //     //   (
-      //     //     controls.currentTimeInterval === "month" &&
-      //     //     controls.currentMonth === m
-      //     //   )
-      //     // ) {
-      //     //   accum[region_id] += count;
-      //     // }
-      //     return accum;
-      //   },
-      //   {}
-      // );
-
+      const { currentTimeInterval, currentMonth, currentYear } = controls;
       return Object.keys(featureProperties.bgChoropleth)
         .map((featureId) => {
           const {
@@ -162,8 +134,29 @@ const { columns, rows } = dataTableRowsAndCols({
               pct_other,
               pct_pi,
               pct_wh,
-            }
+            },
+            filings
           } = featureProperties.bgChoropleth[featureId];
+
+          const nFilings = Object.entries(filings).reduce(
+            (accum, [key, { c: count }]) => {
+              const [year, month] = key.split("-").map((n) => Number.parseInt(n));
+              if (
+                currentTimeInterval === "month" &&
+                currentYear === year &&
+                currentMonth === month
+              ) {
+                accum += count;
+              } else if (
+                currentTimeInterval === "year" &&
+                currentYear === year
+              ) {
+                accum += count;
+              }
+              return accum;
+            },
+            0
+          );
 
           return {
             id: featureId,
@@ -190,7 +183,7 @@ const { columns, rows } = dataTableRowsAndCols({
                 srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
               },
               n_filings: {
-                value: 1,
+                value: nFilings,
               },
               pct_ai: {
                 value: pct_ai,

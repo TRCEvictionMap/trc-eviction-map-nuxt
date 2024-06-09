@@ -61,18 +61,10 @@ function createLayers<S extends SourceId>(source: S): Layers {
         paint: {
           // increase weight as count increases
           "heatmap-weight": {
-            property: "count",
+            property: "c",
             type: "interval",
             stops: interpolated.heatmap
           },
-          // // increase intensity as zoom level increases
-          // "heatmap-intensity": {
-          //   stops: [
-          //     [2, 1],
-          //     [4, 2],
-          //     [6, 3]
-          //   ]
-          // },
           // assign color values be applied to points depending on their density
           "heatmap-color": [
             "interpolate",
@@ -252,22 +244,25 @@ function useMapLayersV2(map: mapboxgl.Map) {
       return;
     }
 
-    if (timeUnit === "year") {
-      map.setFilter(heatmapLayerId, ["==", ["get", "y"], year]);
-    } else {
-      map.setFilter(heatmapLayerId, [
-        "all",
-        ["==", ["get", "y"], year],
-        ["==", ["get", "m"], month],
-      ]);
+    switch (timeUnit) {
+      case "year":
+        return map.setFilter(heatmapLayerId, ["==", ["get", "y"], year]);
+      case "month":
+        return map.setFilter(heatmapLayerId, [
+          "all",
+          ["==", ["get", "y"], year],
+          ["==", ["get", "m"], month],
+        ]);
     }
   }
 
   function updateIsSelected(featureId: string, isSelected: boolean) {
-    map.setFeatureState(
-      { source: controls.currentSource, id: featureId },
-      { isSelected },
-    );
+    if (map.getLayer(choroplethLayerId)) {
+      map.setFeatureState(
+        { source: controls.currentSource, id: featureId },
+        { isSelected },
+      );
+    }
   }
 
   function updateSelectedFeatures(current: string[], previous?: string[]) {

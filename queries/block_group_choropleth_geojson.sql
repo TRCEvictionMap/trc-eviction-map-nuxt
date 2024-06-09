@@ -101,6 +101,7 @@ from (
     'id', props.region_id,
     'geometry', st_asgeojson(st_simplifypreservetopology(props.shape, 0.0001))::jsonb,
     'properties', jsonb_build_object(
+      'id', props.region_id,
       'tr', props.tract,
       'bg', props.block_group::text,
       'filings', props.filings,

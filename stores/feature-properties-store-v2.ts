@@ -1,35 +1,44 @@
 import { defineStore } from "pinia";
-import { useMapControlsV2, type ChoroplethMetric } from "./map-controls-store-v2";
+
 import type { FeatureCollections, FeatureProperties } from "~/utils/types";
 
-function roundPercent(value: number) {
+function formatPercent(value: number) {
   return value < 10 ? value : Math.round(value);
 }
 
-function getProperties(featureCollection: GeoJSON.FeatureCollection) {
+function getProperties<
+  Data extends GeoJSON.FeatureCollection,
+  Props extends Data["features"][number]["properties"],
+  Formatter extends (props: Props) => Props, 
+>(data: Data, format?: Formatter) {
   return Object.fromEntries(
-    featureCollection.features.map(
-      (feature) => [feature.id, feature.properties]
+    data.features.map(
+      (feature) => [
+        feature.id,
+        format ? format(feature.properties as Props) : feature.properties
+      ]
     )
   );
 }
 
-const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
-  const controls = useMapControlsV2();
-  
+const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {  
   const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
   const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
 
-  /**
-   * Aggregate eviction counts by block-group and filter by date/time
-   */
-  const bgHeatmapByDateTime = computed(() => {
-
-  });
-
   function loadChoropleth(source: SourceId, data: FeatureCollections.ChoroplethV2) {
     if (source === "block-group") {
-      bgChoropleth.value = getProperties(data)
+      bgChoropleth.value = getProperties(data, (props) => ({
+        ...props,
+        rr: formatPercent(props.rr),
+        rrm: formatPercent(props.rrm),
+        pr: formatPercent(props.pr),
+        prm: formatPercent(props.prm),
+        race: Object.fromEntries(
+          Object.entries(props.race).map(
+            ([key, value]) => [key, formatPercent(value)]
+          )
+        ) as FeatureProperties.ChoroplethV2["race"],
+      }));
     }
   }
 

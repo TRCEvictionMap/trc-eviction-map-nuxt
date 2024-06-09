@@ -19,7 +19,6 @@ const MONTHS = [
 ];
 
 const CHOROPLETH_METRICS = [
-  "n_filings",
   "renter_count",
   "renter_rate",
   "poverty_rate",
@@ -59,10 +58,6 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
     text: "Poverty Rate",
     value: "poverty_rate",
   },
-  {
-    text: "Eviction Filings",
-    value: "n_filings",
-  }
 ];
 
 const timeIntervalOptions: Option<"month" | "year">[] = [
@@ -128,7 +123,6 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
   function loadAvailableMonths(data: FeatureCollections.ChoroplethV2) {
     Object.keys(data.features[0].properties.filings).forEach((key) => {
       const [year, month] = key.split("-");
-      console.log(key, year, month);
       _availableMonths.value.add({
         year: Number.parseInt(year),
         month: Number.parseInt(month), 
