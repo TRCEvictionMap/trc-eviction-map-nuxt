@@ -116,39 +116,38 @@ const { columns, rows } = dataTableRowsAndCols({
   rows: computed(
     () => {
 
-      const filingsByRegion = Object.values(featureProperties.bgHeatmap).reduce(
-        (accum: Record<string, number>, { region_id, count, m, y }) => {
-          if (!accum[region_id]) {
-            accum[region_id] = 0;
-          }
-          if (
-            controls.currentTimeInterval === "month" &&
-            controls.currentYear === y &&
-            controls.currentMonth === m
-          ) {
-            accum[region_id] += count;
-          } else if (controls.currentYear === y) {
-            accum[region_id] += count;
-          }
-          // if (
-          //   controls.currentYear === y &&
-          //   (
-          //     controls.currentTimeInterval === "month" &&
-          //     controls.currentMonth === m
-          //   )
-          // ) {
-          //   accum[region_id] += count;
-          // }
-          return accum;
-        },
-        {}
-      );
+      // const filingsByRegion = Object.values(featureProperties.bgHeatmap).reduce(
+      //   (accum: Record<string, number>, { c, m, y }) => {
+      //     if (!accum[region_id]) {
+      //       accum[region_id] = 0;
+      //     }
+      //     if (
+      //       controls.currentTimeInterval === "month" &&
+      //       controls.currentYear === y &&
+      //       controls.currentMonth === m
+      //     ) {
+      //       accum[region_id] += count;
+      //     } else if (controls.currentYear === y) {
+      //       accum[region_id] += count;
+      //     }
+      //     // if (
+      //     //   controls.currentYear === y &&
+      //     //   (
+      //     //     controls.currentTimeInterval === "month" &&
+      //     //     controls.currentMonth === m
+      //     //   )
+      //     // ) {
+      //     //   accum[region_id] += count;
+      //     // }
+      //     return accum;
+      //   },
+      //   {}
+      // );
 
-      return Object.keys(featureProperties.bgDemographics)
+      return Object.keys(featureProperties.bgChoropleth)
         .map((featureId) => {
           const {
             id,
-            region,
             rc: renter_count,
             rcm: renter_count_moe,
             rr: renter_rate,
@@ -164,7 +163,7 @@ const { columns, rows } = dataTableRowsAndCols({
               pct_pi,
               pct_wh,
             }
-          } = featureProperties.bgDemographics[featureId];
+          } = featureProperties.bgChoropleth[featureId];
 
           return {
             id: featureId,
@@ -191,7 +190,7 @@ const { columns, rows } = dataTableRowsAndCols({
                 srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
               },
               n_filings: {
-                value: filingsByRegion[featureId],
+                value: 1,
               },
               pct_ai: {
                 value: pct_ai,

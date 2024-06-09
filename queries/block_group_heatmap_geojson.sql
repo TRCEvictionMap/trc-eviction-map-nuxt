@@ -4,7 +4,7 @@ with bg as (
 ),
 filing as (
   select
-    count(1),
+    count(1) c,
     ec.defendant_address_point,
     EXTRACT(YEAR FROM ec.filing_date) AS y,
     EXTRACT(MONTH FROM ec.filing_date) AS m
@@ -36,8 +36,7 @@ features as (
   from (
     select
       filing.*,
-      dap.row_number::text || '_' || filing.m::text || '_' || filing.y::text  place_id,
-      TRIM(LEADING '0' FROM bg.tract_ce || bg.block_group_ce::text)           region_id
+      dap.row_number::text || '_' || filing.m::text || '_' || filing.y::text  place_id
     from filing
     join bg
       on st_contains(bg.shape, filing.defendant_address_point)

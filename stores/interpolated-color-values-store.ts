@@ -48,10 +48,10 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
       (accum, item) => {
         if (controls.currentTimeInterval === "month") {
           if (item.y === controls.currentYear && item.m === controls.currentMonth) {
-            accum += item.count;
+            accum += item.c;
           }
         } else if (item.y === controls.currentYear) {
-          accum += item.count;
+          accum += item.c;
         }
         return accum;
       },
@@ -69,7 +69,7 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
         maxPovertyRate,
         maxRenterCount,
         maxRenterRate
-      } = Object.values(featureProperties.bgDemographics).reduce(
+      } = Object.values(featureProperties.bgChoropleth).reduce(
         (accum, item) => ({
           maxRenterRate: Math.max(accum.maxRenterRate, item.rr),
           maxRenterCount: Math.max(accum.maxRenterCount, item.rc),

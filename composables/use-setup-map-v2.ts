@@ -5,6 +5,7 @@ import { useFeatureState } from "~/stores/feature-state-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import { useFeaturePropertiesV2 } from "~/stores/feature-properties-store-v2";
 import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
+import type { FeatureCollections } from "~/utils/types";
 
 interface SetupMapOptions {
   containerId: string;
@@ -29,7 +30,7 @@ function useSetupMapV2(options: SetupMapOptions) {
   const disclosures = useDisclosures();
 
   onMounted(async () => {
-    const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features, _showDetails } = useInitialQueryParams();
+    const { _lngLat, _source, _year, _zoom, _d_metric, _features, _showDetails } = useInitialQueryParams();
 
     map.value = markRaw(
       new mapboxgl.Map({
@@ -69,14 +70,14 @@ function useSetupMapV2(options: SetupMapOptions) {
 
     map.value.on("load", async () => {
 
-      const [bgDemographicsJson, bgHeatmapJson] = await Promise.all([
-        fetchGeoJson("block-group-demographics") as Promise<DemographicsFeatureCollectionV2>,
-        fetchGeoJson("block-group-heatmap") as Promise<HeatmapFeatureCollection>
+      const [bgChoroplethJson, bgHeatmapJson] = await Promise.all([
+        fetchGeoJson("block-group-choropleth") as Promise<FeatureCollections.ChoroplethV2>,
+        fetchGeoJson("block-group-heatmap") as Promise<FeatureCollections.HeatmapV2>
       ]);
 
-      featureProperties.loadDemographics(
+      featureProperties.loadChoropleth(
         controls.currentSource,
-        bgDemographicsJson
+        bgChoroplethJson
       );
 
       featureProperties.loadHeatmap(
@@ -84,13 +85,13 @@ function useSetupMapV2(options: SetupMapOptions) {
         bgHeatmapJson
       );
 
-      controls.loadAvailableMonths(bgHeatmapJson);
+      controls.loadAvailableMonths(bgChoroplethJson);
 
       map.value
         ?.addSource("block-group", {
           type: "geojson",
           promoteId: "id",
-          data: bgDemographicsJson,
+          data: bgChoroplethJson,
         })
         .addSource("block-group-heatmap", {
           type: "geojson",

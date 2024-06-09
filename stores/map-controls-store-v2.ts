@@ -1,7 +1,7 @@
 
 
 import { defineStore } from "pinia";
-import type { SourceId } from "~/utils/types";
+import type { FeatureCollections, SourceId } from "~/utils/types";
 
 const MONTHS = [
   "January",
@@ -83,7 +83,7 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 
 
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
-  const _availableMonths = ref<Set<{ y: number; m: number }>>(new Set());
+  const _availableMonths = ref<Set<{ year: number; month: number }>>(new Set());
 
   const currentTimeInterval = ref<"month" | "year">("year");
   const currentYear = ref(2023);
@@ -96,7 +96,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     Array
       .from(
         new Set(
-          Array.from(_availableMonths.value).map(({ y }) => y)
+          Array.from(_availableMonths.value).map(({ year }) => year)
         )
       )
       .map((year) => ({ value: year }))
@@ -109,8 +109,8 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
         new Set(
           Array
             .from(_availableMonths.value.keys())
-            .filter(({ y }) => y === currentYear.value)
-            .map(({ m }) => m)
+            .filter(({ year }) => year === currentYear.value)
+            .map(({ month }) => month)
         )
       )
       .map((month) => ({ value: month, text: MONTHS[month - 1] }))
@@ -125,12 +125,15 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     sourceOptions.find((opt) => opt.value === currentSource.value)?.description
   );
 
-  function loadAvailableMonths(featureCollection: HeatmapFeatureCollection) {
-    featureCollection
-      .features
-      .forEach(({ properties: { y, m } }) => {
-        _availableMonths.value.add({ y, m });
+  function loadAvailableMonths(data: FeatureCollections.ChoroplethV2) {
+    Object.keys(data.features[0].properties.filings).forEach((key) => {
+      const [year, month] = key.split("-");
+      console.log(key, year, month);
+      _availableMonths.value.add({
+        year: Number.parseInt(year),
+        month: Number.parseInt(month), 
       });
+    });
   }
 
   return {

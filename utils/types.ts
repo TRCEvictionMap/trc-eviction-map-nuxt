@@ -41,6 +41,10 @@ interface DemographicFeaturePropertiesV2 {
     };
 }
 
+interface ChoroplethFeatureProperties {
+
+}
+
 interface HeatmapFeatureProperties {
     region_id: string;
     count: number;
@@ -97,6 +101,58 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
 
 
 type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left";
+
+export namespace FeatureProperties {
+
+    export interface ChoroplethV2 {
+        id: string;
+        /** census tract */
+        tr: string;
+        /** census block group */
+        bg: string;
+        /** renter count */
+        rc: number;
+        /** renter count margin of error */
+        rcm: number;
+        /** renter rate */
+        rr: number;
+        /** renter rate margin of error */
+        rrm: number;
+        /** poverty rate */
+        pr: number;
+        /** poverty rate margin of error */
+        prm: number;
+        race: {
+            pct_wh: number;
+            pct_bl: number;
+            pct_ai: number;
+            pct_as: number;
+            pct_pi: number;
+            pct_other: number;
+            pct_multi: number;
+        };
+        filings: Record<string, {
+            /** filing count */
+            c: number;
+            /** filing rate */
+            r: number;
+        }>,
+    }
+
+    export interface HeatmapV2 {
+        /** count */
+        c: number;
+        /** year */
+        y: number;
+        /** month */
+        m: number;
+    }
+}
+
+export namespace FeatureCollections {
+    export type ChoroplethV2 = GeoJSON.FeatureCollection<any, FeatureProperties.ChoroplethV2>;
+    export type HeatmapV2 = GeoJSON.FeatureCollection<any, FeatureProperties.HeatmapV2>;
+}
 
 export { isSourceId };
 export type {

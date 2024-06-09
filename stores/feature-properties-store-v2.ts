@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useMapControlsV2, type ChoroplethMetric } from "./map-controls-store-v2";
+import type { FeatureCollections, FeatureProperties } from "~/utils/types";
 
 function roundPercent(value: number) {
   return value < 10 ? value : Math.round(value);
@@ -16,8 +17,8 @@ function getProperties(featureCollection: GeoJSON.FeatureCollection) {
 const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
   const controls = useMapControlsV2();
   
-  const bgDemographics: Ref<Record<string, DemographicFeaturePropertiesV2>> = ref({});
-  const bgHeatmap: Ref<Record<string, HeatmapFeatureProperties>> = ref({});
+  const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
+  const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
 
   /**
    * Aggregate eviction counts by block-group and filter by date/time
@@ -26,25 +27,19 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
 
   });
 
-  function loadDemographics(
-    source: SourceId,
-    featureCollection: DemographicsFeatureCollectionV2
-  ) {
+  function loadChoropleth(source: SourceId, data: FeatureCollections.ChoroplethV2) {
     if (source === "block-group") {
-      bgDemographics.value = getProperties(featureCollection)
+      bgChoropleth.value = getProperties(data)
     }
   }
 
-  function loadHeatmap(
-    source: SourceId,
-    featureCollection: HeatmapFeatureCollection
-  ) {
+  function loadHeatmap(source: SourceId, data: FeatureCollections.HeatmapV2) {
     if (source === "block-group") {
-      bgHeatmap.value = getProperties(featureCollection);
+      bgHeatmap.value = getProperties(data);
     }
   }
 
-  return { bgDemographics, bgHeatmap, loadDemographics, loadHeatmap };
+  return { bgChoropleth, bgHeatmap, loadChoropleth, loadHeatmap };
 });
 
 export { useFeaturePropertiesV2 };

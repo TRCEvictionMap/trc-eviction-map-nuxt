@@ -12,7 +12,7 @@ const featureProperties = useFeaturePropertiesV2();
 
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
 
-const data = computed(() => featureProperties.bgDemographics[featureId]);
+const data = computed(() => featureProperties.bgChoropleth[featureId]);
 
 function deselectFeature() {
   if (featureId) {
