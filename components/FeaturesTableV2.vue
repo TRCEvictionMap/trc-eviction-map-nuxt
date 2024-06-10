@@ -138,24 +138,26 @@ const { columns, rows } = dataTableRowsAndCols({
             filings
           } = featureProperties.bgChoropleth[featureId];
 
-          const nFilings = Object.entries(filings).reduce(
-            (accum, [key, { c: count }]) => {
+          const { n_filings } = Object.entries(filings).reduce(
+            (accum, [key, { c: count, r: rate }]) => {
               const [year, month] = key.split("-").map((n) => Number.parseInt(n));
               if (
                 currentTimeInterval === "month" &&
                 currentYear === year &&
                 currentMonth === month
               ) {
-                accum += count;
+                accum.n_filings += count;
+                accum.filing_rate += rate;
               } else if (
                 currentTimeInterval === "year" &&
                 currentYear === year
               ) {
-                accum += count;
+                accum.n_filings += count;
+                accum.filing_rate += rate;
               }
               return accum;
             },
-            0
+            { n_filings: 0, filing_rate: 0 }
           );
 
           return {
@@ -183,7 +185,7 @@ const { columns, rows } = dataTableRowsAndCols({
                 srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
               },
               n_filings: {
-                value: nFilings,
+                value: n_filings,
               },
               pct_ai: {
                 value: pct_ai,

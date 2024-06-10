@@ -80,12 +80,15 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
   const _availableMonths = ref<Set<{ year: number; month: number }>>(new Set());
 
+
   const currentTimeInterval = ref<"month" | "year">("year");
   const currentYear = ref(2023);
   const currentMonth = ref(1);
   const currentSource = ref<SourceId>("block-group");
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
+
+  const nDates = computed(() => Array.from(_availableMonths.value.keys()).length);
 
   const yearOptions = computed((): Option<number>[] =>
     Array
@@ -132,6 +135,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   return {
     loadAvailableMonths,
+    nDates,
     yearOptions,
     monthOptions,
     sourceOptions,

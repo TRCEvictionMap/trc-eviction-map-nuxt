@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFloating, autoUpdate, autoPlacement, arrow, offset } from "@floating-ui/vue";
-import type { CSSProperties } from "nuxt/dist/app/compat/capi";
+import type { CSSProperties } from "vue";
 
 const props = defineProps<{ text: string, delay?: number }>();
 

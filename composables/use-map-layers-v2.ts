@@ -84,7 +84,8 @@ function createLayers<S extends SourceId>(source: S): Layers {
           // increase radius as zoom increases
           "heatmap-radius": {
             stops: [
-              [9, 10],
+              [8, 3],
+              [9, 6],
               [12, 15],
               [15, 50]
             ]

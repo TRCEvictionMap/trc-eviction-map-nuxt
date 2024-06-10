@@ -5,6 +5,8 @@ import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 defineProps<{ position: "center" | "left" }>();
 
+const range = ref<[number, number]>([0, 6]);
+
 const controls = useMapControlsV2();
 
 </script>
@@ -23,8 +25,8 @@ const controls = useMapControlsV2();
   >
 
     <div class="
-      flex justify-center items-center flex-shrink-0 w-full
-      p-4
+      flex flex-col justify-center items-center flex-shrink-0 w-full
+      p-4 gap-y-4
       rounded border shadow-2xl
       bg-white
     ">
@@ -45,17 +47,21 @@ const controls = useMapControlsV2();
           :options="controls.timeIntervalOptions"
           v-model="controls.currentTimeInterval"
         />
-        <TRCSelect
+        <!-- <TRCSelect
           label="Year"
           :options="controls.yearOptions"
           v-model="controls.currentYear"
-        />
+        /> -->
         <TRCSelect
           v-if="controls.currentTimeInterval === 'month'"
           label="Month"
           :options="controls.monthOptions"
           v-model="controls.currentMonth"
         />
+      </div>
+      <div class="flex gap-4 w-full">
+        <TRCRangeSlider v-model="range" :min="0" :max="controls.nDates" />
+        <div>{{ range }}</div>
       </div>
     </div>
   </div>

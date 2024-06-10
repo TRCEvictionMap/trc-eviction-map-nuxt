@@ -20,6 +20,10 @@ const mainPanelWidth = computed(() => window.innerWidth - sidePanelWidth.value);
 
 watch(sidePanelWidth, resizeMap);
 watch(bottomPanelHeight, resizeMap);
+watch(() => settings.options.showBottomPanel, async () => {
+  await nextTick();
+  resizeMap();
+});
 
 function resizeMap() {
   map.value?.resize();
@@ -29,7 +33,10 @@ function resizeMap() {
 
 <template>
   <div class="relative flex flex-1">
-    <TransitionGroup :name="resizeActive ? 'disabled-transition' : 'side-drawer'" @afterLeave="resizeMap">
+    <TransitionGroup
+      :name="resizeActive ? 'DISABLED_TRANSITION' : 'side-drawer'"
+      @afterLeave="resizeMap"
+    >
       <div
         v-if="settings.options.showLeftPanel"
         key="right"
@@ -54,6 +61,10 @@ function resizeMap() {
         class="flex flex-col flex-1 max-h-[calc(100vh-60px)]"
         :style="{ width: `${mainPanelWidth}px` }"
       >
+        <!-- <TransitionGroup
+          :name="resizeActive ? 'DISABLED_TRANSITION' : 'bottom-drawer'"
+          @afterLeave="() => onTransitionLeave('bottom-drawer')"
+        > -->
         <div
           key="map-content"
           class="relative z-10 flex flex-1"
@@ -64,24 +75,27 @@ function resizeMap() {
           ></div>
           <slot name="map-overlay"></slot>
         </div>
-        <div
-          v-if="settings.options.showBottomPanel"
-          key="bottom-panel"
-          class="relative z-20 border-t bg-white"
-          :style="{ height: `${bottomPanelHeight}px` }"
-        >
-          <TRCResize
-            :min="300"
-            :max="600"
-            v-model="bottomPanelHeight"
-            direction="vertical"
-            position="top"
-          />
-          <div class="p-4 overflow-auto w-full flex flex-col">
-
-            <slot name="bottom" v-bind="{ height: bottomPanelHeight }"></slot>
+          <div
+            v-if="settings.options.showBottomPanel"
+            key="bottom-panel"
+            class="relative z-20 border-t bg-white"
+            :style="{ height: `${bottomPanelHeight}px` }"
+            @mousedown="resizeActive = true"
+            @mouseup="resizeActive = false"
+          >
+            <TRCResize
+              :min="300"
+              :max="600"
+              v-model="bottomPanelHeight"
+              direction="vertical"
+              position="top"
+            />
+            <div class="p-4 overflow-auto w-full flex flex-col">
+  
+              <slot name="bottom" v-bind="{ height: bottomPanelHeight }"></slot>
+            </div>
           </div>
-        </div>
+        <!-- </TransitionGroup> -->
       </div>
     </TransitionGroup>
   </div>
@@ -90,7 +104,11 @@ function resizeMap() {
 <style scoped>
 .side-drawer-move,
 .side-drawer-enter-active,
-.side-drawer-leave-active {
+.side-drawer-leave-active,
+.bottom-drawer-move,
+.bottom-drawer-enter-active,
+.bottom-drawer-leave-active {
+  width: 100%;
   transition: all 75ms ease-in-out;
 }
 
@@ -99,7 +117,13 @@ function resizeMap() {
   transform: translateX(-100%);
 }
 
-.side-drawer-leave-active {
+.bottom-drawer-enter-from,
+.bottom-drawer-leave-to {
+  transform: translateY(100vh);
+}
+
+.side-drawer-leave-active,
+.bottom-drawer-leave-active {
   position: absolute;
 }
 </style>
