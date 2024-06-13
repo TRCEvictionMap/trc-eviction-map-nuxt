@@ -47,11 +47,11 @@ const controls = useMapControlsV2();
           :options="controls.timeIntervalOptions"
           v-model="controls.currentTimeInterval"
         />
-        <!-- <TRCSelect
+        <TRCSelect
           label="Year"
           :options="controls.yearOptions"
           v-model="controls.currentYear"
-        /> -->
+        />
         <TRCSelect
           v-if="controls.currentTimeInterval === 'month'"
           label="Month"

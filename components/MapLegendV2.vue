@@ -1,45 +1,35 @@
 <script setup lang="ts">
-import { useMapControls } from "~/stores/map-controls-store";
 import { interpolateFillRGBA } from "~/composables/use-interpolated-color-values";
+import { useInterpolatedColors } from "~/stores/interpolated-color-values-store";
+import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 defineProps<{
   position: Position
 }>();
 
-const interpolated = useInterpolatedColorValues();
-const controls = useMapControls();
+// const interpolated = useInterpolatedColorValues();
+const interpolated = useInterpolatedColors();
+const controls = useMapControlsV2();
 
-const demographicMetricName = computed(() =>
-  controls.demographicMetricOptions.find(
-    ({ value }) => value === controls.currentDemographicMetric
+const choroplethMetricName = computed(() =>
+  controls.choroplethMetricOptions.find(
+    ({ value }) => value === controls.currentChoroplethMetric
   )?.text
 );
 
-const evictionMetric = computed(() =>
-  controls.evictionMetricOptions.find(
-    ({ value }) => value === controls.currentEvictionMetric
-  )?.text
+
+const choroplethStops = computed(() =>
+  // Object.keys(interpolated[controls.currentDemographicMetric])
+  Object.keys(interpolated.choropleth[controls.currentChoroplethMetric])
 );
 
-const demographicStops = computed(() =>
-  Object.keys(interpolated[controls.currentDemographicMetric])
-);
 
-const evictionStops = computed(() =>
-  Object.keys(interpolated[controls.currentEvictionMetric])
-);
-
-const evictionStopSizes = computed(() =>
-  evictionStops.value.map(
-    (stop) => (interpolated[controls.currentEvictionMetric] as Record<string, number>)[stop] * 2
-  )
-);
 
 </script>
 
 <template>
   <div
-    v-if="controls.currentDemographicMetric !== 'none'"
+    v-if="controls.currentChoroplethMetric !== 'none'"
     class="
       absolute self-end shadow-xl border rounded bg-white text-xs p-2
       sm:p-3 sm:text-sm sm:min-h-[96px]
@@ -52,12 +42,9 @@ const evictionStopSizes = computed(() =>
     }"
   >
     <div class="flex space-x-4">
-      <div
-        v-if="controls.currentDemographicMetric !== 'none'"
-        class="space-y-2 min-w-[160px]"
-      >
+      <div class="space-y-2 min-w-[160px]">
         <h2 class="font-semibold ">
-          {{ demographicMetricName }}
+          {{ choroplethMetricName }}
         </h2>
         <div>
           <div
@@ -70,19 +57,19 @@ const evictionStopSizes = computed(() =>
             <div class="absolute left-[10%]">
               <div class="h-2 border-r border-slate-400 w-[1px]"></div>
               <div class="-translate-x-[50%]">
-                {{ demographicStops[1] }}
+                {{ choroplethStops[1] }}
               </div>
             </div>
             <div class="absolute left-[50%]">
               <div class="h-2 border-r border-slate-400 w-[1px]"></div>
               <div class="-translate-x-[50%]">
-                {{ demographicStops[2] }}
+                {{ choroplethStops[2] }}
               </div>
             </div>
             <div class="absolute left-[90%]">
               <div class="h-2 border-r border-slate-400 w-[1px]"></div>
               <div class="-translate-x-[50%]">
-                {{ demographicStops[3] }}
+                {{ choroplethStops[3] }}
               </div>
             </div>
           </div>

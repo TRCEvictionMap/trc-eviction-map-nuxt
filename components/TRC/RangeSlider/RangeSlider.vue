@@ -1,144 +1,91 @@
 <script setup lang="ts">
 import type { CSSProperties } from "vue";
 
-const props = defineProps<{
+interface RangeSliderProps {
+  modelValue: [number, number];
   min: number;
   max: number;
-  modelValue: [number, number];
-}>();
+  step?: number;
+}
+
+const props = withDefaults(defineProps<RangeSliderProps>(), {
+  step: 1,
+});
 
 const emit = defineEmits<{
   "update:modelValue": [value: [number, number]];
 }>();
 
-const input = ref<HTMLInputElement>();
+const bounds: RangeSlider.Bounds = computed(() => ({
+  min: props.min,
+  max: props.max,
+}));
 
-const rangeSize = computed(() => props.modelValue[1] - props.modelValue[0]);
-const rangeCenter = computed(() => props.modelValue[1] - Math.floor(rangeSize.value / 2));
+const step: RangeSlider.Step = computed(() => props.step);
 
-watch(
-  [
-    () => props.min,
-    () => props.max,
-  ],
-  ([min, max]) => {
-    if (input.value) {
-      input.value.min = min.toString();
-      input.value.max = max.toString();
+const range: RangeSlider.Range = computed({
+  get() {
+    return {
+      start: props.modelValue[0],
+      end: props.modelValue[1],
     }
-  }
-);
-
-function onInput() {
-  if (input.value) {
-    try {
-      const value = Number.parseFloat(input.value.value);
-      const nextStart = value - Math.floor(rangeSize.value / 2);
-      const nextEnd = value + Math.floor(rangeSize.value / 2);
-      if (nextStart >= props.min && nextEnd <= props.max) {
-        emit("update:modelValue", [nextStart, nextEnd]);
-      }
-      input.value.value = rangeCenter.value.toString();
-    } catch (error) {
-      console.warn("[RangeSlider onInput]", error);
-    }
-  }
-}
-
-const trackStyle = computed((): CSSProperties => {
-  const style: CSSProperties = {
-    position: "absolute",
-    left: `${Math.round(props.modelValue[0] / props.max * 100)}%`,
-    right: `${Math.round(props.modelValue[1] / props.max * 100)}%`,
-    width: `${Math.round(rangeSize.value / props.max * 100)}%`
-  };
-  // console.log(style);
-  return style;
+  },
+  set(value) {
+    emit("update:modelValue", [value.start, value.end]);
+  },
 });
 
-function onTouchStart(ev: any) {
-  console.log(ev)
-}
+const {
+  inputRef,
+  inputListeners,
+  containerRef,
+  isFocused,
+  onMousedown,
+  rangeCenter,
+  rangeSize,
+} = useRangeSlider({ bounds, step, range });
+
+const trackStyle = computed((): CSSProperties => ({
+  left: `${Math.floor(props.modelValue[0] / props.max * 100)}%`,
+  right: `${Math.ceil(props.modelValue[1] / props.max * 100)}%`,
+  width: `${Math.ceil(rangeSize.value / props.max * 100)}%`
+}));
+
+const thumbStyle = computed((): CSSProperties => ({
+  left: `${Math.floor(rangeCenter.value / props.max * 100)}%`
+}));
 
 </script>
 
 <template>
-  <div class="relative w-72" @touchstart="onTouchStart">
+  <div
+    ref="containerRef"
+    class="relative w-72"
+  >
+    <!-- @mousedown="(ev) => onMousedown(ev, rangeCenter)" -->
     <!-- extends the full length of the slider -->
-    <span class="rail absolute top-2 w-full h-1 bg-slate-300 rounded"></span>
+    <span class="absolute top-2 w-full h-1 bg-slate-300 rounded"></span>
     <!-- represents the current range -->
-    <span class="track top-2 h-1 bg-trc-blue-500 rounded" :style="trackStyle"></span>
+    <span class="absolute top-2 h-1 bg-trc-blue-500 rounded " :style="trackStyle"></span>
     <!-- the button the user clicks and slides -->
-    <span class="handle" >
+    <span
+      class="absolute top-0 h-5 w-5 rounded-full bg-trc-blue-500 shadow"
+      :class="{
+        'ring ring-trc-blue-400 ring-offset-1': isFocused,
+      }"
+      :style="thumbStyle"
+    >
       <input
-        ref="input"
+        ref="inputRef"
         type="range"
         :value="rangeCenter"
-        @input="onInput"
+        v-bind="inputListeners"
         :min="min"
         :max="max"
-        step="1"
-        class="absolute"
-        style=""
+        :step="step"
+        style="clip-path: rect(0 0 0 0);"
       >
     </span>
-
   </div>
+
 </template>
-
-<style scoped>
-input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 100%; /* Specific width is required for Firefox. */
-  background: transparent; /* Otherwise white in Chrome */
-}
-
-input[type=range]:focus {
-  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-}
-
-input[type=range]::-ms-track {
-  width: 100%;
-  cursor: pointer;
-
-  /* Hides the slider so custom styles can be added */
-  background: transparent; 
-  border-color: transparent;
-  color: transparent;
-}
-
-/* Special styling for WebKit/Blink */
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 1px solid #000000;
-  height: 24px;
-  width: 12px;
-  border-radius: 3px;
-  background: #ffffff;
-  cursor: pointer;
-  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
-}
-
-/* All the same stuff for Firefox */
-input[type=range]::-moz-range-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 24px;
-  width: 12px;
-  border-radius: 3px;
-  background: #ffffff;
-  cursor: pointer;
-}
-
-/* All the same stuff for IE */
-input[type=range]::-ms-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 24px;
-  width: 12px;
-  border-radius: 3px;
-  background: #ffffff;
-  cursor: pointer;
-}
-</style>
