@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-// import { useMapControls } from "~/stores/map-controls-store";
+
 import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 defineProps<{ position: "center" | "left" }>();
-
-// const range = ref<[number, number]>([0, 12]);
 
 const controls = useMapControlsV2();
 
@@ -41,27 +39,10 @@ const controls = useMapControlsV2();
           :options="controls.sourceOptions"
           v-model="controls.currentSource"
         />
-        <div class="border-r-2 h-11"></div>
-        <TRCSelect
-          label="Interval"
-          :options="controls.timeIntervalOptions"
-          v-model="controls.currentTimeInterval"
-        />
-        <TRCSelect
-          label="Year"
-          :options="controls.yearOptions"
-          v-model="controls.currentYear"
-        />
-        <TRCSelect
-          v-if="controls.currentTimeInterval === 'month'"
-          label="Month"
-          :options="controls.monthOptions"
-          v-model="controls.currentMonth"
-        />
       </div>
       <div class="flex flex-col gap-4 w-full">
-        <TRCRangeSlider v-model="controls.currentDateRangeIndices" :min="0" :max="controls.dateRangeMax" />
-        <pre>{{ controls.currentDateRange }}</pre>
+        <TRCRangeSlider v-model="controls.currentDateRangeIndicesV2" :min="0" :max="controls.dateRangeMax" />
+        <pre>{{ controls.currentDateRangeV2 }}</pre>
       </div>
     </div>
   </div>
@@ -91,11 +72,6 @@ const controls = useMapControlsV2();
           label="Region"
           :options="controls.sourceOptions"
           v-model="controls.currentSource"
-        />
-        <TRCSelect
-          label="Year"
-          :options="controls.yearOptions"
-          v-model="controls.currentYear"
         />
       </PopoverPanel>
     </Transition>

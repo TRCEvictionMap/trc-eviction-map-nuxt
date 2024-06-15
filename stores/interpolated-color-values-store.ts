@@ -33,13 +33,14 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
      */
     const maxFilings = Object.values(featureProperties.bgHeatmap).reduce(
       (accum, item) => {
-        if (controls.currentTimeInterval === "month") {
-          if (item.y === controls.currentYear && item.m === controls.currentMonth) {
-            accum += item.c;
-          }
-        } else if (item.y === controls.currentYear) {
-          accum += item.c;
-        }
+        // if (item.e )
+        // if (controls.currentTimeInterval === "month") {
+        //   if (item.y === controls.currentYear && item.m === controls.currentMonth) {
+        //     accum += item.c;
+        //   }
+        // } else if (item.y === controls.currentYear) {
+        //   accum += item.c;
+        // }
         return accum;
       },
       0

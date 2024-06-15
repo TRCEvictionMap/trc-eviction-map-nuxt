@@ -156,7 +156,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
     updateChoroplethPaintProperties(controls.currentChoroplethMetric);
     updateSelectedFeatures(featureState.selectedFeatures);
-    updateHeatmapTimeFilter(controls.currentDateRange);
+    updateHeatmapTimeFilter(controls.currentEpochRangeV2);
 
     map.on("click", choroplethLayerId, handleMapClick);
     map.on("mousemove", choroplethLayerId, handleMapMousemove);
@@ -190,7 +190,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
   );
 
   watch(
-    () => controls.currentDateRange,
+    () => controls.currentEpochRangeV2,
     updateHeatmapTimeFilter,
     { immediate: true }
   );
@@ -249,14 +249,17 @@ function useMapLayersV2(map: mapboxgl.Map) {
   //   }
   // }
 
-  function updateHeatmapTimeFilter(dateRange: DateRange) {
+  function updateHeatmapTimeFilter(epochRange: [number, number]) {
     if (map.getLayer(heatmapLayerId)) {
-      const { startYear, startMonth, endYear, endMonth } = dateRange;
+      // const { startYear, startMonth, endYear, endMonth } = dateRange;
+      const [startEpoch, endEpoch] = epochRange;
 
       map.setFilter(heatmapLayerId, [
         "all",
-        [">=", ["concat", ["get", "y"], ["get", "m"]], `${startYear}${startMonth}`],
-        ["<=", ["concat", ["get", "y"], ["get", "m"]], `${endYear}${endMonth}`],
+        [">=", ["get", "e"], startEpoch],
+        ["<=", ["get", "e"], endEpoch],
+        // [">=", ["concat", ["get", "y"], ["get", "m"]], `${startYear}${startMonth}`],
+        // ["<=", ["concat", ["get", "y"], ["get", "m"]], `${endYear}${endMonth}`],
         // [">=", ["+", ["get", "y"], ["get", "m"]], startYear + startMonth],
         // ["<=", ["+", ["get", "y"], ["get", "m"]], endYear + endMonth]
         

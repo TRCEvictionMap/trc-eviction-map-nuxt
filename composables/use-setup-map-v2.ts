@@ -92,6 +92,7 @@ function useSetupMapV2(options: SetupMapOptions) {
       );
 
       controls.loadAvailableMonths(bgChoroplethJson);
+      controls.loadDateEpochMap(bgHeatmapJson);
 
       map.value
         ?.addSource("block-group", {

@@ -142,10 +142,8 @@ export namespace FeatureProperties {
     export interface HeatmapV2 {
         /** count */
         c: number;
-        /** year */
-        y: number;
-        /** month */
-        m: number;
+        /** unix epoch */
+        e: number;
     }
 }
 

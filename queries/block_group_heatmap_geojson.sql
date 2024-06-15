@@ -3,15 +3,16 @@ with bg as (
 ),
 filing as (
   select
-    count(1) c,
+    count(1),
     ec.defendant_address_point,
-    EXTRACT(YEAR FROM ec.filing_date) AS y,
-    EXTRACT(MONTH FROM ec.filing_date) AS m
+    EXTRACT(YEAR FROM ec.filing_date) y,
+    EXTRACT(MONTH FROM ec.filing_date) m,
+    EXTRACT(EPOCH FROM DATE_TRUNC('month', ec.filing_date)) epoch
   from eviction_cases ec
   join bg
   on st_contains(bg.shape, ec.defendant_address_point)
   where defendant_address_point is not null
-  group by ec.defendant_address_point, y, m
+  group by ec.defendant_address_point, y, m, epoch
 ),
 dap as (
   select
@@ -30,12 +31,15 @@ features as (
     'type', 'Feature',
     'id', props.place_id,
     'geometry', ST_AsGeoJSON(defendant_address_point)::jsonb,
-    'properties', to_jsonb(props.*) - 'defendant_address_point' - 'place_id'
+    'properties', jsonb_build_object(
+      'c', props.count,
+      'e', props.epoch
+    )
   ) feature
   from (
     select
       filing.*,
-      dap.row_number::text || '_' || filing.m::text || '_' || filing.y::text place_id
+      dap.row_number::text || '-' || filing.y::text || '-' || filing.m::text place_id
     from filing
     join bg
       on st_contains(bg.shape, filing.defendant_address_point)

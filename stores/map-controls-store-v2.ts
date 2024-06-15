@@ -82,6 +82,9 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 }
 
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
+
+  const _availableDatesV2 = ref<{ date: string, epoch: number }[]>([]);
+
   const _avalailableDates = ref<{ year: number; month: number }[]>([]);
 
   const _availableMonths = ref<Set<{ year: number; month: number }>>(new Set());
@@ -93,63 +96,34 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
 
-  const currentDateRange = ref<DateRange>({
-    startYear: 2022,
-    startMonth: 4,
-    endYear: 2022,
-    endMonth: 10,
-  });
+  const currentDateRangeV2 = ref<[string, string]>(["2022-4", "2022-4"]);
 
-  const currentDateRangeIndices: WritableComputedRef<[number, number]> = computed({
+  const currentDateRangeIndicesV2: WritableComputedRef<[number, number]> = computed({
     get() {
-      const { startMonth, startYear, endMonth, endYear } = currentDateRange.value;
+      const [start, end] = currentDateRangeV2.value;
       return [
-        _avalailableDates.value.findIndex(
-          ({ year, month }) => year === startYear && month === startMonth
-        ),
-        _avalailableDates.value.findIndex(
-          ({ year, month }) => year === endYear && month === endMonth
-        ),
+        _availableDatesV2.value.findIndex(({ date }) => date === start),
+        _availableDatesV2.value.findIndex(({ date }) => date === end),
+      ];
+    },
+    set([start, end]) {
+      currentDateRangeV2.value = [
+        _availableDatesV2.value[start].date,
+        _availableDatesV2.value[end].date
       ]
     },
-    set(indices) {
-      const start = _avalailableDates.value[indices[0]];
-      const end = _avalailableDates.value[indices[1]];
-      currentDateRange.value = {
-        startYear: start.year,
-        startMonth: start.month,
-        endYear: end.year,
-        endMonth: end.month,
-      };
-    },
   });
 
+  const currentEpochRangeV2 = computed((): [number, number] => {
+    const [start, end] = currentDateRangeIndicesV2.value;
+    return [
+      _availableDatesV2.value[start].epoch,
+      _availableDatesV2.value[end].epoch,
+    ];
+  });
+
+
   const dateRangeMax = computed(() => _avalailableDates.value.length - 1);
-
-  const yearOptions = computed((): Option<number>[] =>
-    Array
-      .from(
-        new Set(
-          Array.from(_availableMonths.value).map(({ year }) => year)
-        )
-      )
-      .map((year) => ({ value: year }))
-      .sort((a, b) => b.value - a.value)
-  );
-
-  const monthOptions = computed((): Option<number>[] =>
-    Array
-      .from(
-        new Set(
-          Array
-            .from(_availableMonths.value.keys())
-            .filter(({ year }) => year === currentYear.value)
-            .map(({ month }) => month)
-        )
-      )
-      .map((month) => ({ value: month, text: MONTHS[month - 1] }))
-      .sort((a, b) => a.value - b.value)
-  );
 
   const currentSourceHumanReadable = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.text
@@ -158,6 +132,22 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
   const currentSourceDesicription = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.description
   );
+
+  function loadDateEpochMap(data: FeatureCollections.HeatmapV2) {
+    const dateEpochMap = Object.fromEntries(
+      data.features.map((feature) => {
+        const featureId = feature.id as string;
+        const date = featureId.slice(featureId.indexOf("-") + 1);
+        const epoch = feature.properties.e;
+        return [date, epoch];
+      })
+    );
+
+    _availableDatesV2.value = Object
+      .entries(dateEpochMap)
+      .map(([date, epoch]) => ({ date, epoch }))
+      .sort((a, b) => a.epoch - b.epoch);
+  }
 
   function loadAvailableMonths(data: FeatureCollections.ChoroplethV2) {
     _avalailableDates.value = Object
@@ -185,8 +175,8 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   return {
     loadAvailableMonths,
-    yearOptions,
-    monthOptions,
+    loadDateEpochMap,
+
     sourceOptions,
     choroplethMetricOptions,
     timeIntervalOptions,
@@ -197,8 +187,9 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     currentYear,
     currentMonth,
     currentChoroplethMetric,
-    currentDateRangeIndices,
-    currentDateRange,
+    currentDateRangeIndicesV2,
+    currentDateRangeV2,
+    currentEpochRangeV2,
     dateRangeMax,
   };
 });
