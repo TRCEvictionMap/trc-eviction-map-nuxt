@@ -96,7 +96,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
 
-  const currentDateRangeV2 = ref<[string, string]>(["2022-4", "2022-4"]);
+  const currentDateRangeV2 = ref<[string, string]>(["2022-4", "2023-4"]);
 
   const currentDateRangeIndicesV2: WritableComputedRef<[number, number]> = computed({
     get() {
@@ -107,19 +107,29 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
       ];
     },
     set([start, end]) {
-      currentDateRangeV2.value = [
-        _availableDatesV2.value[start].date,
-        _availableDatesV2.value[end].date
-      ]
+      if (_availableDatesV2.value[start]) {
+        currentDateRangeV2.value = [
+          _availableDatesV2.value[start].date,
+          _availableDatesV2.value[end].date
+        ]
+      }
     },
   });
 
+  /**
+   * A range of unix epoch timestamps
+   * 
+   * `[start, end]`
+   */
   const currentEpochRangeV2 = computed((): [number, number] => {
     const [start, end] = currentDateRangeIndicesV2.value;
-    return [
-      _availableDatesV2.value[start].epoch,
-      _availableDatesV2.value[end].epoch,
-    ];
+    if (_availableDatesV2.value[start]) {
+      return [
+        _availableDatesV2.value[start].epoch,
+        _availableDatesV2.value[end].epoch,
+      ];
+    }
+    return [-1, -1]
   });
 
 
@@ -176,7 +186,6 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
   return {
     loadAvailableMonths,
     loadDateEpochMap,
-
     sourceOptions,
     choroplethMetricOptions,
     timeIntervalOptions,

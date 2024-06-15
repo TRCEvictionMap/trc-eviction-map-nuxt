@@ -59,12 +59,6 @@ function createLayers<S extends SourceId>(source: S): Layers {
         type: "heatmap",
         maxzoom: 20,
         paint: {
-          // increase weight as count increases
-          "heatmap-weight": {
-            property: "c",
-            type: "interval",
-            stops: interpolated.heatmap
-          },
           // assign color values be applied to points depending on their density
           "heatmap-color": [
             "interpolate",

@@ -18,36 +18,28 @@ function interpolateColor(maxValue: number, gradient: string[]) {
   return gradient.flatMap((color, step) => [Math.round(maxValue * (step / gradient.length)), color])
 }
 
-function interpolateRange(maxValue: number, range: number[]): [number, number][] {
-  return range.map((value, step) => [Math.round(maxValue * (step / range.length)), value]);
-}
+// function interpolateRange(maxValue: number, range: number[]): [number, number][] {
+//   return range.map((value, step) => [
+//     Math.round(maxValue * (step / range.length)),
+//     value
+//   ]);
+// }
 
 const useInterpolatedColors = defineStore("interpolated-colors", () => {
-  const controls = useMapControlsV2();
   const featureProperties = useFeaturePropertiesV2();
 
-  const heatmap = computed((): [number, number][] => {
+  // const heatmap = computed((): [number, number][] => {
 
-    /**
-     * The most filings for any address in a given year (and month).
-     */
-    const maxFilings = Object.values(featureProperties.bgHeatmap).reduce(
-      (accum, item) => {
-        // if (item.e )
-        // if (controls.currentTimeInterval === "month") {
-        //   if (item.y === controls.currentYear && item.m === controls.currentMonth) {
-        //     accum += item.c;
-        //   }
-        // } else if (item.y === controls.currentYear) {
-        //   accum += item.c;
-        // }
-        return accum;
-      },
-      0
-    );
+  //   /**
+  //    * The largest filing count at a given place and time across the whole dataset
+  //    */
+  //   const maxFilings = Object.values(featureProperties.bgHeatmap).reduce(
+  //     (accum, { c: count }) => Math.max(accum, count),
+  //     0
+  //   );
     
-    return interpolateRange(maxFilings, [0, 0.2, 0.4, 0.6, 0.8]);
-  });
+  //   return interpolateRange(maxFilings, [0, maxFilings]);
+  // });
 
   const choropleth = computed(
     (): Record<ChoroplethMetric, (number | string)[]> => {
@@ -74,7 +66,7 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
     }
   );
 
-  return { choropleth, heatmap };
+  return { choropleth };
 });
 
 export { useInterpolatedColors };

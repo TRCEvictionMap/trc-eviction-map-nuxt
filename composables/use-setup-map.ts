@@ -1,6 +1,6 @@
 import mapboxgl from "mapbox-gl";
 
-import blockGroupJson from "~/geojson/block-group.json";
+// import blockGroupJson from "~/geojson/block-group.json";
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
@@ -70,13 +70,13 @@ function useSetupMap(options: SetupMapOptions) {
       _map.addSource("block-group", {
         type: "geojson",
         promoteId: "id",
-        data: blockGroupJson as unknown as string,
+        data: {} as unknown as string,
       });
     });
 
     const years = featureProperties.loadData(
       "block-group",
-      blockGroupJson as unknown as EvictionFeatureCollection
+      "blockGroupJson" as unknown as EvictionFeatureCollection
     );
 
     controls.yearOptions = years

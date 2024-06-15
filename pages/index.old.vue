@@ -11,14 +11,14 @@ import { useSettings } from "~/stores/settings-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
 import { useFeatureFlags } from "~/stores/feature-flags";
-import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
+
 
 useHead({
   title: "Eviction Map - Tenant Resource Center"
 });
 
 const router = useRouter();
-const mapControls = useMapControlsV2();
+const mapControls = useMapControls();
 const mapMeta = useMapMeta();
 const featureState = useFeatureState();
 const settings = useSettings();
@@ -31,7 +31,8 @@ const unwatch = watchEffect(() => {
     query: {
       source: mapControls.currentSource,
       year: mapControls.currentYear,
-      d_metric: mapControls.currentChoroplethMetric,
+      e_metric: mapControls.currentEvictionMetric,
+      d_metric: mapControls.currentDemographicMetric,
       zoom: mapMeta.zoom,
       center: mapMeta.lngLat
         ? mapMeta.lngLat.join(",")
@@ -65,66 +66,56 @@ await useAsyncData(
   () => queryContent("/welcome-modal-content").findOne()
 );
 
+const showDetailCards = computed(() =>
+  !disclosures.showDetails &&
+  !settings.options.showAlderDistricts &&
+  !settings.options.showDataTable
+);
 
 </script>
 
 <template>
-  <div class="absolute w-full min-h-screen flex flex-col">
+  <!-- <div class="absolute top-0 w-full h-full flex flex-col">
     <TheHeader />
     <ClientOnly>
-      <TheMapProviderV2 v-if="true">
-        <template #right>
-          <div class="space-y-4">
-            <TransitionGroup name="features">
-              <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
-            </TransitionGroup>
-          </div>
-        </template>
-        <template #map-overlay>
+      <Disclosure :defaultOpen="disclosures.showDetails">
+        <TheMap>
+          <template #right>
+            <FeaturesTable />
+          </template>
+          <MapControls :position="settings.options.showDataTable ? 'left' : 'center' " />
           <MapLayers />
-          <MapControlsV2 position="left" />
-          <MapLegendV2 position="bottom-right" />
-        </template>
-        <template #bottom="{ height }">
-          <FeaturesTableV2 :style="{ height: `${height - 30}px` }" />
-        </template>
-      </TheMapProviderV2>
-      <TheMapProvider v-else>
-        <template #right>
-          <div class="space-y-4">
-            <TransitionGroup name="features">
-              <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
-            </TransitionGroup>
-          </div>
-        </template>
-        <template #map-overlay>
-          <MapLayers />
-          <MapControls position="left" />
-          <MapLegend position="bottom-right" />
-        </template>
-        <template #bottom="{ height }">
-          <FeaturesTable :style="{ height: `${height - 30}px` }" />
-        </template>
-      </TheMapProvider>
+          <MapLegend v-if="!disclosures.showDetails" position="bottom-right" />
+          <DetailCardGroup v-if="showDetailCards" />
+        </TheMap>
+        <Transition name="details-drawer">
+          <DetailDisclosurePanel static v-if="disclosures.showDetails" />
+        </Transition>
+      </Disclosure>
       <WelcomeModal />
+      <SettingsDialog
+        :open="konami.didKonami || settings.showDialog"
+        @close="onCloseSettingsMenu"
+      />
     </ClientOnly>
-  </div>
+  </div> -->
 </template>
 
-<style>
-.features-move,
-.features-enter-active,
-.features-leave-active {
-  transition: all 150ms ease-in-out;
+<style scoped>
+.details-drawer-enter-active {
+  animation: details-drawer-open 0.1s;
 }
 
-.features-enter-from,
-.features-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
+.details-drawer-leave-active {
+  animation: details-drawer-open 0.1s reverse;
 }
 
-.features-leave-active {
-  position: absolute;
+@keyframes details-drawer-open {
+  from {
+    height: 0;
+  }
+  to {
+    height: 50%;
+  }
 }
 </style>
