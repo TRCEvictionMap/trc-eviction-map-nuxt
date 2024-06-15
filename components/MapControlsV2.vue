@@ -5,7 +5,7 @@ import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 defineProps<{ position: "center" | "left" }>();
 
-const range = ref<[number, number]>([0, 6]);
+// const range = ref<[number, number]>([0, 12]);
 
 const controls = useMapControlsV2();
 
@@ -59,9 +59,9 @@ const controls = useMapControlsV2();
           v-model="controls.currentMonth"
         />
       </div>
-      <div class="flex gap-4 w-full">
-        <TRCRangeSlider v-model="range" :min="0" :max="controls.nDates" />
-        <div>{{ range }}</div>
+      <div class="flex flex-col gap-4 w-full">
+        <TRCRangeSlider v-model="controls.currentDateRangeIndices" :min="0" :max="controls.dateRangeMax" />
+        <pre>{{ controls.currentDateRange }}</pre>
       </div>
     </div>
   </div>

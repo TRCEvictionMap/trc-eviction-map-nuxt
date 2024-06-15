@@ -1,5 +1,4 @@
-
-
+import type { WritableComputedRef } from "vue";
 import { defineStore } from "pinia";
 import type { FeatureCollections, SourceId } from "~/utils/types";
 
@@ -32,6 +31,13 @@ interface Option<Value> {
   value: Value;
   description?: string
 };
+
+interface DateRange {
+  startYear: number;
+  startMonth: number;
+  endYear: number;
+  endMonth: number;
+}
 
 const sourceOptions: Option<SourceId>[] = [
   {
@@ -71,15 +77,14 @@ const timeIntervalOptions: Option<"month" | "year">[] = [
   },
 ];
 
-
 function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
   return CHOROPLETH_METRICS.includes(data as ChoroplethMetric);
 }
 
-
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
-  const _availableMonths = ref<Set<{ year: number; month: number }>>(new Set());
+  const _avalailableDates = ref<{ year: number; month: number }[]>([]);
 
+  const _availableMonths = ref<Set<{ year: number; month: number }>>(new Set());
 
   const currentTimeInterval = ref<"month" | "year">("year");
   const currentYear = ref(2023);
@@ -88,7 +93,38 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
 
-  const nDates = computed(() => Array.from(_availableMonths.value.keys()).length);
+  const currentDateRange = ref<DateRange>({
+    startYear: 2022,
+    startMonth: 4,
+    endYear: 2022,
+    endMonth: 10,
+  });
+
+  const currentDateRangeIndices: WritableComputedRef<[number, number]> = computed({
+    get() {
+      const { startMonth, startYear, endMonth, endYear } = currentDateRange.value;
+      return [
+        _avalailableDates.value.findIndex(
+          ({ year, month }) => year === startYear && month === startMonth
+        ),
+        _avalailableDates.value.findIndex(
+          ({ year, month }) => year === endYear && month === endMonth
+        ),
+      ]
+    },
+    set(indices) {
+      const start = _avalailableDates.value[indices[0]];
+      const end = _avalailableDates.value[indices[1]];
+      currentDateRange.value = {
+        startYear: start.year,
+        startMonth: start.month,
+        endYear: end.year,
+        endMonth: end.month,
+      };
+    },
+  });
+
+  const dateRangeMax = computed(() => _avalailableDates.value.length - 1);
 
   const yearOptions = computed((): Option<number>[] =>
     Array
@@ -124,6 +160,20 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
   );
 
   function loadAvailableMonths(data: FeatureCollections.ChoroplethV2) {
+    _avalailableDates.value = Object
+      .keys(data.features[0].properties.filings)
+      .map((key) => {
+        const [year, month] = key.split("-");
+        return {
+          year: Number.parseInt(year),
+          month: Number.parseInt(month),
+        };
+      })
+      .sort((a, b) => a.year === b.year
+        ? a.month - b.month
+        : a.year - b.year
+      );
+
     Object.keys(data.features[0].properties.filings).forEach((key) => {
       const [year, month] = key.split("-");
       _availableMonths.value.add({
@@ -135,7 +185,6 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   return {
     loadAvailableMonths,
-    nDates,
     yearOptions,
     monthOptions,
     sourceOptions,
@@ -148,8 +197,11 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     currentYear,
     currentMonth,
     currentChoroplethMetric,
+    currentDateRangeIndices,
+    currentDateRange,
+    dateRangeMax,
   };
 });
 
 export { useMapControlsV2, isChoroplethMetric };
-export type { ChoroplethMetric };
+export type { ChoroplethMetric, DateRange };

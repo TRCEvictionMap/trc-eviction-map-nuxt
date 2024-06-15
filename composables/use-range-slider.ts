@@ -1,6 +1,7 @@
 import type { WritableComputedRef } from "vue";
 
 namespace RangeSlider {
+
   export type Range = WritableComputedRef<{
     start: number;
     end: number;
@@ -14,8 +15,8 @@ namespace RangeSlider {
   export type Step = ComputedRef<number>;
 
   export type IsFocused = Ref<boolean>;
-}
 
+}
 
 function getRangeSize(range: RangeSlider.Range) {
   return range.value.end - range.value.start;
@@ -25,15 +26,20 @@ function getRangeCenter(range: RangeSlider.Range) {
   return range.value.end - Math.floor(getRangeSize(range) / 2);
 }
 
-
 function useRangeSliderMouse(
   bounds: RangeSlider.Bounds,
   step: RangeSlider.Step,
-  range: RangeSlider.Range
+  range: RangeSlider.Range,
+  inputRef: Ref<HTMLInputElement | undefined>
 ) {
   const containerRef = ref<HTMLElement>();
 
   function onMousedown(ev: MouseEvent) {
+    ev.preventDefault();
+
+    if (inputRef.value) {
+      inputRef.value.focus();
+    }
 
   }
 
@@ -45,9 +51,8 @@ function useRangeSliderMouse(
 
   }
 
-  return { containerRef, onMousedown };
+  return { containerRef, containerListeners: { onMousedown } };
 }
-
 
 function useRangeSliderInput(
   bounds: RangeSlider.Bounds,
@@ -81,19 +86,14 @@ function useRangeSliderInput(
     }
   }
 
-  return {
-    inputRef,
-    inputListeners: { onFocus, onBlur, onInput },
-  };
+  return {  inputRef, inputListeners: { onFocus, onBlur, onInput } };
 }
-
 
 interface UseRangeSliderOptions {
   bounds: RangeSlider.Bounds;
   step: RangeSlider.Step;
   range: RangeSlider.Range;
 }
-
 
 function useRangeSlider(options: UseRangeSliderOptions) {
   const { bounds, step, range } = options;
@@ -109,10 +109,11 @@ function useRangeSlider(options: UseRangeSliderOptions) {
     isFocused
   );
 
-  const { containerRef, onMousedown } = useRangeSliderMouse(
+  const { containerRef, containerListeners } = useRangeSliderMouse(
     bounds,
     step,
-    range
+    range,
+    inputRef,
   );
 
   watch(bounds, (bounds) => {
@@ -127,12 +128,11 @@ function useRangeSlider(options: UseRangeSliderOptions) {
     containerRef,
     inputListeners,
     isFocused,
-    onMousedown,
+    containerListeners,
     rangeCenter,
     rangeSize
   };
 }
-
 
 export { useRangeSlider };
 export type { RangeSlider };

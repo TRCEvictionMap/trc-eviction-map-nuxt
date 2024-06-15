@@ -1,6 +1,6 @@
 import mapboxgl from "mapbox-gl";
 import { useFeatureState } from "~/stores/feature-state-store";
-import { useMapControlsV2, type ChoroplethMetric} from "~/stores/map-controls-store-v2";
+import { useMapControlsV2, type ChoroplethMetric, type DateRange} from "~/stores/map-controls-store-v2";
 import { useInterpolatedColors } from "~/stores/interpolated-color-values-store";
 
 interface Layers {
@@ -156,11 +156,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
     updateChoroplethPaintProperties(controls.currentChoroplethMetric);
     updateSelectedFeatures(featureState.selectedFeatures);
-    updateHeatmapTimeFilter([
-      controls.currentTimeInterval,
-      controls.currentYear,
-      controls.currentMonth,
-    ]);
+    updateHeatmapTimeFilter(controls.currentDateRange);
 
     map.on("click", choroplethLayerId, handleMapClick);
     map.on("mousemove", choroplethLayerId, handleMapMousemove);
@@ -193,6 +189,12 @@ function useMapLayersV2(map: mapboxgl.Map) {
     { immediate: true }
   );
 
+  watch(
+    () => controls.currentDateRange,
+    updateHeatmapTimeFilter,
+    { immediate: true }
+  );
+
   watch(() => featureState.hoveredFeature, (current, prev) => {
     if (prev) {
       map.setFeatureState(
@@ -207,16 +209,6 @@ function useMapLayersV2(map: mapboxgl.Map) {
       );
     }
   });
-
-  watch(
-    [
-      () => controls.currentTimeInterval,
-      () => controls.currentYear,
-      () => controls.currentMonth,
-    ],
-    updateHeatmapTimeFilter,
-    { immediate: true }
-  );
 
   function updateChoroplethPaintProperties(metric: ChoroplethMetric) {
     if (!map.getLayer(choroplethLayerId)) {
@@ -240,20 +232,61 @@ function useMapLayersV2(map: mapboxgl.Map) {
     }
   }
 
-  function updateHeatmapTimeFilter([timeUnit, year, month]: ["month" | "year", number, number]) {
-    if (!map.getLayer(heatmapLayerId)) {
-      return;
-    }
+  // function updateHeatmapTimeFilter([timeUnit, year, month]: ["month" | "year", number, number]) {
+  //   if (!map.getLayer(heatmapLayerId)) {
+  //     return;
+  //   }
 
-    switch (timeUnit) {
-      case "year":
-        return map.setFilter(heatmapLayerId, ["==", ["get", "y"], year]);
-      case "month":
-        return map.setFilter(heatmapLayerId, [
-          "all",
-          ["==", ["get", "y"], year],
-          ["==", ["get", "m"], month],
-        ]);
+  //   switch (timeUnit) {
+  //     case "year":
+  //       return map.setFilter(heatmapLayerId, ["==", ["get", "y"], year]);
+  //     case "month":
+  //       return map.setFilter(heatmapLayerId, [
+  //         "all",
+  //         [">=", ["get", "y"], year],
+  //         ["==", ["get", "m"], month],
+  //       ]);
+  //   }
+  // }
+
+  function updateHeatmapTimeFilter(dateRange: DateRange) {
+    if (map.getLayer(heatmapLayerId)) {
+      const { startYear, startMonth, endYear, endMonth } = dateRange;
+
+      map.setFilter(heatmapLayerId, [
+        "all",
+        [">=", ["concat", ["get", "y"], ["get", "m"]], `${startYear}${startMonth}`],
+        ["<=", ["concat", ["get", "y"], ["get", "m"]], `${endYear}${endMonth}`],
+        // [">=", ["+", ["get", "y"], ["get", "m"]], startYear + startMonth],
+        // ["<=", ["+", ["get", "y"], ["get", "m"]], endYear + endMonth]
+        
+
+        // "case",
+        // [
+        //   "all",
+        //   ["==", ["get", "y"], startYear],
+        //   ["==", ["get", "y"], endYear]
+        // ],
+        // [
+        //   "case",
+        //   [">=", ["get", "m"], startMonth]
+        // ]
+        // "all",
+        // [
+        //   "all",
+        //   [">=", ["get", "y"], startYear],
+        //   ["<=", ["get", "y"], endYear],
+        // ],
+        // [
+        //   "all",
+        //   [">=", ["get", "m"], startMonth],
+        //   ["<=", ["get", "m"], endMonth],
+        // ]
+        // [">=", ["get", "y"], startYear],
+        // [">=", ["get", "m"], startMonth],
+        // ["<=", ["get", "y"], endYear],
+        // ["<=", ["get", "m"], endMonth],
+      ])
     }
   }
 

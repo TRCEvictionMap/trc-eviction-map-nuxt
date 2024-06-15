@@ -39,8 +39,8 @@ const {
   inputRef,
   inputListeners,
   containerRef,
+  containerListeners,
   isFocused,
-  onMousedown,
   rangeCenter,
   rangeSize,
 } = useRangeSlider({ bounds, step, range });
@@ -52,7 +52,7 @@ const trackStyle = computed((): CSSProperties => ({
 }));
 
 const thumbStyle = computed((): CSSProperties => ({
-  left: `${Math.floor(rangeCenter.value / props.max * 100)}%`
+  left: `calc(${Math.floor(rangeCenter.value / props.max * 100)}% - 8px)`
 }));
 
 </script>
@@ -60,7 +60,8 @@ const thumbStyle = computed((): CSSProperties => ({
 <template>
   <div
     ref="containerRef"
-    class="relative w-72"
+    class="relative w-72 cursor-pointer"
+    v-bind="containerListeners"
   >
     <!-- @mousedown="(ev) => onMousedown(ev, rangeCenter)" -->
     <!-- extends the full length of the slider -->
