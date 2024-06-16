@@ -2,10 +2,7 @@ import type { WritableComputedRef } from "vue";
 
 namespace RangeSlider {
 
-  export type Range = WritableComputedRef<{
-    start: number;
-    end: number;
-  }>;
+  export type Range = WritableComputedRef<[start: number, end: number]>;
   
   export type Bounds = ComputedRef<{
     min: number;
@@ -19,11 +16,35 @@ namespace RangeSlider {
 }
 
 function getRangeSize(range: RangeSlider.Range) {
-  return range.value.end - range.value.start;
+  return range.value[1] - range.value[0];
 }
 
 function getRangeCenter(range: RangeSlider.Range) {
-  return range.value.end - Math.floor(getRangeSize(range) / 2);
+  return range.value[1] - Math.floor(getRangeSize(range) / 2);
+}
+
+  /**
+   * Returns a new range (`[number, number]`) if the `start` 
+   * and `end` values fall within the range minimum and maximum 
+   * values. Otherwise, returns `undefined`
+   * @param center the proposed new range center
+   * @returns 
+   */
+  function getValidRange(center: number, bounds: RangeSlider.Bounds, range: RangeSlider.Range): [number, number] | undefined {
+    const { min, max } = bounds.value;
+    const half = Math.floor(getRangeSize(range) / 2);
+    const start = center - half;
+    const end = center + half;
+    if (start >= min && end <= max) {
+      return [start, end];
+    }
+  }
+
+function assertUnref<T>(r: Ref<T>) {
+  if (typeof r.value === "undefined") {
+    throw new Error("[assertGetRefValue] ref.value is undefined");
+  }
+  return r.value;
 }
 
 function useRangeSliderMouse(
@@ -34,21 +55,52 @@ function useRangeSliderMouse(
 ) {
   const containerRef = ref<HTMLElement>();
 
+  function getValue(ev: MouseEvent) {
+    const container = assertUnref(containerRef);
+    const { width: containerWidth, x: containerX } = container.getBoundingClientRect();
+    const offsetX = ev.clientX - containerX;
+    const ratio = Math.round(offsetX / containerWidth * 100) / 100;
+    const value = Math.round(bounds.value.max * ratio);
+    return Math.max(0, Math.min(value, bounds.value.max));
+  }
+
   function onMousedown(ev: MouseEvent) {
     ev.preventDefault();
 
-    if (inputRef.value) {
-      inputRef.value.focus();
+    try {
+      const input = assertUnref(inputRef);
+      input.focus();
+
+      const newRange = getValidRange(getValue(ev), bounds, range);
+
+      if (newRange) {
+        range.value = newRange;
+      }
+
+      window.addEventListener("mousemove", onMousemove);
+      window.addEventListener("mouseup", onMouseup);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  function onMousemove(ev: MouseEvent) {
+    const newRange = getValidRange(getValue(ev), bounds, range);
+
+    if (newRange) {
+      range.value = newRange;
+    }
+  }
+  
+  function onMouseup(ev: MouseEvent) {
+    const newRange = getValidRange(getValue(ev), bounds, range);
+
+    if (newRange) {
+      range.value = newRange;
     }
 
-  }
-
-  function _onMousemove(ev: MouseEvent) {
-  
-  }
-
-  function _onMouseup(ev: MouseEvent) {
-
+    window.removeEventListener("mousemove", onMousemove);
+    window.removeEventListener("mouseup", onMouseup);
   }
 
   return { containerRef, containerListeners: { onMousedown } };
@@ -70,23 +122,22 @@ function useRangeSliderInput(
   }
 
   function onInput() {
-    if (inputRef.value) {
-      try {
-        const rangeSize = getRangeSize(range);
-        const value = Number.parseFloat(inputRef.value.value);
-        const start = value - Math.floor(rangeSize / 2);
-        const end = value + Math.floor(rangeSize / 2);
-        if (start >= bounds.value.min && end <= bounds.value.max) {
-          range.value = { start, end };
-        }
-        inputRef.value.value = getRangeCenter(range).toString();
-      } catch (error) {
-        console.warn("[useRangeSliderInput onInput]", error);
+    try {
+      const input = assertUnref(inputRef);
+      const newRange = getValidRange(input.valueAsNumber, bounds, range);;
+
+      if (newRange) {
+        range.value = newRange;
       }
+
+      input.value = getRangeCenter(range).toString();
+    } catch (error) {
+      console.warn("[useRangeSliderInput onInput]", error);
     }
+
   }
 
-  return {  inputRef, inputListeners: { onFocus, onBlur, onInput } };
+  return { inputRef, inputListeners: { onFocus, onBlur, onInput } };
 }
 
 interface UseRangeSliderOptions {

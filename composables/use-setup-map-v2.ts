@@ -91,7 +91,6 @@ function useSetupMapV2(options: SetupMapOptions) {
         bgHeatmapJson
       );
 
-      controls.loadAvailableMonths(bgChoroplethJson);
       controls.loadDateEpochMap(bgHeatmapJson);
 
       map.value

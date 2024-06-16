@@ -133,7 +133,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
   });
 
 
-  const dateRangeMax = computed(() => _avalailableDates.value.length - 1);
+  const dateRangeMax = computed(() => _availableDatesV2.value.length - 1);
 
   const currentSourceHumanReadable = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.text
@@ -159,32 +159,32 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
       .sort((a, b) => a.epoch - b.epoch);
   }
 
-  function loadAvailableMonths(data: FeatureCollections.ChoroplethV2) {
-    _avalailableDates.value = Object
-      .keys(data.features[0].properties.filings)
-      .map((key) => {
-        const [year, month] = key.split("-");
-        return {
-          year: Number.parseInt(year),
-          month: Number.parseInt(month),
-        };
-      })
-      .sort((a, b) => a.year === b.year
-        ? a.month - b.month
-        : a.year - b.year
-      );
+  // function loadAvailableMonths(data: FeatureCollections.ChoroplethV2) {
+  //   _avalailableDates.value = Object
+  //     .keys(data.features[0].properties.filings)
+  //     .map((key) => {
+  //       const [year, month] = key.split("-");
+  //       return {
+  //         year: Number.parseInt(year),
+  //         month: Number.parseInt(month),
+  //       };
+  //     })
+  //     .sort((a, b) => a.year === b.year
+  //       ? a.month - b.month
+  //       : a.year - b.year
+  //     );
 
-    Object.keys(data.features[0].properties.filings).forEach((key) => {
-      const [year, month] = key.split("-");
-      _availableMonths.value.add({
-        year: Number.parseInt(year),
-        month: Number.parseInt(month), 
-      });
-    });
-  }
+  //   Object.keys(data.features[0].properties.filings).forEach((key) => {
+  //     const [year, month] = key.split("-");
+  //     _availableMonths.value.add({
+  //       year: Number.parseInt(year),
+  //       month: Number.parseInt(month), 
+  //     });
+  //   });
+  // }
 
   return {
-    loadAvailableMonths,
+    // loadAvailableMonths,
     loadDateEpochMap,
     sourceOptions,
     choroplethMetricOptions,

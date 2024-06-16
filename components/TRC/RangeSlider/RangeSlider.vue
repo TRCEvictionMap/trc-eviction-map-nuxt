@@ -25,13 +25,10 @@ const step: RangeSlider.Step = computed(() => props.step);
 
 const range: RangeSlider.Range = computed({
   get() {
-    return {
-      start: props.modelValue[0],
-      end: props.modelValue[1],
-    }
+    return props.modelValue;
   },
   set(value) {
-    emit("update:modelValue", [value.start, value.end]);
+    emit("update:modelValue", value);
   },
 });
 
@@ -60,10 +57,9 @@ const thumbStyle = computed((): CSSProperties => ({
 <template>
   <div
     ref="containerRef"
-    class="relative w-72 cursor-pointer"
+    class="relative w-72 h-5 cursor-pointer"
     v-bind="containerListeners"
   >
-    <!-- @mousedown="(ev) => onMousedown(ev, rangeCenter)" -->
     <!-- extends the full length of the slider -->
     <span class="absolute top-2 w-full h-1 bg-slate-300 rounded"></span>
     <!-- represents the current range -->
