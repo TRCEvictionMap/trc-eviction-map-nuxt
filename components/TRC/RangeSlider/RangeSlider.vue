@@ -38,18 +38,18 @@ const {
   containerRef,
   containerListeners,
   isFocused,
+  isMousemove,
   rangeCenter,
   rangeSize,
 } = useRangeSlider({ bounds, step, range });
 
 const trackStyle = computed((): CSSProperties => ({
   left: `${Math.floor(props.modelValue[0] / props.max * 100)}%`,
-  right: `${Math.ceil(props.modelValue[1] / props.max * 100)}%`,
   width: `${Math.ceil(rangeSize.value / props.max * 100)}%`
 }));
 
 const thumbStyle = computed((): CSSProperties => ({
-  left: `calc(${Math.floor(rangeCenter.value / props.max * 100)}% - 8px)`
+  left: `${Math.floor(rangeCenter.value / props.max * 100)}%`,
 }));
 
 </script>
@@ -60,15 +60,19 @@ const thumbStyle = computed((): CSSProperties => ({
     class="relative w-72 h-5 cursor-pointer"
     v-bind="containerListeners"
   >
-    <!-- extends the full length of the slider -->
     <span class="absolute top-2 w-full h-1 bg-slate-300 rounded"></span>
-    <!-- represents the current range -->
-    <span class="absolute top-2 h-1 bg-trc-blue-500 rounded " :style="trackStyle"></span>
-    <!-- the button the user clicks and slides -->
     <span
-      class="absolute top-0 h-5 w-5 rounded-full bg-trc-blue-500 shadow"
+      class="absolute top-2 h-1 bg-trc-blue-500 rounded"
       :class="{
-        'ring ring-trc-blue-400 ring-offset-1': isFocused,
+        'transition-all': !isMousemove
+      }"
+      :style="trackStyle"
+    ></span>
+    <span
+      class="absolute top-0 h-5 w-5 rounded-full bg-trc-blue-500 -translate-x-2"
+      :class="{
+        'ring ring-trc-blue-400 ring-offset-2': isFocused,
+        'transition-all': !isMousemove
       }"
       :style="thumbStyle"
     >
@@ -76,6 +80,7 @@ const thumbStyle = computed((): CSSProperties => ({
         ref="inputRef"
         type="range"
         :value="rangeCenter"
+        :aria-valuenow="rangeCenter"
         v-bind="inputListeners"
         :min="min"
         :max="max"
@@ -84,5 +89,4 @@ const thumbStyle = computed((): CSSProperties => ({
       >
     </span>
   </div>
-
 </template>

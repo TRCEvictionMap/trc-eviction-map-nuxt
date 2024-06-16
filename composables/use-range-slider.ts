@@ -55,6 +55,8 @@ function useRangeSliderMouse(
 ) {
   const containerRef = ref<HTMLElement>();
 
+  const isMousemove = ref(false);
+
   function getValue(ev: MouseEvent) {
     const container = assertUnref(containerRef);
     const { width: containerWidth, x: containerX } = container.getBoundingClientRect();
@@ -64,9 +66,9 @@ function useRangeSliderMouse(
     return Math.max(0, Math.min(value, bounds.value.max));
   }
 
-  function onMousedown(ev: MouseEvent) {
+  function onMousedown(ev: MouseEvent) {    
     ev.preventDefault();
-
+  
     try {
       const input = assertUnref(inputRef);
       input.focus();
@@ -85,6 +87,8 @@ function useRangeSliderMouse(
   }
   
   function onMousemove(ev: MouseEvent) {
+    isMousemove.value = true;
+
     const newRange = getValidRange(getValue(ev), bounds, range);
 
     if (newRange) {
@@ -93,6 +97,8 @@ function useRangeSliderMouse(
   }
   
   function onMouseup(ev: MouseEvent) {
+    isMousemove.value = false;
+
     const newRange = getValidRange(getValue(ev), bounds, range);
 
     if (newRange) {
@@ -103,7 +109,7 @@ function useRangeSliderMouse(
     window.removeEventListener("mouseup", onMouseup);
   }
 
-  return { containerRef, containerListeners: { onMousedown } };
+  return { containerRef, isMousemove, containerListeners: { onMousedown } };
 }
 
 function useRangeSliderInput(
@@ -160,7 +166,7 @@ function useRangeSlider(options: UseRangeSliderOptions) {
     isFocused
   );
 
-  const { containerRef, containerListeners } = useRangeSliderMouse(
+  const { containerRef, containerListeners, isMousemove } = useRangeSliderMouse(
     bounds,
     step,
     range,
@@ -176,10 +182,11 @@ function useRangeSlider(options: UseRangeSliderOptions) {
 
   return {
     inputRef,
-    containerRef,
     inputListeners,
-    isFocused,
+    containerRef,
     containerListeners,
+    isFocused,
+    isMousemove,
     rangeCenter,
     rangeSize
   };
