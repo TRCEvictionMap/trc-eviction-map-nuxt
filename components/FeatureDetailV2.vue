@@ -13,6 +13,15 @@ const featureProperties = useFeaturePropertiesV2();
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
 
 const data = computed(() => featureProperties.bgChoropleth[featureId]);
+const filings = computed(() =>
+  Object.fromEntries(
+    Object
+      .entries(featureProperties.bgChoropleth[featureId].filings)
+      .map(([key, { c }]) => [key, c])
+      .sort()
+  )
+);
+
 
 function deselectFeature() {
   if (featureId) {
@@ -28,6 +37,7 @@ function onMouseover() {
 function onMouseleave() {
   featureState.setFeatureState(featureId, "isHovered", false);
 }
+
 
 </script>
 
@@ -45,9 +55,7 @@ function onMouseleave() {
         <IconXMark class="text-slate-500" />
       </TRCButton>
     </div>
-    <div v-if="data">
-      {{ data }}
-    </div>
+    <pre v-if="data">{{ filings }}</pre>
     <div v-else>
       ...loading
     </div>

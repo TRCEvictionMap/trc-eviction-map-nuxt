@@ -30,7 +30,11 @@ function getRangeCenter(range: RangeSlider.Range) {
    * @param center the proposed new range center
    * @returns 
    */
-  function getValidRange(center: number, bounds: RangeSlider.Bounds, range: RangeSlider.Range): [number, number] | undefined {
+  function getValidRange(
+    center: number,
+    bounds: RangeSlider.Bounds,
+    range: RangeSlider.Range
+  ): [number, number] | undefined {
     const { min, max } = bounds.value;
     const half = Math.floor(getRangeSize(range) / 2);
     const start = center - half;

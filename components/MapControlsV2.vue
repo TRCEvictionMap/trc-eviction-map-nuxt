@@ -41,8 +41,8 @@ const controls = useMapControlsV2();
         />
       </div>
       <div class="flex flex-col gap-4 w-full">
-        <TRCRangeSlider v-model="controls.currentDateRangeIndicesV2" :min="0" :max="controls.dateRangeMax" />
-        <pre>{{ controls.currentDateRangeV2 }}</pre>
+        <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
+        <div>{{ controls.currentMonthRange }}</div>
       </div>
     </div>
   </div>

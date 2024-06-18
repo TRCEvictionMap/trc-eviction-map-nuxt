@@ -115,11 +115,13 @@ const { columns, rows } = dataTableRowsAndCols({
   ],
   rows: computed(
     () => {
-      const { currentTimeInterval, currentMonth, currentYear } = controls;
+      const [startMonth, endMonth] = controls.currentMonthRange;
+
       return Object.keys(featureProperties.bgChoropleth)
         .map((featureId) => {
           const {
-            id,
+            bg,
+            tr,
             rc: renter_count,
             rcm: renter_count_moe,
             rr: renter_rate,
@@ -138,34 +140,25 @@ const { columns, rows } = dataTableRowsAndCols({
             filings
           } = featureProperties.bgChoropleth[featureId];
 
-          const { n_filings } = Object.entries(filings).reduce(
-            (accum, [key, { c: count, r: rate }]) => {
-              const [year, month] = key.split("-").map((n) => Number.parseInt(n));
+          const nFilings = Object.entries(filings).reduce(
+            (accum, [filingMonth, { c: count }]) => {
               if (
-                currentTimeInterval === "month" &&
-                currentYear === year &&
-                currentMonth === month
+                controls.monthEpochMap[filingMonth] >= controls.monthEpochMap[startMonth] &&
+                controls.monthEpochMap[filingMonth] <=  controls.monthEpochMap[endMonth]
               ) {
-                accum.n_filings += count;
-                accum.filing_rate += rate;
-              } else if (
-                currentTimeInterval === "year" &&
-                currentYear === year
-              ) {
-                accum.n_filings += count;
-                accum.filing_rate += rate;
+                accum += count;
               }
               return accum;
             },
-            { n_filings: 0, filing_rate: 0 }
+            0
           );
 
           return {
             id: featureId,
             fields: {
               id: {
-                value: featureId as unknown as number,
-                text: featureId,
+                value: `${tr}.${bg}`,
+                text: `${tr}.${bg}`,
               },
               renter_count: {
                 value: renter_count,
@@ -185,7 +178,7 @@ const { columns, rows } = dataTableRowsAndCols({
                 srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
               },
               n_filings: {
-                value: n_filings,
+                value: nFilings,
               },
               pct_ai: {
                 value: pct_ai,

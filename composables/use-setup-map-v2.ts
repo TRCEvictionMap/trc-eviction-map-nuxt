@@ -91,7 +91,7 @@ function useSetupMapV2(options: SetupMapOptions) {
         bgHeatmapJson
       );
 
-      controls.loadDateEpochMap(bgHeatmapJson);
+      controls.loadMonthEpochMap(bgHeatmapJson);
 
       map.value
         ?.addSource("block-group", {
