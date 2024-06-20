@@ -130,9 +130,9 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     monthEpochMap.value = Object.fromEntries(
       data.features.map((feature) => {
         const featureId = feature.id as string;
-        const date = featureId.slice(featureId.indexOf("-") + 1);
+        const month = featureId.slice(featureId.indexOf("-") + 1);
         const epoch = feature.properties.e;
-        return [date, epoch];
+        return [month, epoch];
       })
     );
   }

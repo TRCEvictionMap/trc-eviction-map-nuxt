@@ -28,7 +28,7 @@ const controls = useMapControlsV2();
       rounded border shadow-2xl
       bg-white
     ">
-      <div class="hidden sm:flex items-center gap-x-4">
+      <div class="hidden sm:flex items-center gap-x-4 relative z-10">
         <TRCSelect
           label="Demographic Metric"
           :options="controls.choroplethMetricOptions"
@@ -41,6 +41,7 @@ const controls = useMapControlsV2();
         />
       </div>
       <div class="flex flex-col gap-4 w-full">
+        
         <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
         <div>{{ controls.currentMonthRange }}</div>
       </div>

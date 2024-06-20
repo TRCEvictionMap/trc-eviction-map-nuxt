@@ -126,10 +126,15 @@ function addLayers(
 
   if (!loaded.has(sourceId) && sourceId === source && isSourceLoaded) {
     loaded.add(sourceId);
+  
     layers.forEach(({ layer, before }) => {
       map.addLayer(layer, before);
     });
+  
+    return true;
   }
+  
+  return false;
 }
 
 function removeLayers(map: mapboxgl.Map, layers: Layer[]) {
@@ -158,13 +163,17 @@ function useMapLayersV2(map: mapboxgl.Map) {
   map.on("sourcedata", async (ev) => {
     const context = { map, ev, loaded };
 
-    addLayers(context, "block-group", choroplethLayers);
-    addLayers(context, "block-group-heatmap", heatmapLayers);
+    if (addLayers(context, "block-group", choroplethLayers)) {
+      updateChoroplethPaintProperties(controls.currentChoroplethMetric);
+      updateChoroplethFeatureState(featureState.selectedFeatures);
+    }
 
-    updateChoroplethPaintProperties(controls.currentChoroplethMetric);
-    updateSelectedFeatures(featureState.selectedFeatures);
-    updateHeatmapTimeFilter(controls.currentMonthRange);
+    if (addLayers(context, "block-group-heatmap", heatmapLayers)) {
+      updateHeatmapTimeFilter(controls.currentMonthRange);
+    }
+  });
 
+  onMounted(() => {
     map.on("click", choroplethLayerId, handleMapClick);
     map.on("mousemove", choroplethLayerId, handleMapMousemove);
     map.on("mouseleave", choroplethLayerId, handleMapMouseleave);
@@ -174,7 +183,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
     removeLayers(map, choroplethLayers);
     removeLayers(map, heatmapLayers);
 
-    updateSelectedFeatures([], featureState.selectedFeatures);
+    updateChoroplethFeatureState([], featureState.selectedFeatures);
 
     featureState.clearSelectedFeatures();
     featureState.clearHoveredFeature();
@@ -186,7 +195,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   watch(
     () => featureState.selectedFeatures,
-    updateSelectedFeatures,
+    updateChoroplethFeatureState,
     { immediate: true }
   );
 
@@ -260,7 +269,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
     }
   }
 
-  function updateSelectedFeatures(current: string[], previous?: string[]) {
+  function updateChoroplethFeatureState(current: string[], previous?: string[]) {
     previous
       ?.filter((featureId) => !current.includes(featureId))
       .forEach((featureId) => {
@@ -274,13 +283,8 @@ function useMapLayersV2(map: mapboxgl.Map) {
       });
   }
 
-  // TODO: `clickLock` is a hack that breaks sometimes when dev-server reloads – likely
-  // related to component mounting and unmounting while Promise is pending...Issue not
-  // observed in any other context so far...
-  let clickLock = false;
   async function handleMapClick(ev: MapboxMouseEvent<true>) {
-    if (!clickLock && ev.features && ev.features.length) {
-      clickLock = true;
+    if (ev.features && ev.features.length) {
       const justClicked = ev.features[0].id?.toString() ?? "";
       featureState.setFeatureState(
         justClicked,
@@ -288,8 +292,6 @@ function useMapLayersV2(map: mapboxgl.Map) {
         !featureState.selectedFeatures.includes(justClicked)
       );
     }
-    await nextTick();
-    clickLock = false;
   }
 
   function handleMapMouseleave(ev: MapboxMouseEvent<true>) {

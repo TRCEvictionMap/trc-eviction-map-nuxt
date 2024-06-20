@@ -30,7 +30,7 @@ function useSetupMapV2(options: SetupMapOptions) {
   const disclosures = useDisclosures();
 
   onMounted(async () => {
-    const { _lngLat, _source, _year, _zoom, _d_metric, _features, _showDetails } = useInitialQueryParams();
+    const { _lngLat, _source, _year, _zoom, _d_metric, _features, _showDetails, _dates } = useInitialQueryParams();
 
     map.value = markRaw(
       new mapboxgl.Map({
@@ -92,6 +92,14 @@ function useSetupMapV2(options: SetupMapOptions) {
       );
 
       controls.loadMonthEpochMap(bgHeatmapJson);
+
+      if (
+        _dates &&
+        typeof controls.monthEpochMap[_dates[0]] === "number" &&
+        typeof controls.monthEpochMap[_dates[1]] === "number"
+      ) {
+        controls.currentMonthRange = _dates;
+      }
 
       map.value
         ?.addSource("block-group", {
