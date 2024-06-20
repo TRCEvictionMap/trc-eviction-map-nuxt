@@ -99,6 +99,11 @@ function useSetupMapV2(options: SetupMapOptions) {
         typeof controls.monthEpochMap[_dates[1]] === "number"
       ) {
         controls.currentMonthRange = _dates;
+      } else {
+        const availableMonths = controls.availableMonthRangeValues;
+        const start = availableMonths[availableMonths.length - Math.min(13, availableMonths.length)];
+        const end = availableMonths[availableMonths.length - 1];
+        controls.currentMonthRange = [start, end];
       }
 
       map.value
@@ -117,7 +122,6 @@ function useSetupMapV2(options: SetupMapOptions) {
   });
 
   return map;
-
 }
 
 export { useSetupMapV2 };

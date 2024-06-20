@@ -102,7 +102,7 @@ type MapboxMouseEvent<WithFeatures extends boolean = false> = WithFeatures exten
 
 type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left";
 
-export namespace FeatureProperties {
+namespace FeatureProperties {
 
     export interface ChoroplethV2 {
         id: string;
@@ -147,10 +147,20 @@ export namespace FeatureProperties {
     }
 }
 
-export namespace FeatureCollections {
+namespace FeatureCollections {
     export type ChoroplethV2 = GeoJSON.FeatureCollection<any, FeatureProperties.ChoroplethV2>;
     export type HeatmapV2 = GeoJSON.FeatureCollection<any, FeatureProperties.HeatmapV2>;
 }
+
+namespace Range {
+    export type Span = [start: number, end: number];
+
+    export interface Bounds {
+        min: number;
+        max: number;
+    }
+}
+
 
 export { isSourceId };
 export type {
@@ -164,5 +174,8 @@ export type {
     SourceId,
     FeatureId,
     MapboxMouseEvent,
-    Position
+    Position,
+    Range,
+    FeatureProperties,
+    FeatureCollections,
 };

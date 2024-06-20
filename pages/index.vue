@@ -29,7 +29,7 @@ const konami = useKonamiCode();
 const unwatch = watchEffect(() => {
   router.replace({
     query: {
-      dates: mapControls.currentMonthRange.join(","),
+      dates: (mapControls.currentMonthRange ?? []).join(","),
       source: mapControls.currentSource,
       year: mapControls.currentYear,
       d_metric: mapControls.currentChoroplethMetric,

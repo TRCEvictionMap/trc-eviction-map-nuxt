@@ -26,6 +26,35 @@ const CHOROPLETH_METRICS = [
 
 type ChoroplethMetric = typeof CHOROPLETH_METRICS[number];
 
+const VALID_RANGE_SIZES = [0, 6, 12];
+
+
+function getBestFitRangeSpan(span: Range.Span, bounds: Range.Bounds): Range.Span {
+  let [start, end] = span;
+
+  const proposedSize = end - start;
+  
+  const { bestSize } = VALID_RANGE_SIZES.reduce(
+    (accum, size) => {
+      const distance = Math.abs(proposedSize - size);
+      if (distance < accum.distance) {
+        accum.distance = distance;
+        accum.bestSize = size;
+      }
+      return accum;
+    },
+    { distance: Infinity, bestSize: proposedSize }
+  );
+
+  if (bestSize === proposedSize) {
+    return [start, end];
+  }
+
+  const origin = Math.max(0, start);
+
+  return [origin, origin + bestSize];
+}
+
 interface Option<Value> {
   text?: string;
   value: Value;
@@ -89,34 +118,57 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
 
-  const currentMonthRange = ref<[string, string]>(["2022-10", "2023-4"]);
-
-  const availableMonths = computed(() =>
+  const availableMonthRangeValues = computed(() =>
     Object
       .entries(monthEpochMap.value)
       .sort(([, epochA], [, epochB]) => epochA - epochB)
       .map(([month]) => month)
   );
 
-  const currentMonthRangeIndices: WritableComputedRef<[number, number]> = computed({
+  const monthRangeMax = computed(() => availableMonthRangeValues.value.length - 1);
+
+  const _currentMonthRange = ref<[string, string]>(["", ""]);
+
+  const currentMonthRangeIndices: RangeSlider.Range = computed({
     get() {
-      const [start, end] = currentMonthRange.value;
+      const [start, end] = _currentMonthRange.value;
       return [
-        availableMonths.value.indexOf(start),
-        availableMonths.value.indexOf(end),
+        availableMonthRangeValues.value.indexOf(start),
+        availableMonthRangeValues.value.indexOf(end),
       ];
     },
     set([start, end]) {
-      if (availableMonths.value[start]) {
-        currentMonthRange.value = [
-          availableMonths.value[start],
-          availableMonths.value[end]
+      if (availableMonthRangeValues.value[start]) {
+        _currentMonthRange.value = [
+          availableMonthRangeValues.value[start],
+          availableMonthRangeValues.value[end]
         ];
       }
     },
   });
 
-  const monthRangeMax = computed(() => availableMonths.value.length - 1);
+  const currentMonthRange = computed({
+    get() {
+      return _currentMonthRange.value;
+    },
+    set([start, end]) {
+      const [startIndex, endIndex] = getBestFitRangeSpan(
+        [
+          availableMonthRangeValues.value.indexOf(start),
+          availableMonthRangeValues.value.indexOf(end),
+        ],
+        {
+          min: 0,
+          max: monthRangeMax.value,
+        }
+      );
+      _currentMonthRange.value = [
+        availableMonthRangeValues.value[startIndex],
+        availableMonthRangeValues.value[endIndex],
+      ]
+    },
+  });
+
 
   const currentSourceHumanReadable = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.text
@@ -141,6 +193,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     loadMonthEpochMap,
     monthEpochMap,
     monthRangeMax,
+    availableMonthRangeValues,
     currentMonthRangeIndices,
     currentMonthRange,
     sourceOptions,
