@@ -136,22 +136,8 @@ const { columns, rows } = dataTableRowsAndCols({
               pct_other,
               pct_pi,
               pct_wh,
-            },
-            filings
+            }
           } = featureProperties.bgChoropleth[featureId];
-
-          const nFilings = Object.entries(filings).reduce(
-            (accum, [filingMonth, { c: count }]) => {
-              if (
-                controls.monthEpochMap[filingMonth] >= controls.monthEpochMap[startMonth] &&
-                controls.monthEpochMap[filingMonth] <=  controls.monthEpochMap[endMonth]
-              ) {
-                accum += count;
-              }
-              return accum;
-            },
-            0
-          );
 
           return {
             id: featureId,
@@ -178,7 +164,7 @@ const { columns, rows } = dataTableRowsAndCols({
                 srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
               },
               n_filings: {
-                value: nFilings,
+                value: featureProperties.currentMonthRangeFilingCount[featureId],
               },
               pct_ai: {
                 value: pct_ai,

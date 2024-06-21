@@ -12,44 +12,42 @@ const featureProperties = useFeaturePropertiesV2();
 const canvasRef = ref<HTMLCanvasElement>();
 const chartRef = ref<Chart>();
 
-watch(
-  () => controls.availableMonthRangeValues,
-  (availableMonthRangeValues) => {
-    try {
-      const chart = assertUnref(chartRef);
-
-      chart.data.labels = availableMonthRangeValues;
-      chart.data.datasets[0].data = [1,2,3,4,5];
-      console.log("hekeii")
-
-    } catch (error) {
-      
+const datasets = computed(
+  (): Chart["data"]["datasets"] => featureState.selectedFeatures
+    .filter((featureId) => Boolean(featureProperties.bgChoropleth[featureId]))
+    .map((featureId) => {
+      const { bg, tr, filings } = featureProperties.bgChoropleth[featureId];
+      return {
+        label: `Block Group ${tr}.${bg}`,
+        data: Object.values(filings).map(({ c }) => c),
+      };
     }
-  },
-  { immediate: true }
-)
+  )
+);
+
+watch(datasets, (datasets) => {
+  try {
+    const chart = assertUnref(chartRef);
+    chart.data.labels = controls.availableMonthRangeValues;
+    chart.data.datasets = datasets;
+    chart.update();
+  } catch (error) {
+    console.warn(error);
+  }
+}, { immediate: true });
 
 onMounted(() => {
-  chartRef.value = new Chart(
+  chartRef.value = markRaw(new Chart(
     assertUnref(canvasRef),
     {
       type: "line",
-      options: {
-        onResize(chart, size) {
-          console.log(chart, size)
-        },
-      },
+      options: {},
       data: {
-        labels: controls.availableMonthRangeValues,
-        datasets: [
-          {
-            label: "Eviction filings per month",
-            data: [3, 3, 4]
-          }
-        ]
+        labels: [],
+        datasets: []
       }
     }
-  )
+  ));
 });
 
 </script>

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
 import type { FeatureCollections, FeatureProperties } from "~/utils/types";
+import { useMapControlsV2 } from "./map-controls-store-v2";
 
 function formatPercent(value: number) {
   return value < 10 ? value : Math.round(value);
@@ -22,8 +23,31 @@ function getProperties<
 }
 
 const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {  
+  const controls = useMapControlsV2();
+
   const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
   const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
+
+  const currentMonthRangeFilingCount = computed(() => {
+    const [startMonth, endMonth] = controls.currentMonthRange;
+    return Object.fromEntries(
+      Object.entries(bgChoropleth.value).map(([featureId, properties]) => [
+        featureId,
+        Object.entries(properties.filings).reduce(
+          (accum, [filingMonth, { c: count }]) => {
+            if (
+              controls.monthEpochMap[filingMonth] >= controls.monthEpochMap[startMonth] &&
+              controls.monthEpochMap[filingMonth] <= controls.monthEpochMap[endMonth]
+            ) {
+              accum += count;
+            }
+            return accum;
+          },
+          0
+        )
+      ])
+    );
+  });
 
   function loadChoropleth(source: SourceId, data: FeatureCollections.ChoroplethV2) {
     if (source === "block-group") {
@@ -48,7 +72,7 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
     }
   }
 
-  return { bgChoropleth, bgHeatmap, loadChoropleth, loadHeatmap };
+  return { bgChoropleth, bgHeatmap, loadChoropleth, loadHeatmap, currentMonthRangeFilingCount };
 });
 
 export { useFeaturePropertiesV2 };
