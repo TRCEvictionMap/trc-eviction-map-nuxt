@@ -41,8 +41,10 @@ const controls = useMapControlsV2();
         />
       </div>
       <div class="flex flex-col gap-4 w-full">
-        
-        <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
+        <div class="flex gap-4">
+          <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
+          <TRCSelect label="Time interval" :options="controls.timeIntervalOptions" v-model="controls.currentMonthRangeSize"  />
+        </div>
         <div>{{ controls.currentMonthRange }}</div>
       </div>
     </div>

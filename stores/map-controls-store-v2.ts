@@ -26,34 +26,9 @@ const CHOROPLETH_METRICS = [
 
 type ChoroplethMetric = typeof CHOROPLETH_METRICS[number];
 
-const VALID_RANGE_SIZES = [0, 6, 12];
+const VALID_RANGE_SIZES = [0, 6, 12] as const;
 
-
-function getBestFitRangeSpan(span: Range.Span, bounds: Range.Bounds): Range.Span {
-  let [start, end] = span;
-
-  const proposedSize = end - start;
-  
-  const { bestSize } = VALID_RANGE_SIZES.reduce(
-    (accum, size) => {
-      const distance = Math.abs(proposedSize - size);
-      if (distance < accum.distance) {
-        accum.distance = distance;
-        accum.bestSize = size;
-      }
-      return accum;
-    },
-    { distance: Infinity, bestSize: proposedSize }
-  );
-
-  if (bestSize === proposedSize) {
-    return [start, end];
-  }
-
-  const origin = Math.max(0, start);
-
-  return [origin, origin + bestSize];
-}
+type ValidRangeSize = typeof VALID_RANGE_SIZES[number];
 
 interface Option<Value> {
   text?: string;
@@ -88,15 +63,19 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
   },
 ];
 
-const timeIntervalOptions: Option<"month" | "year">[] = [
+const timeIntervalOptions: Option<ValidRangeSize>[] = [
   {
-    text: "Year",
-    value: "year",
+    text: "12 months",
+    value: 12,
   },
   {
-    text: "Month",
-    value: "month",
+    text: "6 months",
+    value: 6,
   },
+  {
+    text: "1 month",
+    value: 0,
+  }
 ];
 
 function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
@@ -107,8 +86,6 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const monthEpochMap = ref<Record<string, number>>({});
 
-  const currentTimeInterval = ref<"month" | "year">("year");
-  
   /** @deprecated */
   const currentYear = ref(2023);
   /** @deprecated */
@@ -147,12 +124,28 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     },
   });
 
+  const currentMonthRangeSize = computed({
+    get() {
+      return currentMonthRangeIndices.value[1] - currentMonthRangeIndices.value[0];
+    },
+    set(newSize) {
+      currentMonthRangeIndices.value = resizeSpan(
+        currentMonthRangeIndices.value,
+        {
+          min: 0,
+          max: monthRangeMax.value,
+        },
+        newSize
+      );
+    },
+  });
+
   const currentMonthRange = computed({
     get() {
       return _currentMonthRange.value;
     },
     set([start, end]) {
-      const [startIndex, endIndex] = getBestFitRangeSpan(
+      const [startIndex, endIndex] = findBestFitSpan(
         [
           availableMonthRangeValues.value.indexOf(start),
           availableMonthRangeValues.value.indexOf(end),
@@ -160,7 +153,8 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
         {
           min: 0,
           max: monthRangeMax.value,
-        }
+        },
+        VALID_RANGE_SIZES as unknown as number[]
       );
       _currentMonthRange.value = [
         availableMonthRangeValues.value[startIndex],
@@ -202,7 +196,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     currentSource,
     currentSourceHumanReadable,
     currentSourceDesicription,
-    currentTimeInterval,
+    currentMonthRangeSize,
     currentYear,
     currentMonth,
     currentChoroplethMetric,
