@@ -53,7 +53,7 @@ function resizeMap() {
           @mouseup="resizeActive = false"
         />
         <div class="p-4 overflow-auto max-h-[calc(100vh-60px)]">
-          <slot name="right"></slot>
+          <slot name="left"></slot>
         </div>
       </div>
       <div

@@ -74,12 +74,8 @@ await useAsyncData(
     <TheHeader />
     <ClientOnly>
       <TheMapProviderV2 v-if="true">
-        <template #right>
-          <div class="space-y-4">
-            <TransitionGroup name="features">
-              <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
-            </TransitionGroup>
-          </div>
+        <template #left>
+          <LeftPanelContent />
         </template>
         <template #map-overlay>
           <MapLayers />
@@ -112,20 +108,3 @@ await useAsyncData(
   </div>
 </template>
 
-<style>
-.features-move,
-.features-enter-active,
-.features-leave-active {
-  transition: all 150ms ease-in-out;
-}
-
-.features-enter-from,
-.features-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-.features-leave-active {
-  position: absolute;
-}
-</style>

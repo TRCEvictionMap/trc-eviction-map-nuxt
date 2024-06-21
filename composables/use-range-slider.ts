@@ -44,12 +44,6 @@ function getRangeCenter(range: RangeSlider.Range) {
     }
   }
 
-function assertUnref<T>(r: Ref<T>) {
-  if (typeof r.value === "undefined") {
-    throw new Error("[assertGetRefValue] ref.value is undefined");
-  }
-  return r.value;
-}
 
 function useRangeSliderMouse(
   bounds: RangeSlider.Bounds,

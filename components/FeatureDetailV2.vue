@@ -22,7 +22,6 @@ const filings = computed(() =>
   )
 );
 
-
 function deselectFeature() {
   if (featureId) {
     featureState.setFeatureState(featureId, "isSelected", false);

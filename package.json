@@ -26,6 +26,7 @@
     "@nuxt/content": "^2.9.0",
     "@nuxt/image": "^1.0.0",
     "@pinia/nuxt": "^0.4.11",
+    "chart.js": "^4.4.3",
     "mapbox-gl": "^2.15.0",
     "pinia": "^2.1.6"
   },
