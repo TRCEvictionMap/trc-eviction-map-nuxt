@@ -34,7 +34,7 @@ export default defineNuxtConfig({
             mapboxStyleUrlDark: "",
 
             /* BEGIN FEATURE FLAGS */
-            disableChart: false,
+            disableChart: true,
             disableDataTableHeaderToggle: false,
             disableMultiColorFeatureOutline: false,
             /* END FEATURE FLAGS */

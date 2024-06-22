@@ -174,6 +174,11 @@ function useMapLayersV2(map: mapboxgl.Map) {
   map.on("sourcedata", async (ev) => {
     const context = { map, ev, loaded };
 
+    // TODO: instead of loading layers as soon as their source data is available,
+    // queue up layers whose sources have been added and THEN add layers in a
+    // guaranteed proper order..."block-group-heatmap" currently occaisionally
+    // seems to load before "block-group", resulting in heatmap stuff showing up
+    // behind choropleth stuff
     if (addLayers(context, "block-group", choroplethLayers)) {
       updateChoroplethLayerFeatureState(featureState.selectedFeatures);
       updateChoroplethPaintProperties(controls.currentChoroplethMetric);
