@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { useFeatureFlags } from "~/stores/feature-flags";
 import { useFeatureState } from "~/stores/feature-state-store";
 
+const flags = useFeatureFlags();
 const featureState = useFeatureState();
 </script>
 
 <template>
   Left panel content
   <div class="space-y-4">
-    <FeatureDetailChart class="w-full" />
+    <FeatureDetailChart v-if="!flags.disableChart" class="w-full" />
     <TransitionGroup name="features">
       <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
     </TransitionGroup>

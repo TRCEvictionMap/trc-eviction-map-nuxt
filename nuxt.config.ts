@@ -32,6 +32,12 @@ export default defineNuxtConfig({
             mapboxAccessToken: "",
             mapboxStyleUrlLight: "",
             mapboxStyleUrlDark: "",
+
+            /* BEGIN FEATURE FLAGS */
+            disableChart: false,
+            disableDataTableHeaderToggle: false,
+            disableMultiColorFeatureOutline: false,
+            /* END FEATURE FLAGS */
         },
     },
     app: {

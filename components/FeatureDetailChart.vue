@@ -20,12 +20,33 @@ const datasets = computed(
       return {
         label: `Block Group ${tr}.${bg}`,
         data: Object.values(filings).map(({ c }) => c),
+        borderColor: featureState.selectedFeatureColors[featureId],
       };
     }
   )
 );
 
-watch(datasets, (datasets) => {
+watch(datasets, updateChartDatasets, { immediate: true });
+
+onMounted(() => {
+  chartRef.value = markRaw(new Chart(
+    assertUnref(canvasRef),
+    {
+      type: "line",
+      options: {
+        animation: false,
+      },
+      data: {
+        labels: [],
+        datasets: []
+      }
+    }
+  ));
+
+  updateChartDatasets(datasets.value);
+});
+
+function updateChartDatasets(datasets: Chart["data"]["datasets"]) {
   try {
     const chart = assertUnref(chartRef);
     chart.data.labels = controls.availableMonthRangeValues;
@@ -34,21 +55,7 @@ watch(datasets, (datasets) => {
   } catch (error) {
     console.warn(error);
   }
-}, { immediate: true });
-
-onMounted(() => {
-  chartRef.value = markRaw(new Chart(
-    assertUnref(canvasRef),
-    {
-      type: "line",
-      options: {},
-      data: {
-        labels: [],
-        datasets: []
-      }
-    }
-  ));
-});
+}
 
 </script>
 

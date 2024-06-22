@@ -1,7 +1,8 @@
 import mapboxgl from "mapbox-gl";
-import { useFeatureState } from "~/stores/feature-state-store";
+import { useFeatureState, type FeatureColors } from "~/stores/feature-state-store";
 import { useMapControlsV2, type ChoroplethMetric } from "~/stores/map-controls-store-v2";
 import { useInterpolatedColors } from "~/stores/interpolated-color-values-store";
+import { useFeatureFlags } from "~/stores/feature-flags";
 
 interface Layer {
   layer: mapboxgl.AnyLayer;
@@ -18,6 +19,8 @@ interface Layers {
 }
 
 function createLayers<S extends SourceId>(source: S): Layers {
+  const flags = useFeatureFlags();
+
   const {
     choroplethLayerId,
     choroplethBorderLayerId,
@@ -53,12 +56,19 @@ function createLayers<S extends SourceId>(source: S): Layers {
                 1
               ]
             ],
-            "line-color": [
+            "line-opacity": [
               "case",
               ["boolean", ["feature-state", "isHovered"], false],
-              "black",
-              "#656565"
-            ]
+              1,
+              0.8,
+            ],
+            "line-color": ["string", ["feature-state", "lineColor"], "#656565"],
+            "line-offset": [
+              "case",
+              ["boolean", ["==", ["typeof", ["feature-state", "lineColor"]], "string"], false],
+              flags.disableMultiColorFeatureOutline ? 0 : 2,
+              0
+            ],
           },
         },
       },
@@ -150,13 +160,14 @@ const CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP: Partial<Record<ChoroplethMetric, k
 };
 
 function useMapLayersV2(map: mapboxgl.Map) {
+  const flags = useFeatureFlags();
   const controls = useMapControlsV2();
   const featureState = useFeatureState();
   const interpolated = useInterpolatedColors();
 
   const { choroplethLayers, heatmapLayers } = createLayers(controls.currentSource);
 
-  const { choroplethLayerId, heatmapLayerId } = useLayerIds(controls.currentSource);
+  const { choroplethLayerId, choroplethBorderLayerId, heatmapLayerId } = useLayerIds(controls.currentSource);
 
   const loaded = new Set<string>();
 
@@ -164,8 +175,9 @@ function useMapLayersV2(map: mapboxgl.Map) {
     const context = { map, ev, loaded };
 
     if (addLayers(context, "block-group", choroplethLayers)) {
+      updateChoroplethLayerFeatureState(featureState.selectedFeatures);
       updateChoroplethPaintProperties(controls.currentChoroplethMetric);
-      updateChoroplethFeatureState(featureState.selectedFeatures);
+      updateChoroplethBorderLayerFeatureState(featureState.selectedFeatureColors);
     }
 
     if (addLayers(context, "block-group-heatmap", heatmapLayers)) {
@@ -183,7 +195,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
     removeLayers(map, choroplethLayers);
     removeLayers(map, heatmapLayers);
 
-    updateChoroplethFeatureState([], featureState.selectedFeatures);
+    updateChoroplethLayerFeatureState([], featureState.selectedFeatures);
 
     featureState.clearSelectedFeatures();
     featureState.clearHoveredFeature();
@@ -195,7 +207,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   watch(
     () => featureState.selectedFeatures,
-    updateChoroplethFeatureState,
+    updateChoroplethLayerFeatureState,
     { immediate: true }
   );
 
@@ -206,45 +218,57 @@ function useMapLayersV2(map: mapboxgl.Map) {
   );
 
   watch(
+    () => featureState.selectedFeatureColors,
+    updateChoroplethBorderLayerFeatureState,
+    { immediate: true }
+  )
+
+  watch(
     () => controls.currentMonthRange,
     updateHeatmapTimeFilter,
     { immediate: true }
   );
 
-  watch(() => featureState.hoveredFeature, (current, prev) => {
-    if (prev) {
-      map.setFeatureState(
-        { source: controls.currentSource, id: prev },
-        { isHovered: false }
-      );
+  watch(() => featureState.hoveredFeature, (current, previous) => {
+    if (previous) {
+      setFeatureState(previous, { isHovered: false });
     }
     if (current) {
-      map.setFeatureState(
-        { source: controls.currentSource, id: current },
-        { isHovered: true }
-      );
+      setFeatureState(current, { isHovered: true });
     }
   });
 
   function updateChoroplethPaintProperties(metric: ChoroplethMetric) {
-    if (!map.getLayer(choroplethLayerId)) {
-      return;
+    if (map.getLayer(choroplethLayerId)) {
+      if (metric !== "none") {
+        map.setPaintProperty(
+          choroplethLayerId,
+          "fill-color",
+          [
+            "interpolate",
+            ["linear"],
+            ["number", ["get", CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP[metric], ["properties"]]],
+            ...interpolated.choropleth[metric]
+          ]
+        );
+      } else {
+        map.setPaintProperty(choroplethLayerId, "fill-color", "transparent")
+      }
     }
+  }
 
-    if (metric !== "none") {
-      map.setLayoutProperty(choroplethLayerId, "visibility", "visible");
-      map.setPaintProperty(
-        choroplethLayerId,
-        "fill-color",
-        [
-          "interpolate",
-          ["linear"],
-          ["number", ["get", CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP[metric], ["properties"]]],
-          ...interpolated.choropleth[metric]
-        ]
-      );
-    } else {
-      map.setLayoutProperty(choroplethLayerId, "visibility", "none");
+  function updateChoroplethBorderLayerFeatureState(
+    current: FeatureColors,
+    previous?: FeatureColors
+  ) {
+    if (map.getLayer(choroplethBorderLayerId)) {
+      Object.entries(previous ?? []).forEach(([featureId]) => {
+        setFeatureState(featureId, { lineColor: null });
+      });
+
+      Object.entries(current).forEach(([featureId, color]) => {
+        setFeatureState(featureId, { lineColor: flags.disableMultiColorFeatureOutline ? "black" : color });
+      });
     }
   }
 
@@ -269,7 +293,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
     }
   }
 
-  function updateChoroplethFeatureState(current: string[], previous?: string[]) {
+  function updateChoroplethLayerFeatureState(current: string[], previous?: string[]) {
     previous
       ?.filter((featureId) => !current.includes(featureId))
       .forEach((featureId) => {
@@ -292,6 +316,13 @@ function useMapLayersV2(map: mapboxgl.Map) {
         !featureState.selectedFeatures.includes(justClicked)
       );
     }
+  }
+
+  function setFeatureState(featureId: string, state: Record<string, any>) {
+    map.setFeatureState(
+      { source: controls.currentSource, id: featureId },
+      state
+    );
   }
 
   function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
