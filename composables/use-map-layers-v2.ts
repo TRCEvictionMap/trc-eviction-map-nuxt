@@ -63,12 +63,25 @@ function createLayers<S extends SourceId>(source: S): Layers {
               0.8,
             ],
             "line-color": ["string", ["feature-state", "lineColor"], "#656565"],
-            "line-offset": [
-              "case",
-              ["boolean", ["==", ["typeof", ["feature-state", "lineColor"]], "string"], false],
-              flags.disableMultiColorFeatureOutline ? 0 : 2,
-              0
-            ],
+            "line-offset": flags.disableMultiColorFeatureOutline
+              ? 0
+              : [
+                  "case",
+                  [
+                    "boolean",
+                    [
+                      "==",
+                      [
+                        "typeof",
+                        ["feature-state", "lineColor"]
+                      ],
+                      "string"
+                    ],
+                    false
+                  ],
+                  2,
+                  0
+                ],
           },
         },
       },
@@ -121,30 +134,10 @@ function createLayers<S extends SourceId>(source: S): Layers {
   };
 }
 
-interface AddLayersContext {
-  loaded: Set<string>;
-  ev: mapboxgl.MapSourceDataEvent & mapboxgl.EventData;
-  map: mapboxgl.Map;
-}
-
-function addLayers(
-  context: AddLayersContext,
-  source: string,
-  layers: Layer[]
-) {
-  const { loaded, map, ev: { sourceId, isSourceLoaded } } = context;
-
-  if (!loaded.has(sourceId) && sourceId === source && isSourceLoaded) {
-    loaded.add(sourceId);
-  
-    layers.forEach(({ layer, before }) => {
-      map.addLayer(layer, before);
-    });
-  
-    return true;
-  }
-  
-  return false;
+function addLayers(map: mapboxgl.Map, layers: Layer[]) {
+  layers.forEach(({ layer, before }) => {
+    map.addLayer(layer, before);
+  });
 }
 
 function removeLayers(map: mapboxgl.Map, layers: Layer[]) {
@@ -169,23 +162,31 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   const { choroplethLayerId, choroplethBorderLayerId, heatmapLayerId } = useLayerIds(controls.currentSource);
 
-  const loaded = new Set<string>();
+  const loadedSources = new Set<string>();
+  let layersAdded = false;
 
   map.on("sourcedata", async (ev) => {
-    const context = { map, ev, loaded };
+    if (layersAdded) {
+      return;
+    }
 
-    // TODO: instead of loading layers as soon as their source data is available,
-    // queue up layers whose sources have been added and THEN add layers in a
-    // guaranteed proper order..."block-group-heatmap" currently occaisionally
-    // seems to load before "block-group", resulting in heatmap stuff showing up
-    // behind choropleth stuff
-    if (addLayers(context, "block-group", choroplethLayers)) {
+    if (ev.isSourceLoaded) {
+      loadedSources.add(ev.sourceId);
+    }
+
+    if (
+      loadedSources.has("block-group") &&
+      loadedSources.has("block-group-heatmap")
+    ) {
+      addLayers(map, choroplethLayers);
+      addLayers(map, heatmapLayers);
+
+      layersAdded = true;
+
       updateChoroplethLayerFeatureState(featureState.selectedFeatures);
       updateChoroplethPaintProperties(controls.currentChoroplethMetric);
       updateChoroplethBorderLayerFeatureState(featureState.selectedFeatureColors);
-    }
-
-    if (addLayers(context, "block-group-heatmap", heatmapLayers)) {
+  
       updateHeatmapTimeFilter(controls.currentMonthRange);
     }
   });
@@ -272,7 +273,9 @@ function useMapLayersV2(map: mapboxgl.Map) {
       });
 
       Object.entries(current).forEach(([featureId, color]) => {
-        setFeatureState(featureId, { lineColor: flags.disableMultiColorFeatureOutline ? "black" : color });
+        setFeatureState(featureId, {
+          lineColor: flags.disableMultiColorFeatureOutline ? "black" : color
+        });
       });
     }
   }

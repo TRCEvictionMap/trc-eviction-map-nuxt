@@ -39,23 +39,21 @@ function useSelectedFeatures() {
   });
 
   watch(selectedFeatures, (selectedFeatures) => {
-    interface Accum {
-      featureColors: FeatureColors;
-      availableColors: FeatureColor[];
-    }
-
-    const { featureColors, availableColors } = Object.entries(_featureColors.value).reduce(
-      (accum: Accum, [featureId, color]) => {
-        if (selectedFeatures.includes(featureId)) {
-          accum.featureColors[featureId] = color;
-          accum.availableColors = accum.availableColors.filter(
-            (c) => c !== color
-          );
-        }
-        return accum;
-      },
-      { featureColors: {}, availableColors: Array.from(FEATURE_COLOR) } 
-    );
+    const { featureColors, availableColors } = Object
+      .entries(_featureColors.value)
+      .reduce(
+        (accum, [featureId, color]) => {
+          if (selectedFeatures.includes(featureId)) {
+            accum.featureColors[featureId] = color;
+            accum.availableColors = accum.availableColors.filter(
+              (c) => c !== color
+            );
+          }
+          return accum;
+        },
+        { featureColors: {}, availableColors: Array.from(FEATURE_COLOR) } as
+        { featureColors: FeatureColors; availableColors: FeatureColor[] }
+      );
 
     selectedFeatures.forEach((featureId) => {
       if (!featureColors[featureId]) {

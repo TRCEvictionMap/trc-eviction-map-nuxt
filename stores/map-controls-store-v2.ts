@@ -163,6 +163,34 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     },
   });
 
+  const currentMonthRangeHumanReadable = computed(() => {
+    const [start, end] = currentMonthRange.value;
+
+    if (!start.trim()) {
+      return {
+        simple: "",
+        verbose: "",
+      };
+    }
+
+    let [y1, m1] = start.split("-");
+    let [y2, m2] = end.split("-");
+    
+    m1 = MONTHS[Number.parseInt(m1) - 1];
+    m2 = MONTHS[Number.parseInt(m2) - 1];
+
+    if (y1 === y2 && m1 === m2) {
+      return {
+        simple: `${m1} ${y1}`,
+        verbose: `View evictions filed from the beginning through the end of ${m1} ${y1}.`,
+      };
+    }
+
+    return {
+      simple: `${m1} ${y1} - ${m2} ${y2}`,
+      verbose: `View evictions filed from the beginning of ${m1} ${y1} through the end of ${m2} ${y2}.`
+    };
+  });
 
   const currentSourceHumanReadable = computed(() =>
     sourceOptions.find((opt) => opt.value === currentSource.value)?.text
@@ -200,7 +228,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     currentYear,
     currentMonth,
     currentChoroplethMetric,
-
+    currentMonthRangeHumanReadable,
   };
 });
 

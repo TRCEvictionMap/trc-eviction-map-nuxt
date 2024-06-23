@@ -23,7 +23,7 @@ const controls = useMapControlsV2();
   >
 
     <div class="
-      flex flex-col justify-center items-center flex-shrink-0 w-full
+      flex flex-col justify-center items-start flex-shrink-0 w-full
       p-4 gap-y-4
       rounded border shadow-2xl
       bg-white
@@ -31,11 +31,13 @@ const controls = useMapControlsV2();
       <div class="hidden sm:flex items-center gap-x-4 relative z-10">
         <TRCSelect
           label="Demographic Metric"
+          class="min-w-[208px]"
           :options="controls.choroplethMetricOptions"
           v-model="controls.currentChoroplethMetric"
         />
         <TRCSelect
           label="Geography"
+          class="min-w-[208px]"
           :options="controls.sourceOptions"
           v-model="controls.currentSource"
         />
@@ -45,7 +47,8 @@ const controls = useMapControlsV2();
           <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
           <TRCSelect label="Time window" :options="controls.timeIntervalOptions" v-model="controls.currentMonthRangeSize"  />
         </div>
-        <div>{{ controls.currentMonthRange }}</div>
+        <div>{{ controls.currentMonthRangeHumanReadable.simple }}</div>
+        <!-- <div>{{ controls.currentMonthRangeHumanReadable.verbose }}</div> -->
       </div>
     </div>
   </div>
