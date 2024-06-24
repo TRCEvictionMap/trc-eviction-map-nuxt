@@ -5,6 +5,9 @@ interface RangeSliderProps {
   modelValue: [number, number];
   min: number;
   max: number;
+  /** @todo @notimplemented */
+  showTicks?: boolean;
+  /** @todo @notimplemented */
   step?: number;
 }
 
@@ -52,6 +55,10 @@ const thumbStyle = computed((): CSSProperties => ({
   left: `${Math.floor(rangeCenter.value / props.max * 100)}%`,
 }));
 
+const tickStyle = computed((): CSSProperties => ({
+  width: `${Math.floor(1 / props.max * 100)}%`,
+}));
+
 </script>
 
 <template>
@@ -60,9 +67,18 @@ const thumbStyle = computed((): CSSProperties => ({
     class="relative w-72 h-5 cursor-pointer"
     v-bind="containerListeners"
   >
-    <span class="absolute top-2 w-full h-1 bg-slate-300 rounded"></span>
+    <span class="absolute top-2 w-full h-1 flex bg-slate-300 rounded">
+      <template v-if="showTicks && max > 0">
+        <span
+          v-for="n in max"
+          :style="tickStyle"
+        >
+          <slot>|</slot>
+        </span>
+      </template>
+    </span>
     <span
-      class="absolute top-2 h-1 bg-trc-blue-500 rounded"
+      class="absolute top-2 h-1 bg-trc-blue-500 rounded w-full"
       :class="{
         'transition-all': !isMousemove
       }"

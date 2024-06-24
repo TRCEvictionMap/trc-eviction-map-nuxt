@@ -115,8 +115,6 @@ const { columns, rows } = dataTableRowsAndCols({
   ],
   rows: computed(
     () => {
-      const [startMonth, endMonth] = controls.currentMonthRange;
-
       return Object.keys(featureProperties.bgChoropleth)
         .map((featureId) => {
           const {
@@ -164,7 +162,7 @@ const { columns, rows } = dataTableRowsAndCols({
                 srOnly: `${poverty_rate} plus or minus ${poverty_rate_moe} percent`
               },
               n_filings: {
-                value: featureProperties.currentMonthRangeFilingCount[featureId],
+                value: featureProperties.currentMonthRangeFilingCount[featureId].currentWindow,
               },
               pct_ai: {
                 value: pct_ai,

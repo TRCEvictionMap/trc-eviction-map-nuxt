@@ -27,25 +27,34 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
 
   const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
   const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
-
+  
   const currentMonthRangeFilingCount = computed(() => {
     const [startMonth, endMonth] = controls.currentMonthRange;
+
     return Object.fromEntries(
-      Object.entries(bgChoropleth.value).map(([featureId, properties]) => [
-        featureId,
-        Object.entries(properties.filings).reduce(
-          (accum, [filingMonth, { c: count }]) => {
-            if (
-              controls.monthEpochMap[filingMonth] >= controls.monthEpochMap[startMonth] &&
-              controls.monthEpochMap[filingMonth] <= controls.monthEpochMap[endMonth]
-            ) {
-              accum += count;
-            }
-            return accum;
-          },
-          0
-        )
-      ])
+      Object.entries(bgChoropleth.value).map(
+        ([featureId, properties]) => [
+          featureId,
+          Object.entries(properties.filings).reduce(
+            (accum, [filingMonth, { c: count }]) => {
+              const filingEpoch = controls.monthEpochMap[filingMonth];
+              const startEpoch = controls.monthEpochMap[startMonth];
+              const endEpoch = controls.monthEpochMap[endMonth];
+
+              if (filingEpoch >= startEpoch && filingEpoch <= endEpoch) {
+                accum.currentWindow += count;
+              }
+
+              if (filingEpoch <= endEpoch) {
+                accum.total += count;
+              }
+
+              return accum;
+            },
+            { currentWindow: 0, total: 0 }
+          )
+        ]
+      )
     );
   });
 
