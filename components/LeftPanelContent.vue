@@ -7,12 +7,20 @@ const featureState = useFeatureState();
 </script>
 
 <template>
-  Left panel content
   <div class="space-y-4">
-    <FeatureDetailChart v-if="!flags.disableChart" class="w-full" />
+    <MapControlsV2 position="left" />
     <TransitionGroup name="features">
-      <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
+      <FeatureDetailV2
+        v-for="featureId in featureState.selectedFeatures"
+        :key="featureId"
+        :featureId="featureId"
+      />
     </TransitionGroup>
+    <div>
+      <!-- Must be wrapped by div if placed below TransitionGroup (...because
+           of v-if...?) -->
+      <FeatureDetailChart v-if="!flags.disableChart" class="w-full" />
+    </div>
   </div>
 </template>
 

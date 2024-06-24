@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useFeatureFlags } from "~/stores/feature-flags";
 import { useFeatureProperties, type FeatureProperties } from "~/stores/feature-properties-store";
 import { useFeaturePropertiesV2 } from "~/stores/feature-properties-store-v2";
 import { useFeatureState } from "~/stores/feature-state-store";
@@ -7,10 +8,16 @@ import { useMapControls } from "~/stores/map-controls-store";
 const { featureId } = defineProps<{ featureId: string }>();
 
 const controls = useMapControls();
+const flags = useFeatureFlags();
 const featureState = useFeatureState();
 const featureProperties = useFeaturePropertiesV2();
 
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
+const featureColor = computed(() => {
+  if (!flags.disableMultiColorFeatureOutline) {
+    return featureState.selectedFeatureColors[featureId];
+  }
+});
 
 const data = computed(() => featureProperties.bgChoropleth[featureId]);
 const filings = computed(() =>
@@ -42,9 +49,12 @@ function onMouseleave() {
 
 <template>
   <div
-    class="border rounded bg-white relative p-4"
+    class="border rounded bg-white relative p-4 ring-1 ring-black"
     :class="{
-      'ring-2 ring-black': isHovered,
+      'ring-2': isHovered,
+      // 'ring-[#ff7f00]': featureColor === '#ff7f00',
+      // 'ring-[#4daf4a]': featureColor === '#4daf4a',
+      // 'ring-[#984ea3]': featureColor === '#984ea3',
     }"
     @mouseover="onMouseover"
     @mouseleave="onMouseleave"
@@ -54,7 +64,24 @@ function onMouseleave() {
         <IconXMark class="text-slate-500" />
       </TRCButton>
     </div>
-    <pre v-if="data">{{ filings }}</pre>
+    <div v-if="data">
+      <div class="flex items-center gap-2">
+        <div
+          class="h-4 w-4"
+          :class="{
+            'bg-[#ff7f00]': featureColor === '#ff7f00',
+            'bg-[#4daf4a]': featureColor === '#4daf4a',
+            'bg-[#984ea3]': featureColor === '#984ea3',
+          }"
+        ></div>
+        <h3 class="font-semibold">
+          {{ controls.currentSourceHumanReadable }} {{ data.tr }}.{{ data.bg }}
+        </h3>
+      </div>
+      <div>
+        {{ featureProperties.currentMonthRangeFilingCount[featureId] }}
+      </div>
+    </div>
     <div v-else>
       ...loading
     </div>

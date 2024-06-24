@@ -79,7 +79,7 @@ await useAsyncData(
         </template>
         <template #map-overlay>
           <MapLayers />
-          <MapControlsV2 position="left" />
+          <MapControlsV2 v-if="!settings.options.showLeftPanel" isFloating position="left" />
           <MapLegendV2 position="bottom-right" />
         </template>
         <template #bottom="{ height }">

@@ -3,7 +3,10 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
-defineProps<{ position: "center" | "left" }>();
+defineProps<{
+  position: "center" | "left";
+  isFloating?: boolean;
+}>();
 
 const controls = useMapControlsV2();
 
@@ -12,22 +15,28 @@ const controls = useMapControlsV2();
 <template>
   <div
     class="
-      hidden absolute top-0 z-10 
+      hidden z-10 
       sm:w-auto sm:flex
-      sm:top-2 sm:justify-center bg-orange-200
+      sm:justify-center bg-orange-200
     "
     :class="{
+      'relative max-w-[460px] min-w-[460px]': !isFloating,
+      'absolute top-0 sm:top-2': isFloating,
       'sm:self-start sm:ml-2': position === 'left',
       'sm:self-center': position === 'center',
     }"
   >
-
-    <div class="
-      flex flex-col justify-center items-start flex-shrink-0 w-full
-      p-4 gap-y-4
-      rounded border shadow-2xl
-      bg-white
-    ">
+    <div
+      class="
+        flex flex-col justify-center items-start flex-shrink-0 w-full
+        p-4 gap-y-4
+        rounded border
+        bg-white
+      "
+      :class="{
+        'shadow-2xl': isFloating
+      }"
+    >
       <div class="hidden sm:flex items-center gap-x-4 relative z-10">
         <TRCSelect
           label="Demographic Metric"
@@ -44,11 +53,14 @@ const controls = useMapControlsV2();
       </div>
       <div class="flex flex-col gap-4 w-full">
         <div class="flex gap-4">
-          <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
-          <TRCSelect label="Time window" :options="controls.timeIntervalOptions" v-model="controls.currentMonthRangeSize"  />
+          <div class="space-y-2">
+            <div class="font-mono font-bold text-sm" :title="controls.currentMonthRangeHumanReadable.verbose">
+              {{ controls.currentMonthRangeHumanReadable.simple }}
+            </div>
+            <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
+          </div>
+          <TRCSelect class="flex-1" label="Time window" :options="controls.timeIntervalOptions" v-model="controls.currentMonthRangeSize"  />
         </div>
-        <div>{{ controls.currentMonthRangeHumanReadable.simple }}</div>
-        <!-- <div>{{ controls.currentMonthRangeHumanReadable.verbose }}</div> -->
       </div>
     </div>
   </div>
