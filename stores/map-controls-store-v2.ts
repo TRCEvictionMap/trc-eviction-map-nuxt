@@ -84,6 +84,8 @@ function isChoroplethMetric(data: unknown): data is ChoroplethMetric {
 
 const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
+  const showHeatmap = ref(false);
+
   const monthEpochMap = ref<Record<string, number>>({});
 
   /** @deprecated */
@@ -229,6 +231,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     currentMonth,
     currentChoroplethMetric,
     currentMonthRangeHumanReadable,
+    showHeatmap,
   };
 });
 

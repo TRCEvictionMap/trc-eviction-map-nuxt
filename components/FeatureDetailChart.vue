@@ -18,7 +18,7 @@ const datasets = computed(
     .map((featureId) => {
       const { bg, tr, filings } = featureProperties.bgChoropleth[featureId];
       return {
-        label: `Block Group ${tr}.${bg}`,
+        label: `${tr}.${bg}`,
         data: Object.values(filings).map(({ c }) => c),
         borderColor: featureState.selectedFeatureColors[featureId],
       };

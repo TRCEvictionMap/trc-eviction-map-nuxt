@@ -4,7 +4,7 @@ import { Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
 const props = defineProps<{
   modelValue: boolean;
   label?: string;
-
+  stackLabel?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -23,7 +23,13 @@ const checked = computed({
 
 <template>
   <SwitchGroup>
-    <div class="flex items-center gap-2">
+    <div
+      class="flex gap-2"
+      :class="{
+        'flex-col items-start': stackLabel,
+        'items-center': !stackLabel
+      }"
+    >
       <SwitchLabel v-if="label" class="text-xs font-bold text-slate-600">
         {{ label }}
       </SwitchLabel>
@@ -32,8 +38,8 @@ const checked = computed({
         :class="checked ? 'bg-trc-blue-900' : 'bg-trc-blue-300'"
         class="
           relative inline-flex h-6 w-10 shrink-0 cursor-pointer
-          rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out 
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75
+          rounded-full border-2 border-transparent transition-all duration-200 ease-in-out 
+          outline-none focus-visible:ring focus-visible:ring-trc-blue-400 focus-visible:ring-offset-2
         "
       >
         <span

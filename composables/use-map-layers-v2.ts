@@ -187,6 +187,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
       updateChoroplethPaintProperties(controls.currentChoroplethMetric);
       updateChoroplethBorderLayerFeatureState(featureState.selectedFeatureColors);
   
+      updateHeatmapVisibility(controls.showHeatmap);
       updateHeatmapTimeFilter(controls.currentMonthRange);
     }
   });
@@ -227,11 +228,17 @@ function useMapLayersV2(map: mapboxgl.Map) {
     () => featureState.selectedFeatureColors,
     updateChoroplethBorderLayerFeatureState,
     { immediate: true }
-  )
+  );
 
   watch(
     () => controls.currentMonthRange,
     updateHeatmapTimeFilter,
+    { immediate: true }
+  );
+
+  watch(
+    () => controls.showHeatmap,
+    updateHeatmapVisibility,
     { immediate: true }
   );
 
@@ -260,6 +267,16 @@ function useMapLayersV2(map: mapboxgl.Map) {
       } else {
         map.setPaintProperty(choroplethLayerId, "fill-color", "transparent")
       }
+    }
+  }
+
+  function updateHeatmapVisibility(isVisible: boolean) {
+    if (map.getLayer(heatmapLayerId)) {
+      map.setLayoutProperty(
+        heatmapLayerId,
+        "visibility",
+        isVisible ? "visible" : "none"
+      );
     }
   }
 

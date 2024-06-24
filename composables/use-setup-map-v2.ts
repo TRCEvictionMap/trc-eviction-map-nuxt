@@ -30,7 +30,7 @@ function useSetupMapV2(options: SetupMapOptions) {
   const disclosures = useDisclosures();
 
   onMounted(async () => {
-    const { _lngLat, _source, _year, _zoom, _d_metric, _features, _showDetails, _dates } = useInitialQueryParams();
+    const { _lngLat, _source, _year, _zoom, _d_metric, _features, _showDetails, _dates, _showHeatmap } = useInitialQueryParams();
 
     map.value = markRaw(
       new mapboxgl.Map({
@@ -60,6 +60,7 @@ function useSetupMapV2(options: SetupMapOptions) {
     controls.currentSource = _source;
     controls.currentYear = Number.parseInt(_year);
     controls.currentChoroplethMetric = _d_metric;
+    controls.showHeatmap = _showHeatmap;
 
     featureState.initSelectedFeatures(_features);
 

@@ -4,6 +4,7 @@ import { type SourceId, isSourceId } from "~/utils/types";
 
 interface QueryParams {
   _showDetails: boolean;
+  _showHeatmap: boolean;
   _lngLat: [number, number];
   _zoom: number;
   _year: string;
@@ -25,10 +26,11 @@ function useInitialQueryParams(): QueryParams {
   let _e_metric: QueryParams["_e_metric"] = "n_filings";
   let _features: QueryParams["_features"] = [];
   let _showDetails: QueryParams["_showDetails"] = false;
+  let _showHeatmap: QueryParams["_showHeatmap"] = true;
 
   let _dates: QueryParams["_dates"];
 
-  const { center, zoom, source, year, d_metric, e_metric, features, showDetails, dates } = route.query;
+  const { center, zoom, source, year, d_metric, e_metric, features, showDetails, dates, heatmap } = route.query;
 
   if (center) {
     const [lng, lat] = (route.query.center as string).split(",");
@@ -66,12 +68,16 @@ function useInitialQueryParams(): QueryParams {
     _showDetails = ["t", "true"].includes(showDetails.toLowerCase()) && _features.length > 0;
   }
 
+  if (typeof heatmap === "string") {
+    _showHeatmap = ["t", "true"].includes(heatmap.toLowerCase());
+  }
+
   if (typeof dates === "string" && /^\d{4}-\d{1,2},\d{4}-\d{1,2}$/.test(dates)) {
     const [start, end] = dates.split(",");
     _dates = [start, end];
   }
 
-  return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features, _showDetails, _dates };
+  return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features, _showDetails, _dates, _showHeatmap };
 }
 
 export { useInitialQueryParams };

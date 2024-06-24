@@ -41,6 +41,7 @@ const unwatch = watchEffect(() => {
         ? featureState.selectedFeatures.join(",")
         : undefined,
       showDetails: disclosures.showDetails ? "t" : "f",
+      heatmap: mapControls.showHeatmap ? "t" : "f",
     },
   });
 });

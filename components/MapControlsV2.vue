@@ -20,7 +20,7 @@ const controls = useMapControlsV2();
       sm:justify-center bg-orange-200
     "
     :class="{
-      'relative max-w-[460px] min-w-[460px]': !isFloating,
+      'relative max-w-[512px] min-w-[512px]': !isFloating,
       'absolute top-0 sm:top-2': isFloating,
       'sm:self-start sm:ml-2': position === 'left',
       'sm:self-center': position === 'center',
@@ -30,36 +30,62 @@ const controls = useMapControlsV2();
       class="
         flex flex-col justify-center items-start flex-shrink-0 w-full
         p-4 gap-y-4
-        rounded border
+        rounded 
         bg-white
       "
       :class="{
         'shadow-2xl': isFloating
       }"
     >
-      <div class="hidden sm:flex items-center gap-x-4 relative z-10">
-        <TRCSelect
-          label="Demographic Metric"
-          class="min-w-[208px]"
-          :options="controls.choroplethMetricOptions"
-          v-model="controls.currentChoroplethMetric"
-        />
-        <TRCSelect
-          label="Geography"
-          class="min-w-[208px]"
-          :options="controls.sourceOptions"
-          v-model="controls.currentSource"
-        />
+      <div class="hidden sm:block relative z-10 space-y-4">
+        <div class="space-y-2">
+          <h2 class="font-bold">Map Filters</h2>
+          <div class="flex items-center gap-x-4">
+            <TRCSelect
+              label="Demographic Metric"
+              class="min-w-[208px]"
+              :options="controls.choroplethMetricOptions"
+              v-model="controls.currentChoroplethMetric"
+            />
+            <TRCSelect
+              label="Geography"
+              :options="controls.sourceOptions"
+              v-model="controls.currentSource"
+            />
+            <TRCSwitch
+              stackLabel
+              :label="`${controls.showHeatmap ? 'Hide' : 'Show'} Heatmap`"
+              v-model="controls.showHeatmap"
+            />
+          </div>
+        </div>
       </div>
+      <div class="w-full border"></div>
       <div class="flex flex-col gap-4 w-full">
+        <div>
+          <h2 class="font-bold">Filing Date Window</h2>
+          <p>Use these controls to adjust the </p>
+        </div>
         <div class="flex gap-4">
           <div class="space-y-2">
-            <div class="font-mono font-bold text-sm" :title="controls.currentMonthRangeHumanReadable.verbose">
+            <div
+              class="font-mono font-bold text-sm"
+              :title="controls.currentMonthRangeHumanReadable.verbose"
+            >
               {{ controls.currentMonthRangeHumanReadable.simple }}
             </div>
-            <TRCRangeSlider v-model="controls.currentMonthRangeIndices" :min="0" :max="controls.monthRangeMax" />
+            <TRCRangeSlider
+              v-model="controls.currentMonthRangeIndices"
+              :min="0"
+              :max="controls.monthRangeMax"
+            />
           </div>
-          <TRCSelect class="flex-1" label="Time window" :options="controls.timeIntervalOptions" v-model="controls.currentMonthRangeSize"  />
+          <TRCSelect
+            class="flex-1"
+            label="Time window"
+            :options="controls.timeIntervalOptions"
+            v-model="controls.currentMonthRangeSize"
+          />
         </div>
       </div>
     </div>

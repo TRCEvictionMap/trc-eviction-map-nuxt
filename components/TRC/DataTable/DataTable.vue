@@ -30,9 +30,14 @@ const {
   data: sortedRows,
 } = useSort<Field, DataTableRow<Field>>(
   computed(() => props.rows),
-  (a, b, sortBy, direction) => direction === "asc"
-    ? a.fields[sortBy].value - b.fields[sortBy].value
-    : b.fields[sortBy].value - a.fields[sortBy].value
+  (a, b, sortBy, direction) => {
+    if (typeof a.fields[sortBy].value === "number") {
+      const _a = a.fields[sortBy].value as number;
+      const _b = b.fields[sortBy].value as number;
+      return direction === "asc" ? _a - _b : _b - _a;
+    }
+    return 0;
+  }
 );
 
 const visibleRows: Ref<DataTableRow<Field>[]> = ref([]);

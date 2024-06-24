@@ -20,14 +20,6 @@ const featureColor = computed(() => {
 });
 
 const data = computed(() => featureProperties.bgChoropleth[featureId]);
-const filings = computed(() =>
-  Object.fromEntries(
-    Object
-      .entries(featureProperties.bgChoropleth[featureId].filings)
-      .map(([key, { c }]) => [key, c])
-      .sort()
-  )
-);
 
 function deselectFeature() {
   if (featureId) {
@@ -52,9 +44,6 @@ function onMouseleave() {
     class="border rounded bg-white relative p-4 ring-1 ring-black"
     :class="{
       'ring-2': isHovered,
-      // 'ring-[#ff7f00]': featureColor === '#ff7f00',
-      // 'ring-[#4daf4a]': featureColor === '#4daf4a',
-      // 'ring-[#984ea3]': featureColor === '#984ea3',
     }"
     @mouseover="onMouseover"
     @mouseleave="onMouseleave"
@@ -67,6 +56,7 @@ function onMouseleave() {
     <div v-if="data">
       <div class="flex items-center gap-2">
         <div
+          v-if="featureColor"
           class="h-4 w-4"
           :class="{
             'bg-[#ff7f00]': featureColor === '#ff7f00',
