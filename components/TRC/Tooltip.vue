@@ -110,25 +110,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <span role="tooltip">
     <slot v-bind="{
       ref: (el: any) => reference = el,
-      class: 'underline decoration-dashed'
+      class: 'underline decoration-dotted decoration-2'
     }"></slot>
 
     <Teleport to="body">
       <div
         v-if="isShowing"
         ref="floating"
-        class="absolute py-1 px-2 rounded bg-slate-800 text-white text-sm max-w-xs"
+        class="absolute z-50 py-1 px-2 rounded bg-slate-800 text-white text-sm max-w-xs"
         :style="floatingStyles"
       >
         {{ text }}
-        <!-- <div
-          ref="floatingArrow"
-          :style="floatingArrowStyles"
-        ></div> -->
-    </div>
+      </div>
     </Teleport>
-  </div>
+  </span>
 </template>

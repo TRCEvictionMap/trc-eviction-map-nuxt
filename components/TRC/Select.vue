@@ -65,11 +65,14 @@ const buttonText = computed(() => {
 
 <template>
 	<Listbox v-model="model" as="div">
-		<div class="flex flex-col">
+		<div class="flex flex-col space-y-1">	
 			<ListboxLabel v-if="label" class="px-2 text-xs font-bold text-slate-600">
 				{{ label }}
 			</ListboxLabel>
-			<ListboxButton class="px-2 py-1 border rounded text-start whitespace-nowrap text-sm">
+			<ListboxButton class="
+				px-2 py-1 border rounded text-start whitespace-nowrap text-sm outline-none
+			 	focus:ring focus:ring-trc-blue-400 focus:ring-offset-2
+			">
 				<slot name="button" v-bind="{ buttonText }">
 					{{ buttonText }}
 				</slot>

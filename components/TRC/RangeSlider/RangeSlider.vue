@@ -64,7 +64,7 @@ const tickStyle = computed((): CSSProperties => ({
 <template>
   <div
     ref="containerRef"
-    class="relative w-72 h-5 cursor-pointer"
+    class="relative h-5 cursor-pointer"
     v-bind="containerListeners"
   >
     <span class="absolute top-2 w-full h-1 flex bg-slate-300 rounded">

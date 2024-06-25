@@ -10,28 +10,32 @@ defineProps<{
 
 const controls = useMapControlsV2();
 
+const range = computed(
+  () => controls.currentMonthRangeHumanReadable
+);
+
 </script>
 
 <template>
   <div
     class="
       hidden z-10 
-      sm:w-auto sm:flex
-      sm:justify-center bg-orange-200
+      sm:flex sm:w-auto
+      sm:justify-center 
     "
     :class="{
-      'relative max-w-[512px] min-w-[512px]': !isFloating,
+      'relative': !isFloating,
       'absolute top-0 sm:top-2': isFloating,
-      'sm:self-start sm:ml-2': position === 'left',
-      'sm:self-center': position === 'center',
+      'sm:self-start sm:ml-2': isFloating && position === 'left',
+      'sm:self-center': isFloating && position === 'center',
     }"
   >
     <div
       class="
         flex flex-col justify-center items-start flex-shrink-0 w-full
         p-4 gap-y-4
-        rounded 
-        bg-white
+        rounded flex-1
+        bg-white border
       "
       :class="{
         'shadow-2xl': isFloating
@@ -39,8 +43,8 @@ const controls = useMapControlsV2();
     >
       <div class="hidden sm:block relative z-10 space-y-4">
         <div class="space-y-2">
-          <h2 class="font-bold">Map Filters</h2>
-          <div class="flex items-center gap-x-4">
+          <h2 class="text-lg font-bold">Map Filters</h2>
+          <div class="flex items-center flex-wrap gap-y-4 gap-x-6">
             <TRCSelect
               label="Demographic Metric"
               class="min-w-[208px]"
@@ -62,17 +66,23 @@ const controls = useMapControlsV2();
       </div>
       <div class="w-full border"></div>
       <div class="flex flex-col gap-4 w-full">
-        <div>
-          <h2 class="font-bold">Filing Date Window</h2>
-          <p>Use these controls to adjust the </p>
+        <div class="space-y-2">
+          <h2 class="text-lg font-bold">Filing Date Range</h2>
+          <p class="">
+            Use these controls to adjust the
+          </p>
         </div>
-        <div class="flex gap-4">
-          <div class="space-y-2">
-            <div
-              class="font-mono font-bold text-sm"
-              :title="controls.currentMonthRangeHumanReadable.verbose"
-            >
-              {{ controls.currentMonthRangeHumanReadable.simple }}
+        <div class="flex flex-wrap gap-y-4 gap-x-6">
+          <div class="space-y-2 flex-1">
+            <div class="font-mono font-bold text-sm whitespace-nowrap">
+              <template v-if="range">
+                <template v-if="range.isSingle">
+                  {{ range.start.mAbbr }} {{ range.start.y }}
+                </template>
+                <template v-else>
+                  {{ range.start.mAbbr }} {{ range.start.y }} - {{ range.end.mAbbr }} {{ range.end.y }}
+                </template>
+              </template>
             </div>
             <TRCRangeSlider
               v-model="controls.currentMonthRangeIndices"
@@ -81,8 +91,8 @@ const controls = useMapControlsV2();
             />
           </div>
           <TRCSelect
-            class="flex-1"
-            label="Time window"
+            class=""
+            label="Range Size"
             :options="controls.timeIntervalOptions"
             v-model="controls.currentMonthRangeSize"
           />

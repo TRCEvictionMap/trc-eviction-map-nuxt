@@ -10,7 +10,7 @@ function formatPercent(value: number) {
 function getProperties<
   Data extends GeoJSON.FeatureCollection,
   Props extends Data["features"][number]["properties"],
-  Formatter extends (props: Props) => Props, 
+  Formatter extends (props: Props) => Props, q
 >(data: Data, format?: Formatter) {
   return Object.fromEntries(
     data.features.map(
@@ -27,7 +27,7 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
 
   const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
   const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
-  
+
   const currentMonthRangeFilingCount = computed(() => {
     const [startMonth, endMonth] = controls.currentMonthRange;
 
@@ -46,12 +46,14 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
               }
 
               if (filingEpoch <= endEpoch) {
-                accum.total += count;
+                accum.runningTotal += count;
               }
+
+              accum.total += count;
 
               return accum;
             },
-            { currentWindow: 0, total: 0 }
+            { currentWindow: 0, total: 0, runningTotal: 0 }
           )
         ]
       )

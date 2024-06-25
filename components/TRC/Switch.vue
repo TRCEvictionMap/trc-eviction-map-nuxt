@@ -26,7 +26,7 @@ const checked = computed({
     <div
       class="flex gap-2"
       :class="{
-        'flex-col items-start': stackLabel,
+        'flex-col items-start gap-y-2': stackLabel,
         'items-center': !stackLabel
       }"
     >
