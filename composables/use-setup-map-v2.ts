@@ -102,7 +102,7 @@ function useSetupMapV2(options: SetupMapOptions) {
         controls.currentMonthRange = _dates;
       } else {
         const availableMonths = controls.availableMonthRangeValues;
-        const start = availableMonths[availableMonths.length - Math.min(13, availableMonths.length)];
+        const start = availableMonths[availableMonths.length - Math.min(7, availableMonths.length)];
         const end = availableMonths[availableMonths.length - 1];
         controls.currentMonthRange = [start, end];
       }

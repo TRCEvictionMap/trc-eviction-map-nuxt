@@ -34,7 +34,7 @@ const range = computed(
       class="
         flex flex-col justify-center items-start flex-shrink-0 w-full
         p-4 gap-y-4
-        rounded flex-1
+        rounded flex-1 max-w-[480px]
         bg-white border
       "
       :class="{
@@ -66,10 +66,10 @@ const range = computed(
       </div>
       <div class="w-full border"></div>
       <div class="flex flex-col gap-4 w-full">
-        <div class="space-y-2">
+        <div class="space-y-2 flex flex-col">
           <h2 class="text-lg font-bold">Filing Date Range</h2>
-          <p class="">
-            Use these controls to adjust the
+          <p>
+            Use these controls to adjust the window of time for which eviction filing data is presented.
           </p>
         </div>
         <div class="flex flex-wrap gap-y-4 gap-x-6">
