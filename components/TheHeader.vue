@@ -30,7 +30,7 @@ const flags = useFeatureFlags();
             <TRCSwitch
               v-if="true"
               v-model="settings.options.showBottomPanel"
-              :label="`${settings.options.showBottomPanel ? 'Hide' : 'Show'} Bottom Panel`"
+              :label="`${settings.options.showBottomPanel ? 'Hide' : 'Show'} Data Table`"
             />
             <TRCSwitch
               v-if="!flags.disableDataTableHeaderToggle"
