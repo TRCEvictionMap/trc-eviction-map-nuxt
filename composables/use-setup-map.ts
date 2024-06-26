@@ -1,6 +1,6 @@
 import mapboxgl from "mapbox-gl";
 
-import blockGroupJson from "~/geojson/block-group.json";
+// import blockGroupJson from "~/geojson/block-group.json";
 import { useMapMeta } from "~/stores/map-meta-store";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureProperties } from "~/stores/feature-properties-store";
@@ -8,77 +8,84 @@ import { useFeatureState } from "~/stores/feature-state-store";
 import type { EvictionFeatureCollection } from "~/utils/types";
 import { useDisclosures } from "~/stores/disclosures-store";
 
-function useSetupMap(containerId: string) {
-    const map = ref<mapboxgl.Map>();
+interface SetupMapOptions {
+  containerId: string;
+  navControlPosition?: Position;
+}
 
-    const config = useRuntimeConfig();
-    const mapMeta = useMapMeta();
-    const controls = useMapControls();
-    const featureProperties = useFeatureProperties();
-    const featureState = useFeatureState();
-    const disclosures = useDisclosures();
+function useSetupMap(options: SetupMapOptions) {
+  const { containerId, navControlPosition } = options;
+  
+  const map = ref<mapboxgl.Map>();
 
-    onMounted(() => {
-        const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features, _showDetails } = useInitialQueryParams();
+  const config = useRuntimeConfig();
+  const mapMeta = useMapMeta();
+  const controls = useMapControls();
+  const featureProperties = useFeatureProperties();
+  const featureState = useFeatureState();
+  const disclosures = useDisclosures();
 
-        map.value = markRaw(
-            new mapboxgl.Map({
-                container: containerId,
-                accessToken: config.public.mapboxAccessToken,
-                style: config.public.mapboxStyleUrlLight,
-                center: _lngLat,
-                zoom: _zoom,
-            })
-        );
+  onMounted(() => {
+    const { _lngLat, _source, _year, _zoom, _d_metric, _e_metric, _features, _showDetails } = useInitialQueryParams();
 
-        map.value.addControl(
-            new mapboxgl.NavigationControl({
-                visualizePitch: true,
-            }),
-            "top-right"
-        );
+    map.value = markRaw(
+      new mapboxgl.Map({
+        container: containerId,
+        accessToken: config.public.mapboxAccessToken,
+        style: config.public.mapboxStyleUrlLight,
+        center: _lngLat,
+        zoom: _zoom,
+      })
+    );
 
-        mapMeta.lngLat = _lngLat;
-        mapMeta.zoom = _zoom;
-        controls.currentSource = _source;
-        controls.currentYear = _year;
-        controls.currentDemographicMetric = _d_metric;
-        controls.currentEvictionMetric = _e_metric;
-        
-        featureState.initSelectedFeatures(_features);
-        
-        disclosures.showDetails = _showDetails;
+    map.value.addControl(
+      new mapboxgl.NavigationControl({
+        visualizePitch: true,
+      }),
+      navControlPosition ?? "top-right"
+    );
 
-        map.value.on("moveend", (ev) => {
-            const { lng, lat } = ev.target.getCenter();
-            mapMeta.lngLat = [lng, lat];
-        });
-    
-        map.value.on("zoomend", (ev) => {
-            mapMeta.zoom = ev.target.getZoom();
-        });
+    mapMeta.lngLat = _lngLat;
+    mapMeta.zoom = _zoom;
+    controls.currentSource = _source;
+    controls.currentYear = _year;
+    controls.currentDemographicMetric = _d_metric;
+    controls.currentEvictionMetric = _e_metric;
 
-        map.value.on("load", () => {
-            const _map = map.value as mapboxgl.Map;
-            _map.addSource("block-group", {
-                type: "geojson",
-                promoteId: "id",
-                data: blockGroupJson as unknown as string,
-            });
-        });
+    featureState.initSelectedFeatures(_features);
 
-        const years = featureProperties.loadData(
-            "block-group",
-            blockGroupJson as unknown as EvictionFeatureCollection
-        );
+    disclosures.showDetails = _showDetails;
 
-        controls.yearOptions = years
-            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-            .map((year) => ({ value: year }));
-
+    map.value.on("moveend", (ev) => {
+      const { lng, lat } = ev.target.getCenter();
+      mapMeta.lngLat = [lng, lat];
     });
 
-    return map;
+    map.value.on("zoomend", (ev) => {
+      mapMeta.zoom = ev.target.getZoom();
+    });
+
+    map.value.on("load", () => {
+      const _map = map.value as mapboxgl.Map;
+      _map.addSource("block-group", {
+        type: "geojson",
+        promoteId: "id",
+        data: {} as unknown as string,
+      });
+    });
+
+    const years = featureProperties.loadData(
+      "block-group",
+      "blockGroupJson" as unknown as EvictionFeatureCollection
+    );
+
+    controls.yearOptions = years
+      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+      .map((year) => ({ value: year }));
+
+  });
+
+  return map;
 }
 
 export { useSetupMap };

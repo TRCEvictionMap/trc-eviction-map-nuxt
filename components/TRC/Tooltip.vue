@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFloating, autoUpdate, autoPlacement, arrow, offset } from "@floating-ui/vue";
-import type { CSSProperties } from "nuxt/dist/app/compat/capi";
+import type { CSSProperties } from "vue";
 
 const props = defineProps<{ text: string, delay?: number }>();
 
@@ -30,7 +30,6 @@ const floatingArrowStyles = computed((): CSSProperties => {
   const placement = middlewareData.value.offset?.placement
 
   const marginAndBorder = ((): CSSProperties => {
-    console.log(placement)
     if (placement?.startsWith("bottom")) {
       return {
         borderStyle: "solid",
@@ -111,25 +110,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <span role="tooltip">
     <slot v-bind="{
       ref: (el: any) => reference = el,
-      class: 'underline decoration-dashed'
+      class: 'underline decoration-dotted decoration-2'
     }"></slot>
 
     <Teleport to="body">
       <div
         v-if="isShowing"
         ref="floating"
-        class="absolute py-1 px-2 rounded bg-slate-800 text-white text-sm max-w-xs"
+        class="absolute z-50 py-1 px-2 rounded bg-slate-800 text-white text-sm max-w-xs"
         :style="floatingStyles"
       >
         {{ text }}
-        <!-- <div
-          ref="floatingArrow"
-          :style="floatingArrowStyles"
-        ></div> -->
-    </div>
+      </div>
     </Teleport>
-  </div>
+  </span>
 </template>

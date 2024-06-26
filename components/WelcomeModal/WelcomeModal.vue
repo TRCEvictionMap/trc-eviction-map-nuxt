@@ -6,12 +6,12 @@ import CustomH4 from "./CustomH4.vue";
 
 const disclosures = useDisclosures();
 
-const showOnPageLoad = useLocalStorageRef(
-  "show-on-page-load",
-  true
+const dismiss = useLocalStorageRef(
+  "dismiss-welcome",
+  false
 );
 
-const show = ref(showOnPageLoad.value);
+const show = ref(!dismiss.value);
 
 function closeModal() {
   show.value = false;
@@ -48,8 +48,10 @@ const components = {
     </section>
     <section class="flex justify-end gap-4 px-6 py-4">
       <div class="flex items-center gap-2">
-        <label for="never-show">Show on page load</label>
-        <input id="never-show" type="checkbox" v-model="showOnPageLoad" />
+        <!-- <label for="never-show">Show on page load</label>
+        <input id="never-show" type="checkbox" v-model="dismiss" /> -->
+        <label for="never-show">Don't show this again</label>
+        <input type="checkbox" id="never-show" v-model="dismiss" >
       </div>
       <button class="px-6 py-2 rounded bg-trc-blue-600 text-white" @click="closeModal">
         Ok

@@ -35,7 +35,6 @@ interface FeatureIdMap {
 
 const useFeatureProperties = defineStore("feature-properties", () => {
     const data = ref<Record<SourceId, Record<string, DemographicFeatureProperties | EvictionFeatureProperties>>>({
-        "alder-district": {},
         "block-group": {},
     });
 

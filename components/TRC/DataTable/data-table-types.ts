@@ -14,7 +14,7 @@ type DataTableRow<Field extends string> = {
   id: string;
   fields: {
     [F in Field]: {
-      value: number;
+      value: number | string;
       text?: string;
       moe?: string | number;
       srOnly?: string;

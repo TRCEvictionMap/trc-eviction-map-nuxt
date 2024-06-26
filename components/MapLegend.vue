@@ -2,6 +2,10 @@
 import { useMapControls } from "~/stores/map-controls-store";
 import { interpolateFillRGBA } from "~/composables/use-interpolated-color-values";
 
+defineProps<{
+    position: Position
+}>();
+
 const interpolated = useInterpolatedColorValues();
 const controls = useMapControls();
 
@@ -37,9 +41,15 @@ const evictionStopSizes = computed(() =>
     <div
         v-if="controls.currentDemographicMetric !== 'none' || controls.currentEvictionMetric !== 'none'"
         class="
-            absolute bottom-8 right-2 self-end shadow-xl border rounded bg-white text-xs p-2 min-h-[90px]
-            sm:bottom-6 sm:p-4 sm:text-sm sm:min-h-[118px]
+            absolute self-end shadow-xl border rounded bg-white text-xs p-2
+            sm:p-3 sm:text-sm sm:min-h-[96px]
         "
+        :class="{
+            'bottom-8 right-2 sm:bottom-6': position === 'bottom-right',
+            'top-2 left-2': position === 'top-left',
+            'top-2 right-2': position === 'top-right',
+            'bottom-9 left-2 sm:bottom-8': position === 'bottom-left',
+        }"
     >
 
         <div class="flex space-x-4">
@@ -50,7 +60,7 @@ const evictionStopSizes = computed(() =>
                 </h2>
                 <div>
                     <div
-                        class="h-6 w-full"
+                        class="h-4 w-full"
                         :style="{
                             background: `linear-gradient(to right, ${interpolateFillRGBA(0.05)}, ${interpolateFillRGBA(0.8)})`
                         }"
@@ -88,9 +98,9 @@ const evictionStopSizes = computed(() =>
                     {{ evictionMetric }}
                 </h2>
                 <div>
-                    <div class="relative flex items-center h-8">
+                    <div class="relative flex items-center h-6">
                         <div class="border-b border-slate-300 w-full"></div>
-                        <div class="absolute left-0 w-full top-0 h-8 flex items-center">
+                        <div class="absolute left-0 w-full top-0 h-6 flex items-center">
                             <div class="absolute left-[10%]">
                                 <div
                                     class="-translate-x-[50%] rounded-full bg-trc-orange-400 border border-black box-content"

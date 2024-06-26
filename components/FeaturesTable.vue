@@ -3,7 +3,13 @@ import { useFeatureProperties } from "~/stores/feature-properties-store";
 import { dataTableRowsAndCols, type DataTableColumn, type DataTableRow } from "./TRC/DataTable/data-table-types";
 import { useMapControls } from "~/stores/map-controls-store";
 import { useFeatureState } from "~/stores/feature-state-store";
+import { useSettings } from "~/stores/settings-store";
 
+const emit = defineEmits<{
+  "resizeX": [delta: number];
+}>();
+
+const settings = useSettings();
 const controls = useMapControls();
 const featureProperties = useFeatureProperties();
 const featureState = useFeatureState();
@@ -215,56 +221,23 @@ function setColumnPin(field: string, pinned: boolean) {
   }
 }
 
-const map = await useMap();
-
-onMounted(() => { map.resize() });
-
-const panelWidth = useLocalStorageRef("table-panel-width", window.innerWidth / 2);
-
-function resizePanelWidth(delta: number) {
-  const maxWidth = window.innerWidth - 50;
-  const newWidth = panelWidth.value + delta;
-
-  if (newWidth < maxWidth) {
-    panelWidth.value = newWidth;
-    map.resize();
-  }
-}
-
-const selectedFeatures = computed({
-  get() {
-    return featureState.selectedFeatures;
-  },
-  set(rowIds: string[]) {
-    featureState._features = rowIds;
-  },
-});
-
 </script>
 
 <template>
-  <div
-    class="relative p-4 flex flex-col gap-6 border-r bg-white rounded overflow-hidden"
-    :style="{ width: `${panelWidth}px` }"
-  >
-    <TRCResizeX
-      @moveX="resizePanelWidth"
-      class="w-2 z-30"
-    />
-    <h1 class="font-bold text-xl mt-2">
-      Eviction and Demographic Data
-    </h1>
-    <TRCDataTable
-      class="max-h-[calc(100%-140px)] rounded bg-white"
-      :initalPageSize="20"
-      :columns="columns"
-      :rows="rows"
-      enableSelectAll
-      v-model="selectedFeatures"
-      @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
-      @row:mouseleave="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', false)"
-      @row:mouseover="rowId => featureState.setFeatureState('d_' + rowId, 'isHovered', 'card')"
-      @rows:select="rowIds => featureState._features = rowIds"
-    />
-  </div>
+  <TRCDataTable
+    class="max-h-[calc(100%-140px)] rounded bg-white"
+    :initalPageSize="20"
+    :columns="columns"
+    :rows="rows"
+    :hoveredRow="featureState.hoveredFeature"
+    v-model="featureState.selectedFeatures"
+    @col:pin="({ field, pinned }) => setColumnPin(field, pinned)"
+    @row:mouseleave="rowId => featureState.setFeatureState(rowId, 'isHovered', false)"
+    @row:mouseover="rowId => featureState.setFeatureState(rowId, 'isHovered', 'card')"
+    @rows:select="rowIds => featureState._features = rowIds"
+  />
 </template>
+
+<style>
+
+</style>

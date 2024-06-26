@@ -39,12 +39,12 @@ const _sortBy = computed({
 
 const sortDirectionOptions: TRCSelectOption<SortDirection>[] = [
   {
-    value: "asc",
-    text: "low to high",
-  },
-  {
     value: "desc",
     text: "high to low",
+  },
+  {
+    value: "asc",
+    text: "low to high",
   },
 ];
 
@@ -61,18 +61,6 @@ const _sortDirection = computed({
 
 <template>
   <div class="p-2 flex items-center gap-4 relative z-30">
-    <div class="flex items-center gap-2">
-      Year
-      <TRCSelect
-        :options="controls.yearOptions"
-        v-model="controls.currentYear"
-      >
-        <template #button="{ buttonText }">
-          <span class="font-bold">{{ buttonText }}</span>
-        </template>
-      </TRCSelect>
-    </div>
-    <div class="border  h-6"></div>
     <div class="flex items-center gap-2">
       Sort by
       <TRCSelect

@@ -9,6 +9,7 @@ const props = defineProps<{
   initalPageSize: 10 | 20 | 50;
   enableSelectAll?: boolean;
   maxSelectableRows?: number;
+  hoveredRow?: string;
 }>();
 
 const emit = defineEmits<{
@@ -24,15 +25,19 @@ const tableColumns = useTableColumns(props.columns);
 const {
   incrementSortState,
   setSortState,
-  clearSortState,
   sortBy,
   sortDirection,
   data: sortedRows,
 } = useSort<Field, DataTableRow<Field>>(
   computed(() => props.rows),
-  (a, b, sortBy, direction) => direction === "asc"
-    ? a.fields[sortBy].value - b.fields[sortBy].value
-    : b.fields[sortBy].value - a.fields[sortBy].value
+  (a, b, sortBy, direction) => {
+    if (typeof a.fields[sortBy].value === "number") {
+      const _a = a.fields[sortBy].value as number;
+      const _b = b.fields[sortBy].value as number;
+      return direction === "asc" ? _a - _b : _b - _a;
+    }
+    return 0;
+  }
 );
 
 const visibleRows: Ref<DataTableRow<Field>[]> = ref([]);
@@ -58,14 +63,14 @@ function onRowSelect(rowId: string) {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col">
     <TRCDataTableTop
       :columns="columns"
       :sortBy="sortBy"
       :sortDirection="sortDirection"
       @col:sort:direction="setSortState"
     />
-    <div class="h-full overflow-auto">
+    <div class="h-full overflow-auto flex-1">
       <TRCDataTableHeader
         :sortBy="sortBy"
         :sortDirection="sortDirection"
@@ -85,6 +90,7 @@ function onRowSelect(rowId: string) {
           :data="(row as DataTableRow<Field>)"
           :columns="tableColumns"
           :selectedRows="modelValue"
+          :hoveredRow="hoveredRow"
           @row:mouseleave="$emit('row:mouseleave', $event)"
           @row:mouseover="$emit('row:mouseover', $event)"
           @row:select="onRowSelect"

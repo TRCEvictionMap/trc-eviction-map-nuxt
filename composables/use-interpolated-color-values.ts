@@ -4,10 +4,16 @@ import { useMapControls } from "~/stores/map-controls-store";
 const STEPS = [0, 0.1, 0.5, 0.9];
 
 const FILL_RGB = [120, 151, 181];
+const ORANGE_RGB = [244, 133, 69];
 
-const RADIUS = 20;
+const RADIUS = 16;
 
 const CIRCLE_COLOR = "#F48545";
+
+function interpolateOrange(alpha: number) {
+    const [r, g, b] = ORANGE_RGB;
+    return `rgba(${r},${g},${b},${alpha})`;
+}
 
 function interpolateFillRGBA(alpha: number) {
     const [r, g, b] = FILL_RGB;
@@ -96,4 +102,4 @@ function useInterpolatedColorValues() {
     });
 }
 
-export { useInterpolatedColorValues, interpolateCircleRadius, interpolateFillRGBA, CIRCLE_COLOR };
+export { useInterpolatedColorValues, interpolateCircleRadius, interpolateFillRGBA, CIRCLE_COLOR, interpolateOrange };

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import "mapbox-gl/dist/mapbox-gl.css";
 
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-
-import { nextTick } from "#imports";
 import { Disclosure } from "@headlessui/vue";
 
 import { useMapMeta } from "~/stores/map-meta-store";
@@ -14,28 +11,28 @@ import { useSettings } from "~/stores/settings-store";
 import { useDisclosures } from "~/stores/disclosures-store";
 import WelcomeModal from "~/components/WelcomeModal/WelcomeModal.vue";
 import { useFeatureFlags } from "~/stores/feature-flags";
+import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 useHead({
   title: "Eviction Map - Tenant Resource Center"
 });
 
 const router = useRouter();
-const mapControls = useMapControls();
+const mapControls = useMapControlsV2();
 const mapMeta = useMapMeta();
 const featureState = useFeatureState();
 const settings = useSettings();
 const disclosures = useDisclosures();
-const flags = useFeatureFlags();
 
 const konami = useKonamiCode();
 
 const unwatch = watchEffect(() => {
   router.replace({
     query: {
+      dates: (mapControls.currentMonthRange ?? []).join(","),
       source: mapControls.currentSource,
       year: mapControls.currentYear,
-      e_metric: mapControls.currentEvictionMetric,
-      d_metric: mapControls.currentDemographicMetric,
+      d_metric: mapControls.currentChoroplethMetric,
       zoom: mapMeta.zoom,
       center: mapMeta.lngLat
         ? mapMeta.lngLat.join(",")
@@ -44,6 +41,7 @@ const unwatch = watchEffect(() => {
         ? featureState.selectedFeatures.join(",")
         : undefined,
       showDetails: disclosures.showDetails ? "t" : "f",
+      heatmap: mapControls.showHeatmap ? "t" : "f",
     },
   });
 });
@@ -73,62 +71,41 @@ await useAsyncData(
 </script>
 
 <template>
-  <div class="absolute top-0 w-full h-full flex flex-col">
+  <div class="absolute w-full min-h-screen flex flex-col">
     <TheHeader />
-    <template v-if="!settings.options.showDataTable">
-      <ClientOnly>
-        <Disclosure :defaultOpen="disclosures.showDetails">
-          <TheMap>
-            <MapControls position="center" />
-            <MapLayers />
-            <MapLegend v-if="!disclosures.showDetails" />
-            <DetailCardGroup v-if="!disclosures.showDetails && !settings.options.showAlderDistricts" />
-          </TheMap>
-          <Transition name="details-drawer">
-            <DetailDisclosurePanel static v-if="disclosures.showDetails" />
-          </Transition>
-        </Disclosure>
-        <WelcomeModal />
-      </ClientOnly>
-    </template>
-    <template v-else>
-      <ClientOnly>
-        <TheMap>
-          <template #right>
-            <FeaturesTable />
-          </template>
-          <MapControls position="left" />
-          <MapLayers />
-          <MapLegend />
-        </TheMap>
-        <WelcomeModal />
-      </ClientOnly>
-    </template>
     <ClientOnly>
-      <SettingsDialog
-        :open="konami.didKonami || settings.showDialog"
-        @close="onCloseSettingsMenu"
-      />
+      <TheMapProviderV2 v-if="true">
+        <template #left>
+          <LeftPanelContent />
+        </template>
+        <template #map-overlay>
+          <MapLayers />
+          <MapControlsV2 v-if="!settings.options.showLeftPanel" isFloating position="left" />
+          <MapLegendV2 position="bottom-right" />
+        </template>
+        <template #bottom="{ height }">
+          <FeaturesTableV2 :style="{ height: `${height - 30}px` }" />
+        </template>
+      </TheMapProviderV2>
+      <TheMapProvider v-else>
+        <template #right>
+          <div class="space-y-4">
+            <TransitionGroup name="features">
+              <FeatureDetailV2 v-for="featureId in featureState.selectedFeatures" :key="featureId" :featureId="featureId" />
+            </TransitionGroup>
+          </div>
+        </template>
+        <template #map-overlay>
+          <MapLayers />
+          <MapControls position="left" />
+          <MapLegend position="bottom-right" />
+        </template>
+        <template #bottom="{ height }">
+          <FeaturesTable :style="{ height: `${height - 30}px` }" />
+        </template>
+      </TheMapProvider>
+      <WelcomeModal />
     </ClientOnly>
   </div>
 </template>
 
-<style scoped>
-.details-drawer-enter-active {
-  animation: details-drawer-open 0.1s;
-}
-
-.details-drawer-leave-active {
-  animation: details-drawer-open 0.1s reverse;
-}
-
-@keyframes details-drawer-open {
-  from {
-    height: 0;
-  }
-
-  to {
-    height: 50%;
-  }
-}
-</style>
