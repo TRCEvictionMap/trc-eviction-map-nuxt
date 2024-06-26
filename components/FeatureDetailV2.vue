@@ -55,51 +55,22 @@ function onMouseleave() {
   featureState.setFeatureState(featureId, "isHovered", false);
 }
 
-const log = logger("flyTo");
-
 function flyTo() {
-  const { currentSource } = controls;
-  const { choroplethLayerId } = useLayerIds(currentSource);
+  const { size, lon, lat } = featureProperties.bgPolygonCenter[featureId];
 
-  const [feature] = map.querySourceFeatures(currentSource, {
-    sourceLayer: choroplethLayerId,
-    filter: ["==", "id", featureId]
+  const zoom = (() => {
+    if (size > 0.2) return 10.5;
+    if (size > 0.15) return 11;
+    if (size > 0.05) return 11.5;
+    if (size > 0.01) return 13;
+    return 14;
+  })();
+
+  map.flyTo({
+    center: [lon, lat],
+    essential: true,
+    zoom,
   });
-
-  if (feature.geometry.type === "Polygon") {
-    const coords = feature.geometry.coordinates.flat();
-
-    let maxLon = 0;
-    let maxLat = 0;
-
-    let minLon = Infinity;
-    let minLat = Infinity;
-
-    for (let i = 0; i < coords.length; i++) {
-      maxLon = Math.max(maxLon, Math.abs(coords[i][0]));
-      maxLat = Math.max(maxLat, coords[i][1]);
-
-      minLon = Math.min(minLon, Math.abs(coords[i][0]));
-      minLat = Math.min(minLat, coords[i][1]);
-    }
-
-    const maxLon_ = maxLon;
-    maxLon = -minLon;
-    minLon = -maxLon_;
-
-    const size = Math.max(maxLon - minLon, maxLat - minLat);
-
-    log.info({ size, minLat, minLon, maxLat, maxLon })
-
-    map.flyTo({
-      center: [
-        minLon - (minLon - maxLon) / 2,
-        maxLat - (maxLat - minLat) / 2,
-      ],
-      essential: true,
-      zoom: size > 0.2 ? 10 : size > 0.1 ? 11 : 12,
-    });
-  }
 }
 
 </script>
@@ -142,9 +113,18 @@ function flyTo() {
           </span>
         </TRCTooltip>
       </p>
-      <button @click="flyTo">
-        Fly to
-      </button>
+      <div class="flex justify-end">
+        <button
+          @click="flyTo"
+          class="
+            outline-none px-2 py-1 rounded bg-slate-800 text-white font-semibold
+            hover:bg-slate-950/80
+            focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:bg-slate-800
+          "
+        >
+          Fly to
+        </button>
+      </div>
     </div>
     <div v-else>
       ...loading

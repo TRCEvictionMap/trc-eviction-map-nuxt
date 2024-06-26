@@ -22,11 +22,19 @@ function getProperties<
   );
 }
 
+type PolygonCenterMap = Record<string, {
+  lon: number;
+  lat: number;
+  /** a number representing the largest difference between latitudes or longitudes */
+  size: number;
+}>;
+
 const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {  
   const controls = useMapControlsV2();
 
   const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
   const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
+  const bgPolygonCenter: Ref<PolygonCenterMap> = ref({});
 
   const currentMonthRangeFilingCount = computed(() => {
     const [startMonth, endMonth] = controls.currentMonthRange;
@@ -74,6 +82,41 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
           )
         ) as FeatureProperties.ChoroplethV2["race"],
       }));
+
+      bgPolygonCenter.value = data.features.reduce(
+        (accum: PolygonCenterMap, feature) => {
+          const coords = feature.geometry.coordinates.flat();
+
+          let maxLon = 0;
+          let maxLat = 0;
+      
+          let minLon = Infinity;
+          let minLat = Infinity;
+      
+          for (let i = 0; i < coords.length; i++) {
+            maxLon = Math.max(maxLon, Math.abs(coords[i][0]));
+            maxLat = Math.max(maxLat, coords[i][1]);
+      
+            minLon = Math.min(minLon, Math.abs(coords[i][0]));
+            minLat = Math.min(minLat, coords[i][1]);
+          }
+      
+          // Do a little swapsies because we're assuming we're in
+          // the North Western hemisphere.
+          const maxLon_ = maxLon;
+          maxLon = -minLon;
+          minLon = -maxLon_;
+    
+          accum[feature.id as string] = {
+            lat: maxLat - (maxLat - minLat) / 2,
+            lon: minLon - (minLon - maxLon) / 2,
+            size: Math.max(maxLon - minLon, maxLat - minLat),
+          };
+
+          return accum;
+        },
+        {}
+      )
     }
   }
 
@@ -83,7 +126,7 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
     }
   }
 
-  return { bgChoropleth, bgHeatmap, loadChoropleth, loadHeatmap, currentMonthRangeFilingCount };
+  return { bgChoropleth, bgHeatmap, bgPolygonCenter, loadChoropleth, loadHeatmap, currentMonthRangeFilingCount };
 });
 
 export { useFeaturePropertiesV2 };

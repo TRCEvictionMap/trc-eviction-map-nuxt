@@ -148,8 +148,15 @@ namespace FeatureProperties {
 }
 
 namespace FeatureCollections {
-    export type ChoroplethV2 = GeoJSON.FeatureCollection<any, FeatureProperties.ChoroplethV2>;
-    export type HeatmapV2 = GeoJSON.FeatureCollection<any, FeatureProperties.HeatmapV2>;
+    export type ChoroplethV2 = GeoJSON.FeatureCollection<
+        GeoJSON.Polygon,
+        FeatureProperties.ChoroplethV2
+    >;
+    
+    export type HeatmapV2 = GeoJSON.FeatureCollection<
+        GeoJSON.Polygon,
+        FeatureProperties.HeatmapV2
+    >;
 }
 
 namespace Range {
