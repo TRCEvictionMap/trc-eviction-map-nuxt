@@ -7,12 +7,15 @@ import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 const { featureId } = defineProps<{ featureId: string }>();
 
+const map = await useMap();
 const controls = useMapControlsV2();
 const flags = useFeatureFlags();
 const featureState = useFeatureState();
 const featureProperties = useFeaturePropertiesV2();
 
+
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
+
 const featureColor = computed(() => {
   if (!flags.disableMultiColorFeatureOutline) {
     return featureState.selectedFeatureColors[featureId];
@@ -52,6 +55,52 @@ function onMouseleave() {
   featureState.setFeatureState(featureId, "isHovered", false);
 }
 
+const log = logger("flyTo");
+
+function flyTo() {
+  const { currentSource } = controls;
+  const { choroplethLayerId } = useLayerIds(currentSource);
+
+  const [feature] = map.querySourceFeatures(currentSource, {
+    sourceLayer: choroplethLayerId,
+    filter: ["==", "id", featureId]
+  });
+
+  if (feature.geometry.type === "Polygon") {
+    const coords = feature.geometry.coordinates.flat();
+
+    let maxLon = 0;
+    let maxLat = 0;
+
+    let minLon = Infinity;
+    let minLat = Infinity;
+
+    for (let i = 0; i < coords.length; i++) {
+      maxLon = Math.max(maxLon, Math.abs(coords[i][0]));
+      maxLat = Math.max(maxLat, coords[i][1]);
+
+      minLon = Math.min(minLon, Math.abs(coords[i][0]));
+      minLat = Math.min(minLat, coords[i][1]);
+    }
+
+    const maxLon_ = maxLon;
+    maxLon = -minLon;
+    minLon = -maxLon_;
+
+    const size = Math.max(maxLon - minLon, maxLat - minLat);
+
+    log.info({ size, minLat, minLon, maxLat, maxLon })
+
+    map.flyTo({
+      center: [
+        minLon - (minLon - maxLon) / 2,
+        maxLat - (maxLat - minLat) / 2,
+      ],
+      essential: true,
+      zoom: size > 0.2 ? 10 : size > 0.1 ? 11 : 12,
+    });
+  }
+}
 
 </script>
 
@@ -93,6 +142,9 @@ function onMouseleave() {
           </span>
         </TRCTooltip>
       </p>
+      <button @click="flyTo">
+        Fly to
+      </button>
     </div>
     <div v-else>
       ...loading
