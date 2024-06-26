@@ -34,7 +34,7 @@ const range = computed(
       class="
         flex flex-col justify-center items-start flex-shrink-0 w-full
         p-4 gap-y-4
-        rounded flex-1 max-w-[480px]
+        rounded flex-1 max-w-[490px]
         bg-white border
       "
       :class="{

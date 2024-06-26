@@ -13,7 +13,7 @@ provide("map", map);
 
 const resizeActive = ref(false);
 
-const sidePanelWidth = useLocalStorageRef("side-panel-width", 512);
+const sidePanelWidth = useLocalStorageRef("side-panel-width", 520);
 const bottomPanelHeight = useLocalStorageRef("bottom-panel-height", 300);
 
 const mainPanelWidth = computed(() => window.innerWidth - sidePanelWidth.value);
@@ -45,7 +45,7 @@ function resizeMap() {
       >
         <TRCResize
           :min="300"
-          :max="512"
+          :max="520"
           v-model="sidePanelWidth"
           direction="horizontal"
           position="right"
