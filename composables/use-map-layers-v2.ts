@@ -261,7 +261,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
             "interpolate",
             ["linear"],
             ["number", ["get", CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP[metric], ["properties"]]],
-            ...interpolated.choropleth[metric]
+            ...interpolated.choropleth[metric].array
           ]
         );
       } else {
