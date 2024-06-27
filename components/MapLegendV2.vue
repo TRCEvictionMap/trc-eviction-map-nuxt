@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { CSSProperties } from "vue";
 import { interpolateFillRGBA } from "~/composables/use-interpolated-color-values";
-import { useInterpolatedColors } from "~/stores/interpolated-color-values-store";
+import { useInterpolatedColors, BLUE } from "~/stores/interpolated-color-values-store";
 import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 defineProps<{
@@ -17,13 +18,27 @@ const choroplethMetricName = computed(() =>
   )?.text
 );
 
+// function getStop(stops: (number | string)[], stop: number) {
+//   const halfStopsLength = Math.floor((stops.length - 1) / 2);
+//   const stopIdx = Math.floor(halfStopsLength * stop * 2);
+//   return [stops[stopIdx], stops[stopIdx + 1]];
+// }
 
-const choroplethStops = computed(() =>
-  // Object.keys(interpolated[controls.currentDemographicMetric])
-  Object.keys(interpolated.choropleth[controls.currentChoroplethMetric])
-);
+const choroplethStops = computed(() => {
+  const { entries } = interpolated.choropleth[controls.currentChoroplethMetric];
+
+  return [0.1, 0.5, 0.9].map(
+    (stop) => entries[Math.round(stop * (entries.length - 1))]
+  );
+});
 
 
+const gradientStyle = computed((): CSSProperties => ({
+  background: `linear-gradient(
+    to right,
+    ${choroplethStops.value.map(([_, hex]) => `${hex}88`).join(", ")}
+  )`,
+}))
 
 </script>
 
@@ -49,27 +64,25 @@ const choroplethStops = computed(() =>
         <div>
           <div
             class="h-6 w-full"
-            :style="{
-              background: `linear-gradient(to right, ${interpolateFillRGBA(0.05)}, ${interpolateFillRGBA(0.8)})`
-            }"
+            :style="gradientStyle"
           ></div>
           <div class="relative h-8 -bottom-1">
             <div class="absolute left-[10%]">
               <div class="h-2 border-r border-slate-400 w-[1px]"></div>
               <div class="-translate-x-[50%]">
-                {{ choroplethStops[1] }}
+                {{ choroplethStops[0][0] }}
               </div>
             </div>
             <div class="absolute left-[50%]">
               <div class="h-2 border-r border-slate-400 w-[1px]"></div>
               <div class="-translate-x-[50%]">
-                {{ choroplethStops[2] }}
+                {{ choroplethStops[1][0] }}
               </div>
             </div>
             <div class="absolute left-[90%]">
               <div class="h-2 border-r border-slate-400 w-[1px]"></div>
               <div class="-translate-x-[50%]">
-                {{ choroplethStops[3] }}
+                {{ choroplethStops[2][0] }}
               </div>
             </div>
           </div>

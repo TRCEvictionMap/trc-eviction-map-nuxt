@@ -15,34 +15,27 @@ const BLUE = [
 ];
 
 function interpolateColor(maxValue: number, gradient: string[]) {
-  return gradient.flatMap((color, step) => [Math.round(maxValue * (step / gradient.length)), color])
+  return gradient.map((color, step) => [Math.round(maxValue * (step / gradient.length)), color])
 }
 
-// function interpolateRange(maxValue: number, range: number[]): [number, number][] {
-//   return range.map((value, step) => [
-//     Math.round(maxValue * (step / range.length)),
-//     value
-//   ]);
-// }
+interface Interpolated {
+  array: (number | string)[];
+  entries: (number | string)[][];
+}
+
+function createInterpolated(maxValue: number, gradient: string[]): Interpolated {
+  const interpolated = interpolateColor(maxValue, gradient);
+  return {
+    array: interpolated.flat(),
+    entries: interpolated,
+  };
+}
 
 const useInterpolatedColors = defineStore("interpolated-colors", () => {
   const featureProperties = useFeaturePropertiesV2();
 
-  // const heatmap = computed((): [number, number][] => {
-
-  //   /**
-  //    * The largest filing count at a given place and time across the whole dataset
-  //    */
-  //   const maxFilings = Object.values(featureProperties.bgHeatmap).reduce(
-  //     (accum, { c: count }) => Math.max(accum, count),
-  //     0
-  //   );
-    
-  //   return interpolateRange(maxFilings, [0, maxFilings]);
-  // });
-
   const choropleth = computed(
-    (): Record<ChoroplethMetric, (number | string)[]> => {
+    (): Record<ChoroplethMetric, Interpolated> => {
 
       const {
         maxPovertyRate,
@@ -58,10 +51,13 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
       );
 
       return {
-        none: [],
-        renter_count: interpolateColor(maxRenterCount, BLUE),
-        renter_rate: interpolateColor(maxRenterRate, BLUE),
-        poverty_rate: interpolateColor(maxPovertyRate, BLUE),
+        none: {
+          array: [],
+          entries: [],
+        },
+        renter_count: createInterpolated(maxRenterCount, BLUE),
+        renter_rate: createInterpolated(maxRenterRate, BLUE),
+        poverty_rate: createInterpolated(maxPovertyRate, BLUE),
       }
     }
   );
@@ -69,4 +65,4 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
   return { choropleth };
 });
 
-export { useInterpolatedColors };
+export { useInterpolatedColors, BLUE };
