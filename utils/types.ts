@@ -122,15 +122,15 @@ namespace FeatureProperties {
         pr: number;
         /** poverty rate margin of error */
         prm: number;
-        race: {
-            pct_wh: number;
-            pct_bl: number;
-            pct_ai: number;
-            pct_as: number;
-            pct_pi: number;
-            pct_other: number;
-            pct_multi: number;
-        };
+        // race: {
+        pct_wh: number;
+        pct_bl: number;
+        pct_ai: number;
+        pct_as: number;
+        pct_pi: number;
+        pct_other: number;
+        pct_multi: number;
+        // };
         filings: Record<string, {
             /** filing count */
             c: number;

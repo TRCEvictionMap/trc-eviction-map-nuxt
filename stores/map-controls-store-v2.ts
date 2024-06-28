@@ -21,6 +21,13 @@ const CHOROPLETH_METRICS = [
   "renter_count",
   "renter_rate",
   "poverty_rate",
+  "pct_american_indian",
+  "pct_asian",
+  "pct_black",
+  "pct_multi",
+  "pct_other",
+  "pct_pacific_islander",
+  "pct_white",
   "none"
 ] as const;
 
@@ -50,16 +57,44 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
     value: "none",
   },
   {
-    text: "Renter-Occupied Households",
+    text: "Total renter-occupied",
     value: "renter_count",
   },
   {
-    text: "Percent Renter-Occupied",
+    text: "% Renter-occupied",
     value: "renter_rate",
   },
   {
-    text: "Poverty Rate",
+    text: "% families below poverty Line",
     value: "poverty_rate",
+  },
+  {
+    text: "% American Indian",
+    value: "pct_american_indian",
+  },
+  {
+    text: "% Asian",
+    value: "pct_asian",
+  },
+  {
+    text: "% Black",
+    value: "pct_black",
+  },
+  {
+    text: "% Multiple Races",
+    value: "pct_multi",
+  },
+  {
+    text: "% Other",
+    value: "pct_other",
+  },
+  {
+    text: "% Pacific Islander",
+    value: "pct_pacific_islander",
+  },
+  {
+    text: "% White",
+    value: "pct_white",
   },
 ];
 
@@ -95,7 +130,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentSource = ref<SourceId>("block-group");
 
-  const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
+  const currentChoroplethMetric = ref<ChoroplethMetric>("renter_count");
 
   const availableMonthRangeValues = computed(() =>
     Object

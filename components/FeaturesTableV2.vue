@@ -126,15 +126,13 @@ const { columns, rows } = dataTableRowsAndCols({
             rrm: renter_rate_moe,
             pr: poverty_rate,
             prm: poverty_rate_moe,
-            race: {
-              pct_ai,
-              pct_as,
-              pct_bl,
-              pct_multi,
-              pct_other,
-              pct_pi,
-              pct_wh,
-            }
+            pct_ai,
+            pct_as,
+            pct_bl,
+            pct_multi,
+            pct_other,
+            pct_pi,
+            pct_wh,
           } = featureProperties.bgChoropleth[featureId];
 
           return {

@@ -46,15 +46,16 @@ const range = computed(
           <h2 class="text-lg font-bold">Map Filters</h2>
           <div class="flex items-center flex-wrap gap-y-4 gap-x-6">
             <TRCSelect
-              label="Demographic Metric"
-              class="min-w-[208px]"
-              :options="controls.choroplethMetricOptions"
-              v-model="controls.currentChoroplethMetric"
-            />
-            <TRCSelect
               label="Geography"
+              class="z-10"
               :options="controls.sourceOptions"
               v-model="controls.currentSource"
+            />
+            <TRCSelect
+              label="Demographic Metric"
+              class="min-w-[208px] z-10"
+              :options="controls.choroplethMetricOptions"
+              v-model="controls.currentChoroplethMetric"
             />
             <TRCSwitch
               stackLabel

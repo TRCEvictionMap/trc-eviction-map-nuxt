@@ -28,15 +28,13 @@ with block_group_demographics as (
         (poverty.data -> 'B17010_002M')::float / (poverty.data -> 'B17010_001E')::float * 1000
       ) / 10
     end poverty_rate_moe,
-    jsonb_build_object(
-      'pct_wh', round((race.data -> 'P1_003N')::float / (race.data -> 'P1_001N')::float * 1000) / 10,
-      'pct_bl', round((race.data -> 'P1_004N')::float / (race.data -> 'P1_001N')::float * 1000) / 10,
-      'pct_ai', round((race.data -> 'P1_005N')::float / (race.data -> 'P1_001N')::float * 1000) / 10,
-      'pct_as', round((race.data -> 'P1_006N')::float / (race.data -> 'P1_001N')::float * 1000) / 10,
-      'pct_pi', round((race.data -> 'P1_007N')::float / (race.data -> 'P1_001N')::float * 1000) / 10,
-      'pct_other', round(((race.data -> 'P1_008N')::float / (race.data -> 'P1_001N')::float) * 1000) / 10,
-      'pct_multi', round(((race.data -> 'P1_009N')::float / (race.data -> 'P1_001N')::float) * 1000) / 10
-    ) race
+    round((race.data -> 'P1_003N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_wh,
+    round((race.data -> 'P1_004N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_bl,
+    round((race.data -> 'P1_005N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_ai,
+    round((race.data -> 'P1_006N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_as,
+    round((race.data -> 'P1_007N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_pi,
+    round(((race.data -> 'P1_008N')::float / (race.data -> 'P1_001N')::float) * 1000) / 10 pct_other,
+    round(((race.data -> 'P1_009N')::float / (race.data -> 'P1_001N')::float) * 1000) / 10 pct_multi
   from (
     select tract, block_group, (data #>> '{}')::jsonb data
     from census_data where code = 'B25008' and year = '2022'
@@ -111,7 +109,13 @@ from (
       'rrm', props.renter_rate_moe,
       'pr', props.poverty_rate,
       'prm', props.poverty_rate_moe,
-      'race', props.race
+      'pct_wh', props.pct_wh,
+      'pct_bl', props.pct_bl,
+      'pct_ai', props.pct_ai,
+      'pct_as', props.pct_as,
+      'pct_pi', props.pct_pi,
+      'pct_other', props.pct_other,
+      'pct_multi', props.pct_multi
     )
   ) feature
   from (

@@ -31,6 +31,10 @@ function createInterpolated(maxValue: number, gradient: string[]): Interpolated 
   };
 }
 
+function maxPercent(currentMax: number, test: number): number {
+  return Math.min(100, Math.max(currentMax, test));
+}
+
 const useInterpolatedColors = defineStore("interpolated-colors", () => {
   const featureProperties = useFeaturePropertiesV2();
 
@@ -40,14 +44,39 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
       const {
         maxPovertyRate,
         maxRenterCount,
-        maxRenterRate
+        maxRenterRate,
+        maxPctAsian,
+        maxPctAmericanIndian,
+        maxPctBlack,
+        maxPctMulti,
+        maxPctOther,
+        maxPctPacificIslander,
+        maxPctWhite,
       } = Object.values(featureProperties.bgChoropleth).reduce(
         (accum, item) => ({
-          maxRenterRate: Math.max(accum.maxRenterRate, item.rr),
+          maxPovertyRate: maxPercent(accum.maxPovertyRate, item.pr),
           maxRenterCount: Math.max(accum.maxRenterCount, item.rc),
-          maxPovertyRate: Math.max(accum.maxPovertyRate, item.pr),
+          maxRenterRate: maxPercent(accum.maxRenterRate, item.rr),
+          maxPctAsian: maxPercent(accum.maxPctAsian, item.pct_as),
+          maxPctAmericanIndian: maxPercent(accum.maxPctAmericanIndian, item.pct_ai),
+          maxPctBlack: maxPercent(accum.maxPctBlack, item.pct_bl),
+          maxPctMulti: maxPercent(accum.maxPctMulti, item.pct_multi),
+          maxPctOther: maxPercent(accum.maxPctOther, item.pct_other),
+          maxPctPacificIslander: maxPercent(accum.maxPctPacificIslander, item.pct_pi),
+          maxPctWhite: maxPercent(accum.maxPctWhite, item.pct_wh),
         }),
-        { maxRenterCount: 0, maxRenterRate: 0, maxPovertyRate: 0 }
+        {
+          maxPovertyRate: 0,
+          maxRenterCount: 0,
+          maxRenterRate: 0,
+          maxPctAsian: 0,
+          maxPctAmericanIndian: 0,
+          maxPctBlack: 0,
+          maxPctMulti: 0,
+          maxPctOther: 0,
+          maxPctPacificIslander: 0,
+          maxPctWhite: 0,
+        }
       );
 
       return {
@@ -56,8 +85,15 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
           entries: [],
         },
         renter_count: createInterpolated(maxRenterCount, BLUE),
-        renter_rate: createInterpolated(maxRenterRate, BLUE),
-        poverty_rate: createInterpolated(maxPovertyRate, BLUE),
+        renter_rate: createInterpolated(100, BLUE),
+        poverty_rate: createInterpolated(100, BLUE),
+        pct_american_indian: createInterpolated(100, BLUE),
+        pct_asian: createInterpolated(100, BLUE),
+        pct_black: createInterpolated(100, BLUE),
+        pct_multi: createInterpolated(100, BLUE),
+        pct_other: createInterpolated(100, BLUE),
+        pct_pacific_islander: createInterpolated(100, BLUE),
+        pct_white: createInterpolated(100, BLUE),
       }
     }
   );

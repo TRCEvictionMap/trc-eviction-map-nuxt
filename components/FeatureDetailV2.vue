@@ -73,6 +73,10 @@ function flyTo() {
   });
 }
 
+function scrollIntoViewInTable() {
+
+}
+
 </script>
 
 <template>
@@ -113,17 +117,17 @@ function flyTo() {
           </span>
         </TRCTooltip>
       </p>
-      <div class="flex justify-end">
+      <div class="flex justify-end gap-2">
+        <!-- <button @click="scrollIntoViewInTable" class="button">
+          Pin row in table
+        </button> -->
         <button
           @click="flyTo"
-          class="
-            outline-none px-2 py-1 rounded bg-slate-800 text-white font-semibold
-            hover:bg-slate-950/80
-            focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:bg-slate-800
-          "
+          class="button"
         >
-          Fly to
+          Fly to on map
         </button>
+       
       </div>
     </div>
     <div v-else>
@@ -131,3 +135,14 @@ function flyTo() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.button {
+  @apply outline-none px-2 py-1 rounded font-semibold transition border border-transparent
+        hover:border-slate-900
+        focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:border-slate-800
+  /* @apply outline-none px-2 py-1 rounded font-semibold transition
+        hover:bg-slate-900 hover:text-white
+        focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:bg-slate-800 focus:text-white */
+  }
+</style>

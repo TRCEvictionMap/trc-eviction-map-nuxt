@@ -76,11 +76,13 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
         rrm: formatPercent(props.rrm),
         pr: formatPercent(props.pr),
         prm: formatPercent(props.prm),
-        race: Object.fromEntries(
-          Object.entries(props.race).map(
-            ([key, value]) => [key, formatPercent(value)]
-          )
-        ) as FeatureProperties.ChoroplethV2["race"],
+        pct_ai: formatPercent(props.pct_ai),
+        pct_as: formatPercent(props.pct_as),
+        pct_bl: formatPercent(props.pct_bl),
+        pct_multi: formatPercent(props.pct_multi),
+        pct_other: formatPercent(props.pct_other),
+        pct_pi: formatPercent(props.pct_pi),
+        pct_wh: formatPercent(props.pct_wh),
       }));
 
       bgPolygonCenter.value = data.features.reduce(
