@@ -43,7 +43,7 @@ const range = computed(
     >
       <div class="hidden sm:block relative z-10 space-y-4">
         <div class="space-y-2">
-          <h2 class="text-lg font-bold">Map Filters</h2>
+          <h2 class="text-lg font-bold">Map Layers</h2>
           <div class="flex items-center flex-wrap gap-y-4 gap-x-6">
             <TRCSelect
               label="Geography"
@@ -68,9 +68,9 @@ const range = computed(
       <div class="w-full border"></div>
       <div class="flex flex-col gap-4 w-full">
         <div class="space-y-2 flex flex-col">
-          <h2 class="text-lg font-bold">Filing Date Range</h2>
+          <h2 class="text-lg font-bold">Date Filters</h2>
           <p>
-            Use these controls to adjust the window of time for which eviction filing data is presented.
+            Use these controls to adjust the window of time for which historical eviction filing data is presented.
           </p>
         </div>
         <div class="flex flex-wrap gap-y-4 gap-x-6">
@@ -93,7 +93,7 @@ const range = computed(
           </div>
           <TRCSelect
             class=""
-            label="Range Size"
+            label="Date Range Size"
             :options="controls.timeIntervalOptions"
             v-model="controls.currentMonthRangeSize"
           />

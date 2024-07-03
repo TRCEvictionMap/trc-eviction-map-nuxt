@@ -22,6 +22,13 @@ const emit = defineEmits<{
 
 const tableColumns = useTableColumns(props.columns);
 
+const selectedRowIds = computed(() => props.modelValue);
+const selectedRows = computed(
+  () => props.rows.filter(
+    (row) => selectedRowIds.value.includes(row.id)
+  )
+);
+
 const {
   incrementSortState,
   setSortState,
@@ -29,7 +36,9 @@ const {
   sortDirection,
   data: sortedRows,
 } = useSort<Field, DataTableRow<Field>>(
-  computed(() => props.rows),
+  computed(
+    () => props.rows.filter((row) => !selectedRowIds.value.includes(row.id))
+  ),
   (a, b, sortBy, direction) => {
     if (typeof a.fields[sortBy].value === "number") {
       const _a = a.fields[sortBy].value as number;
@@ -40,23 +49,22 @@ const {
   }
 );
 
-const visibleRows: Ref<DataTableRow<Field>[]> = ref([]);
-
-const visibleRowIds = computed(() => visibleRows.value.map((row) => row.id));
+const pageRows: Ref<DataTableRow<Field>[]> = ref([]);
+const pageRowIds = computed(() => pageRows.value.map((row) => row.id));
 
 function onRowsSelectAll(selectAll: boolean) {
   if (selectAll) {
-    emit("update:modelValue", visibleRows.value.map((row) => row.id));
+    emit("update:modelValue", pageRows.value.map((row) => row.id));
   } else {
     emit("update:modelValue", []);
   }
 }
 
 function onRowSelect(rowId: string) {
-  if (props.modelValue.includes(rowId)) {
-    emit("update:modelValue", props.modelValue.filter((x) => x !== rowId));
+  if (selectedRowIds.value.includes(rowId)) {
+    emit("update:modelValue", selectedRowIds.value.filter((x) => x !== rowId));
   } else {
-    emit("update:modelValue", props.modelValue.concat(rowId));
+    emit("update:modelValue", selectedRowIds.value.concat(rowId));
   }
 }
 
@@ -75,21 +83,37 @@ function onRowSelect(rowId: string) {
         :sortBy="sortBy"
         :sortDirection="sortDirection"
         :columns="tableColumns"
-        :selectedRows="modelValue"
-        :visibleRows="visibleRowIds"
+        :selectedRows="selectedRowIds"
+        :visibleRows="pageRowIds"
         :enableSelectAll="enableSelectAll"
         @rows:selectAll="onRowsSelectAll"
         @col:pin="$emit('col:pin', $event)"
         @col:sort:increment="incrementSortState"
         @col:sort:direction="setSortState"
       />
-      <div role="rowgroup">
+      <div
+        role="rowgroup"
+        class="sticky z-30 top-10"
+      >
         <TRCDataTableRow
-          v-for="row in visibleRows"
+          v-for="row in selectedRows"
           :key="row.id"
           :data="(row as DataTableRow<Field>)"
           :columns="tableColumns"
-          :selectedRows="modelValue"
+          :selectedRows="selectedRowIds"
+          :hoveredRow="hoveredRow"
+          @row:mouseleave="$emit('row:mouseleave', $event)"
+          @row:mouseover="$emit('row:mouseover', $event)"
+          @row:select="onRowSelect"
+        />
+      </div>
+      <div role="rowgroup">
+        <TRCDataTableRow
+          v-for="row in pageRows"
+          :key="row.id"
+          :data="(row as DataTableRow<Field>)"
+          :columns="tableColumns"
+          :selectedRows="selectedRowIds"
           :hoveredRow="hoveredRow"
           @row:mouseleave="$emit('row:mouseleave', $event)"
           @row:mouseover="$emit('row:mouseover', $event)"
@@ -97,10 +121,11 @@ function onRowSelect(rowId: string) {
         />
       </div>
     </div>
+
     <TRCDataTablePagination
       :items="sortedRows"
       :initalPageSize="initalPageSize"
-      v-model="visibleRows"
+      v-model="pageRows"
     />
   </div>
 </template>

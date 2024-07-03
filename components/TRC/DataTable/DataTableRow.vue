@@ -30,9 +30,9 @@ const isSelected = computed({
 
 <template>
   <div
-    class="relative flex "
+    class="relative flex bg-white"
     :class="{
-      'bg-slate-100/50 ring-1 ring-slate-400 z-10': hoveredRow === data.id
+      'ring-1 ring-slate-400 z-10': hoveredRow === data.id,
     }"
     role="row"
     :style="{ width: `${tableWidth}px` }"
@@ -50,7 +50,7 @@ const isSelected = computed({
           :aria-label="col.headerText"
           :style="{ width: `${colWidths[col.field]}px`}"
           role="cell"
-          class="dt-cell  justify-between"
+          class="dt-cell justify-between"
         >
           <span>
             {{ data.fields[col.field].text || data.fields[col.field].value }}
