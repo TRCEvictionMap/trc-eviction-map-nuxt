@@ -13,7 +13,6 @@ const flags = useFeatureFlags();
 const featureState = useFeatureState();
 const featureProperties = useFeaturePropertiesV2();
 
-
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
 
 const featureColor = computed(() => {
@@ -73,10 +72,6 @@ function flyTo() {
   });
 }
 
-function scrollIntoViewInTable() {
-
-}
-
 </script>
 
 <template>
@@ -97,7 +92,7 @@ function scrollIntoViewInTable() {
       <div class="flex items-center gap-2">
         <div
           v-if="featureColor"
-          class="h-4 w-4"
+          class="h-4 w-4 rounded-full"
           :class="{
             'bg-[#ff7f00]': featureColor === '#ff7f00',
             'bg-[#4daf4a]': featureColor === '#4daf4a',
@@ -118,16 +113,12 @@ function scrollIntoViewInTable() {
         </TRCTooltip>
       </p>
       <div class="flex justify-end gap-2">
-        <!-- <button @click="scrollIntoViewInTable" class="button">
-          Pin row in table
-        </button> -->
         <button
           @click="flyTo"
-          class="button"
+          class="button-fly-to"
         >
           Fly to on map
         </button>
-       
       </div>
     </div>
     <div v-else>
@@ -137,7 +128,7 @@ function scrollIntoViewInTable() {
 </template>
 
 <style scoped>
-.button {
+.button-fly-to {
   @apply outline-none px-2 py-1 rounded font-semibold transition border border-transparent
         hover:border-slate-900
         focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:border-slate-800
