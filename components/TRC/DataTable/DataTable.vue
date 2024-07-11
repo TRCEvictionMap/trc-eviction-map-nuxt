@@ -27,9 +27,10 @@ const tableColumns = useTableColumns(props.columns);
 
 const selectedRowIds = computed(() => props.modelValue);
 const selectedRows = computed(
-  () => selectedRowIds.value.map(
-    (rowId) => props.rows.find((row) => row.id === rowId) as DataTableRow<Field>
-  )
+  () => selectedRowIds
+    .value
+    .map((rowId) => props.rows.find((row) => row.id === rowId))
+    .filter(Boolean) as DataTableRow<Field>[]
 );
 
 const {
@@ -74,14 +75,15 @@ function onRowSelect(rowId: string) {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col relative">
     <TRCDataTableTop
+      class="z-20"
       :columns="columns"
       :sortBy="sortBy"
       :sortDirection="sortDirection"
       @col:sort:direction="setSortState"
     />
-    <div class="h-full overflow-auto flex-1">
+    <div class="h-full overflow-auto flex-1 z-10">
       <TRCDataTableHeader
         :sortBy="sortBy"
         :sortDirection="sortDirection"

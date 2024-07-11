@@ -2,7 +2,9 @@
 import { useFeatureFlags } from "~/stores/feature-flags";
 import { useFeatureState } from "~/stores/feature-state-store";
 import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
+import { useSettings } from "~/stores/settings-store";
 
+const settings = useSettings();
 const controls = useMapControlsV2();
 const flags = useFeatureFlags();
 const featureState = useFeatureState();
@@ -30,10 +32,21 @@ const featureState = useFeatureState();
         class="w-full"
       />
     </TransitionGroup>
-    <div class="flex justify-center items-center pt-12">
-      <p v-if="featureState.selectedFeatures.length === 0" class="">
-        Click a {{ controls.currentSourceHumanReadable }} on the map
-      </p>
+    <div class="flex flex-col justify-center items-center pt-12 gap-4">
+      <template v-if="featureState.selectedFeatures.length === 0" >
+        <p>
+          Click a {{ controls.currentSourceHumanReadable?.toLowerCase() }} on the map.
+        </p>
+        <!-- <p>
+          Or select a {{ controls.currentSourceHumanReadable?.toLowerCase() }} row in
+          <button
+            class="text-trc-blue-500"
+            @click="settings.options.showBottomPanel = !settings.options.showBottomPanel"
+          >
+            the table
+          </button>.
+        </p> -->
+      </template>
     </div>
   </div>
 </template>

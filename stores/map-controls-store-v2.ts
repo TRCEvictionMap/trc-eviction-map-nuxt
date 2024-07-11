@@ -57,15 +57,15 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
     value: "none",
   },
   {
-    text: "Total renter-occupied",
+    text: "Renter-occupied households",
     value: "renter_count",
   },
   {
-    text: "% Renter-occupied",
+    text: "% Renter-occupied households",
     value: "renter_rate",
   },
   {
-    text: "% families below poverty Line",
+    text: "% Families below poverty level",
     value: "poverty_rate",
   },
   {

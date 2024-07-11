@@ -17,7 +17,7 @@ const featureState = useFeatureState();
 const currentSourceHumanReadable = computed(() => controls.currentSourceHumanReadable?.toLowerCase())
 
 function racePercentageDescription(race: string) {
-  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table P1 published by the U.S. Census Bureau for the 2020 Decennial Census.`;
+  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table "P2: Hispanic or Latino, and not Hispanic or Latino by Race" published by the U.S. Census Bureau for the 2020 Decennial Census.`;
 }
 
 
@@ -64,6 +64,11 @@ const { columns, rows } = dataTableRowsAndCols({
       `,
     },
     {
+      field: "pop",
+      headerText: "Population",
+      width: 135
+    },
+    {
       field: "pct_ai",
       width: 155,
       headerText: "American Indian",
@@ -83,6 +88,12 @@ const { columns, rows } = dataTableRowsAndCols({
       headerText: "Black",
       headerTitle: "Percent Black",
       description: racePercentageDescription("Black"),
+    },
+    {
+      width: 160,
+      field: "pct_hl",
+      headerText: "Hispanic or Latino",
+      description: racePercentageDescription("Hispanic or Latino"),
     },
     {
       width: 140,
@@ -126,6 +137,8 @@ const { columns, rows } = dataTableRowsAndCols({
             rrm: renter_rate_moe,
             pr: poverty_rate,
             prm: poverty_rate_moe,
+            pop,
+            pct_hl,
             pct_ai,
             pct_as,
             pct_bl,
@@ -162,6 +175,9 @@ const { columns, rows } = dataTableRowsAndCols({
               n_filings: {
                 value: featureProperties.currentMonthRangeFilingCount[featureId].currentWindow,
               },
+              pop: {
+                value: pop,
+              },
               pct_ai: {
                 value: pct_ai,
                 text: `${pct_ai}%`
@@ -173,6 +189,10 @@ const { columns, rows } = dataTableRowsAndCols({
               pct_bl: {
                 value: pct_bl,
                 text: `${pct_bl}%`
+              },
+              pct_hl: {
+                value: pct_hl,
+                text: `${pct_hl}%`,
               },
               pct_multi: {
                 value: pct_multi,

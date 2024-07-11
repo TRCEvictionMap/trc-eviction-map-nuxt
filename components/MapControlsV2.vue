@@ -53,7 +53,7 @@ const range = computed(
             />
             <TRCSelect
               label="Demographic Metric"
-              class="min-w-[208px] z-10"
+              class="min-w-[208px] z-50"
               :options="controls.choroplethMetricOptions"
               v-model="controls.currentChoroplethMetric"
             />

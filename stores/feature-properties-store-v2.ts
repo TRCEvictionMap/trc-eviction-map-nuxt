@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import type { FeatureCollections, FeatureProperties } from "~/utils/types";
 import { useMapControlsV2 } from "./map-controls-store-v2";
 
-function formatPercent(value: number) {
+function roundPercent(value: number) {
   return value < 10 ? value : Math.round(value);
 }
 
@@ -72,17 +72,18 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
     if (source === "block-group") {
       bgChoropleth.value = getProperties(data, (props) => ({
         ...props,
-        rr: formatPercent(props.rr),
-        rrm: formatPercent(props.rrm),
-        pr: formatPercent(props.pr),
-        prm: formatPercent(props.prm),
-        pct_ai: formatPercent(props.pct_ai),
-        pct_as: formatPercent(props.pct_as),
-        pct_bl: formatPercent(props.pct_bl),
-        pct_multi: formatPercent(props.pct_multi),
-        pct_other: formatPercent(props.pct_other),
-        pct_pi: formatPercent(props.pct_pi),
-        pct_wh: formatPercent(props.pct_wh),
+        rr: roundPercent(props.rr),
+        rrm: roundPercent(props.rrm),
+        pr: roundPercent(props.pr),
+        prm: roundPercent(props.prm),
+        pct_ai: roundPercent(props.pct_ai),
+        pct_as: roundPercent(props.pct_as),
+        pct_bl: roundPercent(props.pct_bl),
+        pct_hl: roundPercent(props.pct_hl),
+        pct_multi: roundPercent(props.pct_multi),
+        pct_other: roundPercent(props.pct_other),
+        pct_pi: roundPercent(props.pct_pi),
+        pct_wh: roundPercent(props.pct_wh),
       }));
 
       bgPolygonCenter.value = data.features.reduce(
