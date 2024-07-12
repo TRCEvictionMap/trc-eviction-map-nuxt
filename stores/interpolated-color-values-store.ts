@@ -42,42 +42,20 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
     (): Record<ChoroplethMetric, Interpolated> => {
 
       const {
-        maxPovertyRate,
         maxRenterCount,
-        maxRenterRate,
-        maxPctAsian,
-        maxPctAmericanIndian,
-        maxPctBlack,
-        maxPctMulti,
-        maxPctOther,
-        maxPctPacificIslander,
-        maxPctWhite,
+        maxPopulation,
       } = Object.values(featureProperties.bgChoropleth).reduce(
         (accum, item) => ({
-          maxPovertyRate: maxPercent(accum.maxPovertyRate, item.pr),
           maxRenterCount: Math.max(accum.maxRenterCount, item.rc),
-          maxRenterRate: maxPercent(accum.maxRenterRate, item.rr),
-          maxPctAsian: maxPercent(accum.maxPctAsian, item.pct_as),
-          maxPctAmericanIndian: maxPercent(accum.maxPctAmericanIndian, item.pct_ai),
-          maxPctBlack: maxPercent(accum.maxPctBlack, item.pct_bl),
-          maxPctMulti: maxPercent(accum.maxPctMulti, item.pct_multi),
-          maxPctOther: maxPercent(accum.maxPctOther, item.pct_other),
-          maxPctPacificIslander: maxPercent(accum.maxPctPacificIslander, item.pct_pi),
-          maxPctWhite: maxPercent(accum.maxPctWhite, item.pct_wh),
+          maxPopulation: Math.max(accum.maxPopulation, item.pop),
         }),
         {
-          maxPovertyRate: 0,
           maxRenterCount: 0,
-          maxRenterRate: 0,
-          maxPctAsian: 0,
-          maxPctAmericanIndian: 0,
-          maxPctBlack: 0,
-          maxPctMulti: 0,
-          maxPctOther: 0,
-          maxPctPacificIslander: 0,
-          maxPctWhite: 0,
+          maxPopulation: 0,
         }
       );
+
+      const percentInterpolation = createInterpolated(100, BLUE);
 
       return {
         none: {
@@ -85,15 +63,17 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
           entries: [],
         },
         renter_count: createInterpolated(maxRenterCount, BLUE),
-        renter_rate: createInterpolated(100, BLUE),
-        poverty_rate: createInterpolated(100, BLUE),
-        pct_american_indian: createInterpolated(100, BLUE),
-        pct_asian: createInterpolated(100, BLUE),
-        pct_black: createInterpolated(100, BLUE),
-        pct_multi: createInterpolated(100, BLUE),
-        pct_other: createInterpolated(100, BLUE),
-        pct_pacific_islander: createInterpolated(100, BLUE),
-        pct_white: createInterpolated(100, BLUE),
+        pop: createInterpolated(maxPopulation, BLUE),
+        renter_rate: percentInterpolation,
+        poverty_rate: percentInterpolation,
+        pct_american_indian: percentInterpolation,
+        pct_asian: percentInterpolation,
+        pct_black: percentInterpolation,
+        pct_multi: percentInterpolation,
+        pct_other: percentInterpolation,
+        pct_pacific_islander: percentInterpolation,
+        pct_white: percentInterpolation,
+        pct_hl: percentInterpolation,
       }
     }
   );

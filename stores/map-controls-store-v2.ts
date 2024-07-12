@@ -1,4 +1,3 @@
-import type { WritableComputedRef } from "vue";
 import { defineStore } from "pinia";
 import type { FeatureCollections, SourceId } from "~/utils/types";
 
@@ -28,6 +27,8 @@ const CHOROPLETH_METRICS = [
   "pct_other",
   "pct_pacific_islander",
   "pct_white",
+  "pct_hl",
+  "pop",
   "none"
 ] as const;
 
@@ -57,15 +58,19 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
     value: "none",
   },
   {
-    text: "Renter-occupied households",
+    text: "Renter Count",
     value: "renter_count",
   },
   {
-    text: "% Renter-occupied households",
+    text: "Renter Rate",
     value: "renter_rate",
   },
   {
-    text: "% Families below poverty level",
+    text: "Population",
+    value: "pop",
+  },
+  {
+    text: "Poverty Rate",
     value: "poverty_rate",
   },
   {
@@ -79,6 +84,10 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
   {
     text: "% Black",
     value: "pct_black",
+  },
+  {
+    text: "% Hispanic or Latino",
+    value: "pct_hl",
   },
   {
     text: "% Multiple Races",
