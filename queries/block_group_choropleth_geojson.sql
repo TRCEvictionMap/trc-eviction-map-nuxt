@@ -66,14 +66,6 @@ block_group_demographics as (
     round(p2.pacific_islander / p2.total * 1000) / 10 pct_pi,
     round(p2.other / p2.total * 1000) / 10 pct_other,
     round(p2.multi / p2.total * 1000) / 10 pct_multi
-
-    -- round((race.data -> 'P1_003N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_wh,
-    -- round((race.data -> 'P1_004N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_bl,
-    -- round((race.data -> 'P1_005N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_ai,
-    -- round((race.data -> 'P1_006N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_as,
-    -- round((race.data -> 'P1_007N')::float / (race.data -> 'P1_001N')::float * 1000) / 10 pct_pi,
-    -- round(((race.data -> 'P1_008N')::float / (race.data -> 'P1_001N')::float) * 1000) / 10 pct_other,
-    -- round(((race.data -> 'P1_009N')::float / (race.data -> 'P1_001N')::float) * 1000) / 10 pct_multi
   from (
     select tract, block_group, (data #>> '{}')::jsonb data
     from census_data where code = 'B25008' and year = '2022'
@@ -84,10 +76,6 @@ block_group_demographics as (
   ) poverty
   on tenure.block_group = poverty.block_group and tenure.tract = poverty.tract
   join p2_race p2
-  -- join (
-  --   select tract, block_group, (data #>> '{}')::jsonb data
-  --   from census_data where code = 'P1' and year = '2020'
-  -- ) race
   on tenure.block_group = p2.block_group and tenure.tract = p2.tract
   where (tenure.data -> 'B25008_001E')::float > 0
 ),

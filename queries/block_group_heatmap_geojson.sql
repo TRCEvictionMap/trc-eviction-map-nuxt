@@ -3,7 +3,7 @@ with bg as (
 ),
 filing as (
   select
-    count(1),
+    count(ec.defendant_address_point),
     ec.defendant_address_point,
     EXTRACT(YEAR FROM ec.filing_date) y,
     EXTRACT(MONTH FROM ec.filing_date) m,
