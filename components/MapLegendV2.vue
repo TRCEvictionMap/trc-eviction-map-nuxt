@@ -17,6 +17,12 @@ const choroplethMetricName = computed(() =>
   )?.text
 );
 
+const CHOROPLETH_PERCENT_METRICS: ChoroplethMetric[] = ["poverty_rate", "renter_rate"];
+
+const isChoroplethMetricPercent = computed(
+  () => CHOROPLETH_PERCENT_METRICS.includes(controls.currentChoroplethMetric) || controls.currentChoroplethMetric.startsWith("pct")
+)
+
 const colorStops = computed(() => {
   const { entries } = interpolated.choropleth[controls.currentChoroplethMetric];
 
@@ -25,13 +31,14 @@ const colorStops = computed(() => {
   );
 });
 
-const CHOROPLETH_PERCENT_METRICS: ChoroplethMetric[] = ["poverty_rate", "renter_rate"];
-
-const valueStops = computed(
-  () => colorStops.value.map(([value, _]) => 
-    `${value}${CHOROPLETH_PERCENT_METRICS.includes(controls.currentChoroplethMetric) ? "%" : ""}`
+const valueStops = computed(() => {
+  if (isChoroplethMetricPercent.value) {
+    return ["10%", "50%", "90%"];
+  }
+  return colorStops.value.map(
+    ([value, _]) => `${value}${isChoroplethMetricPercent.value ? "%" : ""}`
   )
-);
+});
 
 const gradientStyle = computed((): CSSProperties => ({
   background: `linear-gradient(
