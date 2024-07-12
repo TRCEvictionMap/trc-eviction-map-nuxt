@@ -13,7 +13,6 @@ const flags = useFeatureFlags();
 const featureState = useFeatureState();
 const featureProperties = useFeaturePropertiesV2();
 
-
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
 
 const featureColor = computed(() => {
@@ -93,7 +92,7 @@ function flyTo() {
       <div class="flex items-center gap-2">
         <div
           v-if="featureColor"
-          class="h-4 w-4"
+          class="h-4 w-4 rounded-full"
           :class="{
             'bg-[#ff7f00]': featureColor === '#ff7f00',
             'bg-[#4daf4a]': featureColor === '#4daf4a',
@@ -113,16 +112,12 @@ function flyTo() {
           </span>
         </TRCTooltip>
       </p>
-      <div class="flex justify-end">
+      <div class="flex justify-end gap-2">
         <button
           @click="flyTo"
-          class="
-            outline-none px-2 py-1 rounded bg-slate-800 text-white font-semibold
-            hover:bg-slate-950/80
-            focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:bg-slate-800
-          "
+          class="button-fly-to"
         >
-          Fly to
+          Fly to on map
         </button>
       </div>
     </div>
@@ -131,3 +126,14 @@ function flyTo() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.button-fly-to {
+  @apply outline-none px-2 py-1 rounded font-semibold transition border border-transparent
+        hover:border-slate-900
+        focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:border-slate-800
+  /* @apply outline-none px-2 py-1 rounded font-semibold transition
+        hover:bg-slate-900 hover:text-white
+        focus:ring focus:ring-trc-blue-400 focus:ring-offset-2 focus:bg-slate-800 focus:text-white */
+  }
+</style>

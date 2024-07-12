@@ -32,7 +32,7 @@ const unwatch = watchEffect(() => {
       dates: (mapControls.currentMonthRange ?? []).join(","),
       source: mapControls.currentSource,
       year: mapControls.currentYear,
-      d_metric: mapControls.currentChoroplethMetric,
+      c_metric: mapControls.currentChoroplethMetric,
       zoom: mapMeta.zoom,
       center: mapMeta.lngLat
         ? mapMeta.lngLat.join(",")

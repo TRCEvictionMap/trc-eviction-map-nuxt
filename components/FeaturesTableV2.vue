@@ -17,7 +17,7 @@ const featureState = useFeatureState();
 const currentSourceHumanReadable = computed(() => controls.currentSourceHumanReadable?.toLowerCase())
 
 function racePercentageDescription(race: string) {
-  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table P1 published by the U.S. Census Bureau for the 2020 Decennial Census.`;
+  return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table "P2: Hispanic or Latino, and not Hispanic or Latino by Race" published by the U.S. Census Bureau for the 2020 Decennial Census.`;
 }
 
 
@@ -64,53 +64,64 @@ const { columns, rows } = dataTableRowsAndCols({
       `,
     },
     {
+      field: "pop",
+      headerText: "Population",
+      width: 135
+    },
+    {
       field: "pct_ai",
       width: 155,
       headerText: "American Indian",
       headerTitle: "Percent American Indian",
-      description: racePercentageDescription("American Indian"),
+      description: racePercentageDescription("American Indian and Alaska Native alone"),
     },
     {
       field: "pct_as",
       width: 80,
       headerText: "Asian",
       headerTitle: "Percent Asian",
-      description: racePercentageDescription("Asian"),
+      description: racePercentageDescription("Asian alone"),
     },
     {
       width: 80,
       field: "pct_bl",
       headerText: "Black",
       headerTitle: "Percent Black",
-      description: racePercentageDescription("Black"),
+      description: racePercentageDescription("Black or African American alone"),
+    },
+    {
+      width: 160,
+      field: "pct_hl",
+      headerText: "Hispanic or Latino",
+      description: racePercentageDescription("Hispanic or Latino"),
     },
     {
       width: 140,
       field: "pct_multi",
       headerText: "Multiple Races",
       headerTitle: "Percent Multiple Races",
-      description: racePercentageDescription("Multiple Races"),
+      description: racePercentageDescription("Two or more races"),
     },
     {
       width: 80,
       field: "pct_other",
       headerText: "Other",
       headerTitle: "Percent Other",
-      description: racePercentageDescription("Other"),
+      description: racePercentageDescription("Some Other Race alone"),
     },
     {
       width: 150,
       field: "pct_pi",
       headerText: "Pacific Islander",
       headerTitle: "Percent Pacific Islander",
-      description: racePercentageDescription("Pacific Islander"),
+      description: racePercentageDescription("Native Hawaiian and Other Pacific Islander alone"),
     },
     {
       width: 80,
       field: "pct_wh",
       headerText: "White",
       headerTitle: "Percent White",
-      description: racePercentageDescription("White"),
+      description: racePercentageDescription("White alone"),
     },
   ],
   rows: computed(
@@ -126,15 +137,15 @@ const { columns, rows } = dataTableRowsAndCols({
             rrm: renter_rate_moe,
             pr: poverty_rate,
             prm: poverty_rate_moe,
-            race: {
-              pct_ai,
-              pct_as,
-              pct_bl,
-              pct_multi,
-              pct_other,
-              pct_pi,
-              pct_wh,
-            }
+            pop,
+            pct_hl,
+            pct_ai,
+            pct_as,
+            pct_bl,
+            pct_multi,
+            pct_other,
+            pct_pi,
+            pct_wh,
           } = featureProperties.bgChoropleth[featureId];
 
           return {
@@ -164,6 +175,9 @@ const { columns, rows } = dataTableRowsAndCols({
               n_filings: {
                 value: featureProperties.currentMonthRangeFilingCount[featureId].currentWindow,
               },
+              pop: {
+                value: pop,
+              },
               pct_ai: {
                 value: pct_ai,
                 text: `${pct_ai}%`
@@ -175,6 +189,10 @@ const { columns, rows } = dataTableRowsAndCols({
               pct_bl: {
                 value: pct_bl,
                 text: `${pct_bl}%`
+              },
+              pct_hl: {
+                value: pct_hl,
+                text: `${pct_hl}%`,
               },
               pct_multi: {
                 value: pct_multi,

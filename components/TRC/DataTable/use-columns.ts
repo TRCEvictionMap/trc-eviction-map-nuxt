@@ -13,7 +13,7 @@ function useTableColumns<Field extends string>(columns: DataTableColumn<Field>[]
   const cols = computed(() => columns.filter((col) => !col.pinned));
   const colsPinned = computed(() => columns.filter((col) => col.pinned));
 
-  const tableWidth = computed(() => columns.reduce((accum, col) => accum + col.width, 0));
+  const tableWidth = computed(() => columns.reduce((accum, col) => accum + col.width, 34));
 
   return { cols, colsPinned, colWidths, tableWidth };
 }

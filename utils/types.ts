@@ -122,15 +122,24 @@ namespace FeatureProperties {
         pr: number;
         /** poverty rate margin of error */
         prm: number;
-        race: {
-            pct_wh: number;
-            pct_bl: number;
-            pct_ai: number;
-            pct_as: number;
-            pct_pi: number;
-            pct_other: number;
-            pct_multi: number;
-        };
+        /** Total population */
+        pop: number;
+        /** Percent Hispanic or Latino */
+        pct_hl: number;
+        /** Percent White alone */
+        pct_wh: number;    
+        /** Percent Black or African American alone */
+        pct_bl: number;
+        /** Percent American Indian and Alaska Native alone */
+        pct_ai: number;
+        /** Percent Asian alone */
+        pct_as: number;
+        /** Percent Native Hawaiian and Other Pacific Islander alone */
+        pct_pi: number;
+        /** Percent Some Other Race alone */
+        pct_other: number;
+        /** Percent population of two or more races*/
+        pct_multi: number;
         filings: Record<string, {
             /** filing count */
             c: number;

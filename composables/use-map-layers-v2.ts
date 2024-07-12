@@ -146,10 +146,19 @@ function removeLayers(map: mapboxgl.Map, layers: Layer[]) {
   });
 }
 
-const CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP: Partial<Record<ChoroplethMetric, keyof DemographicFeaturePropertiesV2>> = {
+const CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP: Partial<Record<ChoroplethMetric, keyof FeatureProperties.ChoroplethV2>> = {
   renter_count: "rc",
   renter_rate: "rr",
   poverty_rate: "pr",
+  pct_american_indian: "pct_ai",
+  pct_asian: "pct_as",
+  pct_black: "pct_bl",
+  pct_hl: "pct_hl",
+  pct_multi: "pct_multi",
+  pct_other: "pct_other",
+  pct_pacific_islander: "pct_pi",
+  pct_white: "pct_wh",
+  pop: "pop",
 };
 
 function useMapLayersV2(map: mapboxgl.Map) {

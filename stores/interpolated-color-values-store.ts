@@ -31,6 +31,10 @@ function createInterpolated(maxValue: number, gradient: string[]): Interpolated 
   };
 }
 
+function maxPercent(currentMax: number, test: number): number {
+  return Math.min(100, Math.max(currentMax, test));
+}
+
 const useInterpolatedColors = defineStore("interpolated-colors", () => {
   const featureProperties = useFeaturePropertiesV2();
 
@@ -38,17 +42,20 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
     (): Record<ChoroplethMetric, Interpolated> => {
 
       const {
-        maxPovertyRate,
         maxRenterCount,
-        maxRenterRate
+        maxPopulation,
       } = Object.values(featureProperties.bgChoropleth).reduce(
         (accum, item) => ({
-          maxRenterRate: Math.max(accum.maxRenterRate, item.rr),
           maxRenterCount: Math.max(accum.maxRenterCount, item.rc),
-          maxPovertyRate: Math.max(accum.maxPovertyRate, item.pr),
+          maxPopulation: Math.max(accum.maxPopulation, item.pop),
         }),
-        { maxRenterCount: 0, maxRenterRate: 0, maxPovertyRate: 0 }
+        {
+          maxRenterCount: 0,
+          maxPopulation: 0,
+        }
       );
+
+      const percentInterpolation = createInterpolated(100, BLUE);
 
       return {
         none: {
@@ -56,8 +63,17 @@ const useInterpolatedColors = defineStore("interpolated-colors", () => {
           entries: [],
         },
         renter_count: createInterpolated(maxRenterCount, BLUE),
-        renter_rate: createInterpolated(maxRenterRate, BLUE),
-        poverty_rate: createInterpolated(maxPovertyRate, BLUE),
+        pop: createInterpolated(maxPopulation, BLUE),
+        renter_rate: percentInterpolation,
+        poverty_rate: percentInterpolation,
+        pct_american_indian: percentInterpolation,
+        pct_asian: percentInterpolation,
+        pct_black: percentInterpolation,
+        pct_multi: percentInterpolation,
+        pct_other: percentInterpolation,
+        pct_pacific_islander: percentInterpolation,
+        pct_white: percentInterpolation,
+        pct_hl: percentInterpolation,
       }
     }
   );

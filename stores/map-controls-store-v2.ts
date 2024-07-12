@@ -1,4 +1,3 @@
-import type { WritableComputedRef } from "vue";
 import { defineStore } from "pinia";
 import type { FeatureCollections, SourceId } from "~/utils/types";
 
@@ -21,6 +20,15 @@ const CHOROPLETH_METRICS = [
   "renter_count",
   "renter_rate",
   "poverty_rate",
+  "pct_american_indian",
+  "pct_asian",
+  "pct_black",
+  "pct_multi",
+  "pct_other",
+  "pct_pacific_islander",
+  "pct_white",
+  "pct_hl",
+  "pop",
   "none"
 ] as const;
 
@@ -50,16 +58,52 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
     value: "none",
   },
   {
-    text: "Renter-Occupied Households",
+    text: "Renter Count",
     value: "renter_count",
   },
   {
-    text: "Percent Renter-Occupied",
+    text: "Renter Rate",
     value: "renter_rate",
+  },
+  {
+    text: "Population",
+    value: "pop",
   },
   {
     text: "Poverty Rate",
     value: "poverty_rate",
+  },
+  {
+    text: "% American Indian",
+    value: "pct_american_indian",
+  },
+  {
+    text: "% Asian",
+    value: "pct_asian",
+  },
+  {
+    text: "% Black",
+    value: "pct_black",
+  },
+  {
+    text: "% Hispanic or Latino",
+    value: "pct_hl",
+  },
+  {
+    text: "% Multiple Races",
+    value: "pct_multi",
+  },
+  {
+    text: "% Other",
+    value: "pct_other",
+  },
+  {
+    text: "% Pacific Islander",
+    value: "pct_pacific_islander",
+  },
+  {
+    text: "% White",
+    value: "pct_white",
   },
 ];
 
@@ -95,7 +139,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentSource = ref<SourceId>("block-group");
 
-  const currentChoroplethMetric = ref<ChoroplethMetric>("renter_rate");
+  const currentChoroplethMetric = ref<ChoroplethMetric>("renter_count");
 
   const availableMonthRangeValues = computed(() =>
     Object

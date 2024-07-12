@@ -6,6 +6,7 @@ const props = defineProps<{
   data: DataTableRow<Field>;
   columns: TableColumns<Field>;
   selectedRows: string[];
+  isHovered?: boolean;
   hoveredRow?: string;
 }>();
 
@@ -30,9 +31,9 @@ const isSelected = computed({
 
 <template>
   <div
-    class="relative flex "
+    class="relative flex bg-white"
     :class="{
-      'bg-slate-100/50 ring-1 ring-slate-400 z-10': hoveredRow === data.id
+      'ring-1 ring-slate-400 z-10': isHovered,
     }"
     role="row"
     :style="{ width: `${tableWidth}px` }"
@@ -50,11 +51,16 @@ const isSelected = computed({
           :aria-label="col.headerText"
           :style="{ width: `${colWidths[col.field]}px`}"
           role="cell"
-          class="dt-cell  justify-between"
+          class="dt-cell justify-between"
         >
-          <span>
-            {{ data.fields[col.field].text || data.fields[col.field].value }}
-          </span>
+          <div class="flex items-center justify-center gap-2">
+            <span>
+              <slot name="cell-left" v-bind="{ field: col.field }"></slot>
+            </span>
+            <span>
+              {{ data.fields[col.field].text || data.fields[col.field].value }}
+            </span>
+          </div>
           <span v-if="data.fields[col.field].moe" class="text-sm">
             &plusmn;{{ data.fields[col.field].moe }}
           </span>
@@ -73,9 +79,14 @@ const isSelected = computed({
         role="cell"
         class="dt-cell justify-between"
       >
-        <span>
-          {{ data.fields[col.field].text || data.fields[col.field].value }}
-        </span>
+        <div class="flex items-center justify-between">
+          <span>
+            <slot name="cell-left" v-bind="{ field: col.field }"></slot>
+          </span>
+          <span>
+            {{ data.fields[col.field].text || data.fields[col.field].value }}
+          </span>
+        </div>
         <span v-if="data.fields[col.field].moe" class="text-sm">
           &plusmn;{{ data.fields[col.field].moe }}
         </span>

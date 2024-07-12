@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useFeatureFlags } from "./feature-flags";
 
 type HoveredFeatureKind = "feature" | "card" | "table-row" | false;
 
@@ -15,17 +16,23 @@ type FeatureColors = Record<string, FeatureColor>;
 const MAX_SELECTED_FEATURES = 3;
 
 function useSelectedFeatures() {
+  const flags = useFeatureFlags();
+
   const _features = ref<string[]>([]);
   const _featureColors = ref<FeatureColors>({});
 
-  const selectedFeatureColors = computed(
-    () => Object.fromEntries(
+  const selectedFeatureColors = computed(() => {
+    if (flags.disableMultiColorFeatureOutline) {
+      return {};
+    }
+    
+    return Object.fromEntries(
       Object.entries(_featureColors.value).map(([featureId, color]) => [
         featureId,
         color
       ])
-    )
-  );
+    );
+  });
 
   const selectedFeatures = computed({
     get() {

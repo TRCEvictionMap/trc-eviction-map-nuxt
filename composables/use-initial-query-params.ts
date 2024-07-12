@@ -1,4 +1,5 @@
 import { type EvictionMetric, type DemographicMetric, isDemographicMetric, isEvictionMetric } from "~/stores/map-controls-store";
+import { isChoroplethMetric, type ChoroplethMetric } from "~/stores/map-controls-store-v2";
 import { type SourceId, isSourceId } from "~/utils/types";
 
 
@@ -10,8 +11,9 @@ interface QueryParams {
   _year: string;
   _dates?: [string, string];
   _source: SourceId;
+  /** @deprecated */
   _e_metric: EvictionMetric;
-  _d_metric: DemographicMetric;
+  _c_metric: ChoroplethMetric;
   _features: string[];
 }
 
@@ -22,7 +24,7 @@ function useInitialQueryParams(): QueryParams {
   let _zoom: QueryParams["_zoom"] = 10.8;
   let _source: QueryParams["_source"] = "block-group";
   let _year: QueryParams["_year"] = "2023";
-  let _d_metric: QueryParams["_d_metric"] = "renter_count";
+  let _c_metric: QueryParams["_c_metric"] = "renter_count";
   let _e_metric: QueryParams["_e_metric"] = "n_filings";
   let _features: QueryParams["_features"] = [];
   let _showDetails: QueryParams["_showDetails"] = false;
@@ -30,7 +32,19 @@ function useInitialQueryParams(): QueryParams {
 
   let _dates: QueryParams["_dates"];
 
-  const { center, zoom, source, year, d_metric, e_metric, features, showDetails, dates, heatmap } = route.query;
+  const {
+    center,
+    zoom,
+    source,
+    year,
+    c_metric,
+    d_metric,
+    e_metric,
+    features,
+    showDetails,
+    dates,
+    heatmap
+  } = route.query;
 
   if (center) {
     const [lng, lat] = (route.query.center as string).split(",");
@@ -52,8 +66,10 @@ function useInitialQueryParams(): QueryParams {
     _source = source;
   }
 
-  if (isDemographicMetric(d_metric)) {
-    _d_metric = d_metric;
+  if (isChoroplethMetric(c_metric)) {
+    _c_metric = c_metric;
+  } else if (isChoroplethMetric(d_metric)) {
+    _c_metric = d_metric;
   }
 
   if (isEvictionMetric(e_metric)) {
@@ -77,7 +93,7 @@ function useInitialQueryParams(): QueryParams {
     _dates = [start, end];
   }
 
-  return { _lngLat, _zoom, _source, _year, _d_metric, _e_metric, _features, _showDetails, _dates, _showHeatmap };
+  return { _lngLat, _zoom, _source, _year, _c_metric, _e_metric, _features, _showDetails, _dates, _showHeatmap };
 }
 
 export { useInitialQueryParams };
