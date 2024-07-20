@@ -75,10 +75,30 @@ function resizeMap() {
           ></div>
           <slot name="map-overlay"></slot>
         </div>
+        <div class="relative z-20 border-t bg-white">
+          <TRCTooltip
+            #="props"
+            placement="top"
+            :text="`${settings.options.showBottomPanel ? 'Close' : 'Open'} data table.`"
+          >
+            <button
+              v-bind="props"
+              class="absolute -top-6 left-1/2 bg-white rounded-tl rounded-tr px-2 py-0"
+              @click="settings.options.showBottomPanel = !settings.options.showBottomPanel"
+            >
+              <IconChevronUp
+                class="transition duration-00"
+                :class="{
+                  'rotate-180': settings.options.showBottomPanel
+                }"
+              />
+
+            </button>
+          </TRCTooltip>
+
           <div
             v-if="settings.options.showBottomPanel"
             key="bottom-panel"
-            class="relative z-20 border-t bg-white"
             :style="{ height: `${bottomPanelHeight}px` }"
             @mousedown="resizeActive = true"
             @mouseup="resizeActive = false"
@@ -91,10 +111,13 @@ function resizeMap() {
               position="top"
             />
             <div class="p-4 overflow-auto w-full flex flex-col">
-  
-              <slot name="bottom" v-bind="{ height: bottomPanelHeight }"></slot>
+              <slot
+                name="bottom"
+                v-bind="{ height: bottomPanelHeight }"
+              ></slot>
             </div>
           </div>
+        </div>
         <!-- </TransitionGroup> -->
       </div>
     </TransitionGroup>

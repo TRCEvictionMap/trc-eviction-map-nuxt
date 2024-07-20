@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { useFloating, autoUpdate, autoPlacement, arrow, offset } from "@floating-ui/vue";
+import { useFloating, autoUpdate, autoPlacement, arrow, offset, type Placement, type Middleware } from "@floating-ui/vue";
 import type { CSSProperties } from "vue";
 
-const props = defineProps<{ text: string, delay?: number }>();
+const props = defineProps<{
+  text: string,
+  delay?: number,
+  /** Used as `placement` option to `useFloating` if not undefined. Otherwise, `useFloating` uses `autoPlacement` middleware */
+  placement?: Placement,
+}>();
 
 const isShowing = ref(false);
 
@@ -15,54 +20,55 @@ const { floatingStyles, middlewareData } = useFloating(
   floating,
   {
     whileElementsMounted: autoUpdate,
+    placement: props.placement,
     middleware: [
-      autoPlacement(),
+      !props.placement && autoPlacement(),
       offset(8),
       arrow({
         element: floatingArrow
       })
-    ],
+    ].filter(Boolean) as any,
   },
 );
 
-const floatingArrowStyles = computed((): CSSProperties => {
-  const arrow = middlewareData.value.arrow;
-  const placement = middlewareData.value.offset?.placement
+// const floatingArrowStyles = computed((): CSSProperties => {
+//   const arrow = middlewareData.value.arrow;
+//   const placement = middlewareData.value.offset?.placement
 
-  const marginAndBorder = ((): CSSProperties => {
-    if (placement?.startsWith("bottom")) {
-      return {
-        borderStyle: "solid",
-        borderWidth: "5px",
-        marginLeft: "-5px",
-        borderColor: "transparent transparent black transparent",
-      };
-    }
+//   const marginAndBorder = ((): CSSProperties => {
+//     if (placement?.startsWith("bottom")) {
+//       return {
+//         borderStyle: "solid",
+//         borderWidth: "5px",
+//         marginLeft: "-5px",
+//         borderColor: "transparent transparent black transparent",
+//       };
+//     }
 
-    if (placement?.startsWith("top")) {
-      return {
-        borderStyle: "solid",
-        borderWidth: "5px",
-        marginLeft: "-5px",
-        borderColor: "black transparent transparent transparent",
-        transform: "rotate(180deg)"
-      };
-    }
+//     if (placement?.startsWith("top")) {
+//       return {
+//         borderStyle: "solid",
+//         borderWidth: "5px",
+//         marginLeft: "-5px",
+//         borderColor: "black transparent transparent transparent",
+//         transform: "rotate(180deg)"
+//       };
+//     }
 
-    if (placement?.startsWith("left")) {
-      // rv.transform
-    }
+//     if (placement?.startsWith("left")) {
+//       // rv.transform
+//     }
 
-    return {};
-  })();
+//     return {};
+//   })();
 
-  return {
-    position: "absolute",
-    left: arrow && typeof arrow.x === "number" ? `${arrow.x}px` : "",
-    top: arrow && typeof arrow.y === "number" ? `${arrow.y}px` : "",
-    // ...marginAndBorder
-  };
-})
+//   return {
+//     position: "absolute",
+//     left: arrow && typeof arrow.x === "number" ? `${arrow.x}px` : "",
+//     top: arrow && typeof arrow.y === "number" ? `${arrow.y}px` : "",
+//     // ...marginAndBorder
+//   };
+// })
 
 let handle: any;
 
