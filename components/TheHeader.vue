@@ -27,11 +27,6 @@ const flags = useFeatureFlags();
       <nav class="flex items-center gap-4 divide-x divide-slate-500">
         <ClientOnly>
           <div class="flex gap-4">
-            <!-- <TRCSwitch
-              v-if="true"
-              v-model="settings.options.showBottomPanel"
-              :label="`${settings.options.showBottomPanel ? 'Hide' : 'Show'} Data Table`"
-            /> -->
             <TRCSwitch
               v-if="!flags.disableDataTableHeaderToggle"
               v-model="settings.options.showLeftPanel"
