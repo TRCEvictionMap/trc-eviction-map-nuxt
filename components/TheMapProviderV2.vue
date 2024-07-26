@@ -32,7 +32,7 @@ function resizeMap() {
 </script>
 
 <template>
-  <div class="relative flex flex-1">
+  <div class="relative flex flex-1" id="main-content">
     <TransitionGroup
       :name="resizeActive ? 'DISABLED_TRANSITION' : 'side-drawer'"
       @afterLeave="resizeMap"
@@ -83,7 +83,7 @@ function resizeMap() {
           >
             <button
               v-bind="props"
-              class="absolute -top-6 left-1/2 bg-white rounded-tl rounded-tr px-2 py-0"
+              class="absolute -top-6 left-1/2 bg-white rounded-tl rounded-tr px-2 py-0 border-t border-l border-r"
               @click="settings.options.showBottomPanel = !settings.options.showBottomPanel"
             >
               <IconChevronUp
