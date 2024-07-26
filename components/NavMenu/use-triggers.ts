@@ -8,6 +8,7 @@ type ContentTransition =
   "content-slide-down";
 
 function useTriggers() {
+  const triggers = ref<HTMLElement[]>([]);
   const menus = ref<string[]>([]);
 
   const activeMenu = ref<string>();
@@ -33,6 +34,11 @@ function useTriggers() {
     activeMenu.value = data.menuName ?? "";
   }
 
+  function onFocus(ev: FocusEvent) {
+    const data = (ev.target as HTMLElement).dataset;
+    activeMenu.value = data.menuName ?? "";
+  }
+
   function onTouchstart(ev: TouchEvent) {
     const data = (ev.target as HTMLElement).dataset;
 
@@ -43,8 +49,10 @@ function useTriggers() {
 
     if (!menus.value.includes(menuName ?? "")) {
       menus.value.push(menuName ?? "");
+      triggers.value.push(trigger);
     }
 
+    trigger.addEventListener("focus", onFocus);
     trigger.addEventListener("mouseenter", onMouseenter);
     trigger.addEventListener("touchstart", onTouchstart)
   }
@@ -54,14 +62,32 @@ function useTriggers() {
       (menuName) => menuName !== trigger.dataset.menuName
     );
 
+    triggers.value = triggers.value.filter(
+      (_trigger) => _trigger.dataset.menuName !== trigger.dataset.menuName
+    );
+
+    trigger.removeEventListener("focus", onFocus);
     trigger.removeEventListener("mouseenter", onMouseenter);
     trigger.removeEventListener("touchstart", onTouchstart);
   }
 
+  function setFocus() {
+    const trigger = triggers.value.find(
+      (trigger) => trigger.dataset.menuName === activeMenu.value
+    );
+
+    if (trigger) {
+      return trigger.focus();
+    }
+
+    triggers.value[0].focus();
+  }
+
   provide("registerTrigger", registerTrigger);
   provide("unregisterTrigger", unregisterTrigger);
+  provide("activeMenu", activeMenu);
 
-  return { activeMenu, contentTransition };
+  return { activeMenu, contentTransition, setFocus };
 }
 
 export { useTriggers };

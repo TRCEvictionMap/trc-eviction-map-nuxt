@@ -9,6 +9,7 @@ const defaultOptions = {
     showDataTable: false,
     showBottomPanel: false,
     showLeftPanel: true,
+    // controlsCollapsed: true,
 }
 
 type Options = typeof defaultOptions;

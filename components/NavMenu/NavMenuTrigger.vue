@@ -1,20 +1,34 @@
 <script setup lang="ts">
 import type { Register, Unregister } from "./use-triggers";
 
-defineProps<{ menuName: string }>();
+const props = defineProps<{ menuName: string }>();
 
-const itemRef = ref<HTMLElement>();
+const triggerRef = ref<HTMLElement>();
 
 const registerTrigger = inject("registerTrigger") as Register;
 const unregisterTrigger = inject("unregisterTrigger") as Unregister;
 
-onMounted(() => { registerTrigger(itemRef.value!) });
-onUnmounted(() => { unregisterTrigger(itemRef.value!) });
+const activeMenu = inject("activeMenu") as Ref<string>;
+
+const isActive = computed(() => activeMenu.value === props.menuName);
+
+onMounted(() => { registerTrigger(triggerRef.value!) });
+onUnmounted(() => { unregisterTrigger(triggerRef.value!) });
+
+defineExpose({ triggerRef });
 
 </script>
 
 <template>
-  <div ref="itemRef" :data-menu-name="menuName">
+  <button
+    ref="triggerRef"
+    tabindex="-1"
+    :data-menu-name="menuName"
+    class=""
+    :class="{
+      'text-trc-blue-500': isActive
+    }"
+  >
     <slot></slot>
-  </div>
+  </button>
 </template>

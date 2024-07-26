@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTriggers } from './use-triggers';
 
-const { activeMenu, contentTransition } = useTriggers();
+const { activeMenu, contentTransition, setFocus } = useTriggers();
 
 const isMounted = ref(false);
 
@@ -25,7 +25,13 @@ onMounted(() => {
         }"
       >
         <div class="flex gap-4">
-          <slot name="items"></slot>
+          <div>
+            <div class="flex gap-4" tabindex="0" @focus="setFocus">
+              <slot name="triggers"></slot>
+            </div>
+            <!-- <div class="h-[2px] border-t-2"></div> -->
+          </div>
+          <slot name="header-misc"></slot>
         </div>
       </div>
       <Transition name="wrapper">

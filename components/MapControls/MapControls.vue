@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSettings } from "~/stores/settings-store";
 
 defineProps<{
   position: "center" | "left";
@@ -9,11 +10,11 @@ defineProps<{
 
 <template>
   <NavMenu>
-    <template #items="props">
-      <NavMenuTrigger v-bind="props" menuName="layers">
+    <template #triggers>
+      <NavMenuTrigger menuName="layers">
         Layers
       </NavMenuTrigger>
-      <NavMenuTrigger v-bind="props" menuName="date-range">
+      <NavMenuTrigger menuName="date-range">
         Date Range
       </NavMenuTrigger>
     </template>

@@ -59,6 +59,8 @@ const tickStyle = computed((): CSSProperties => ({
   width: `${Math.floor(1 / props.max * 100)}%`,
 }));
 
+// defineExpose({ inputRef });
+
 </script>
 
 <template>
