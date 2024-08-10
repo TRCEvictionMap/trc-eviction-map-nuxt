@@ -9,14 +9,15 @@ type ContentTransition =
 
 function useTriggers() {
   const triggers = ref<HTMLElement[]>([]);
-  const menus = ref<string[]>([]);
 
+  const menuNames = ref<string[]>([]);
   const activeMenu = ref<string>();
+
   const contentTransition = ref<ContentTransition>("content-slide-down");
 
   watch(activeMenu, (current, previous)  => {
-    const idxCurrent = menus.value.indexOf(current ?? "");
-    const idxPrevious = menus.value.indexOf(previous ?? "");
+    const idxCurrent = menuNames.value.indexOf(current ?? "");
+    const idxPrevious = menuNames.value.indexOf(previous ?? "");
     if (
       idxPrevious < 0 ||
       (idxPrevious > -1 && idxCurrent < 0)
@@ -39,26 +40,20 @@ function useTriggers() {
     activeMenu.value = data.menuName ?? "";
   }
 
-  function onTouchstart(ev: TouchEvent) {
-    const data = (ev.target as HTMLElement).dataset;
-
-  }
-
   function registerTrigger(trigger: HTMLElement) {
     const menuName = trigger.dataset.menuName;
 
-    if (!menus.value.includes(menuName ?? "")) {
-      menus.value.push(menuName ?? "");
+    if (!menuNames.value.includes(menuName ?? "")) {
+      menuNames.value.push(menuName ?? "");
       triggers.value.push(trigger);
     }
 
     trigger.addEventListener("focus", onFocus);
     trigger.addEventListener("mouseenter", onMouseenter);
-    trigger.addEventListener("touchstart", onTouchstart)
   }
   
   function unregisterTrigger(trigger: HTMLElement) {
-    menus.value = menus.value.filter(
+    menuNames.value = menuNames.value.filter(
       (menuName) => menuName !== trigger.dataset.menuName
     );
 
@@ -68,7 +63,6 @@ function useTriggers() {
 
     trigger.removeEventListener("focus", onFocus);
     trigger.removeEventListener("mouseenter", onMouseenter);
-    trigger.removeEventListener("touchstart", onTouchstart);
   }
 
   function setFocus() {

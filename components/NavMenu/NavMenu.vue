@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useTriggers } from './use-triggers';
 
+defineProps<{ width: number | string }>();
+
 const { activeMenu, contentTransition, setFocus } = useTriggers();
 
 const isMounted = ref(false);
@@ -24,14 +26,14 @@ onMounted(() => {
           'rounded-tr rounded-tl border border-b-transparent': activeMenu
         }"
       >
-        <div class="flex gap-4">
-          <div>
-            <div class="flex gap-4" tabindex="0" @focus="setFocus">
-              <slot name="triggers"></slot>
+        <div class="flex gap-6" :style="{ width: `${width}px` }">
+          <slot name="header-left"></slot>
+          <div class="flex-1">
+            <div class="flex gap-6" tabindex="0" @focus="setFocus">
+              <slot name="header-center"></slot>
             </div>
-            <!-- <div class="h-[2px] border-t-2"></div> -->
           </div>
-          <slot name="header-misc"></slot>
+          <slot name="header-right"></slot>
         </div>
       </div>
       <Transition name="wrapper">

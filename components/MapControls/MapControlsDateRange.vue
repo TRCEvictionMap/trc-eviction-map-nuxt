@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
-// import TRCRangeSlider from "~/components/TRC/RangeSlider/RangeSlider.vue";
 
 const controls = useMapControlsV2();
 
@@ -8,11 +7,6 @@ const range = computed(
   () => controls.currentMonthRangeHumanReadable
 );
 
-// const rangeSliderRef = ref<InstanceType<typeof TRCRangeSlider>>();
-
-// onMounted(() => {
-//   rangeSliderRef.value?.inputRef?.focus();
-// });
 </script>
 
 <template>
@@ -33,12 +27,6 @@ const range = computed(
         :min="0"
         :max="controls.monthRangeMax"
       />
-      <!-- <TRCRangeSlider
-        ref="rangeSliderRef"
-        v-model="controls.currentMonthRangeIndices"
-        :min="0"
-        :max="controls.monthRangeMax"
-      /> -->
     </div>
     <TRCSelect
       class=""
