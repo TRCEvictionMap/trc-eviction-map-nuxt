@@ -19,10 +19,6 @@ const controls = useMapControlsV2();
       :options="controls.choroplethMetricOptions"
       v-model="controls.currentChoroplethMetric"
     />
-    <TRCSwitch
-      stackLabel
-      :label="`${controls.showHeatmap ? 'Hide' : 'Show'} Heatmap`"
-      v-model="controls.showHeatmap"
-    />
+
   </div>
 </template>

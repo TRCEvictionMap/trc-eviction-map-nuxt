@@ -12,7 +12,7 @@ const featureState = useFeatureState();
 
 <template>
   <div class="space-y-6 w-full h-full">
-    <MapControlsV2 position="left" />
+    <MapControls position="center" />
     <TransitionGroup name="features">
       <FeatureDetailV2
         v-for="featureId in featureState.selectedFeatures"
@@ -37,15 +37,6 @@ const featureState = useFeatureState();
         <p>
           Click a {{ controls.currentSourceHumanReadable?.toLowerCase() }} on the map.
         </p>
-        <!-- <p>
-          Or select a {{ controls.currentSourceHumanReadable?.toLowerCase() }} row in
-          <button
-            class="text-trc-blue-500"
-            @click="settings.options.showBottomPanel = !settings.options.showBottomPanel"
-          >
-            the table
-          </button>.
-        </p> -->
       </template>
     </div>
   </div>

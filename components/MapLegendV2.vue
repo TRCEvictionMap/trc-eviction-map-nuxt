@@ -11,11 +11,11 @@ defineProps<{
 const interpolated = useInterpolatedColors();
 const controls = useMapControlsV2();
 
-const choroplethMetricName = computed(() =>
-  controls.choroplethMetricOptions.find(
-    ({ value }) => value === controls.currentChoroplethMetric
-  )?.text
-);
+// const choroplethMetricName = computed(() =>
+//   controls.choroplethMetricOptions.find(
+//     ({ value }) => value === controls.currentChoroplethMetric
+//   )?.text
+// );
 
 const CHOROPLETH_PERCENT_METRICS: ChoroplethMetric[] = ["poverty_rate", "renter_rate"];
 
@@ -66,7 +66,7 @@ const gradientStyle = computed((): CSSProperties => ({
     <div class="flex space-x-4">
       <div class="space-y-2 min-w-[160px]">
         <h2 class="font-semibold ">
-          {{ choroplethMetricName }}
+          {{ controls.choroplethMetricHumanReadable }}
         </h2>
         <div>
           <div

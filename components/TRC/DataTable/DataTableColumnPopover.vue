@@ -33,7 +33,7 @@ const description = computed(() =>
 );
 
 watch(popoverRef, (popover) => {
-  console.log(popover)
+  // console.log(popover)
 })
 
 onMounted(() => {

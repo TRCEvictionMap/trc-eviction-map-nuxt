@@ -10,29 +10,38 @@ const range = computed(
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-y-4 gap-x-6">
-    <div class="space-y-2 flex-1">
-      <div class="font-mono font-bold text-sm whitespace-nowrap">
-        <template v-if="range">
-          <template v-if="range.isSingle">
-            {{ range.start.mAbbr }} {{ range.start.y }}
+  <div class="space-y-4">
+    <div class="flex flex-wrap gap-y-4 gap-x-6">
+      <div class="space-y-2 flex-1">
+        <div class="font-mono font-bold text-sm whitespace-nowrap">
+          <template v-if="range">
+            <template v-if="range.isSingle">
+              {{ range.start.mAbbr }} {{ range.start.y }}
+            </template>
+            <template v-else>
+              {{ range.start.mAbbr }} {{ range.start.y }} - {{ range.end.mAbbr }} {{ range.end.y }}
+            </template>
           </template>
-          <template v-else>
-            {{ range.start.mAbbr }} {{ range.start.y }} - {{ range.end.mAbbr }} {{ range.end.y }}
-          </template>
-        </template>
+        </div>
+        <TRCRangeSlider
+          v-model="controls.currentMonthRangeIndices"
+          :min="0"
+          :max="controls.monthRangeMax"
+        />
       </div>
-      <TRCRangeSlider
-        v-model="controls.currentMonthRangeIndices"
-        :min="0"
-        :max="controls.monthRangeMax"
+      <TRCSelect
+        class=""
+        label="Date Range Size"
+        :options="controls.timeIntervalOptions"
+        v-model="controls.currentMonthRangeSize"
       />
     </div>
-    <TRCSelect
-      class=""
-      label="Date Range Size"
-      :options="controls.timeIntervalOptions"
-      v-model="controls.currentMonthRangeSize"
-    />
+    <div class="flex gap-8">
+      <TRCSwitch
+        stackLabel
+        :label="`${controls.showHeatmap ? 'Hide' : 'Show'} Heatmap`"
+        v-model="controls.showHeatmap"
+      />
+    </div>
   </div>
 </template>

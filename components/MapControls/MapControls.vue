@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { useSettings } from "~/stores/settings-store";
+import { useMapControlsV2 } from '~/stores/map-controls-store-v2';
+
+const controls = useMapControlsV2();
 
 defineProps<{
   position: "center" | "left";
   isFloating?: boolean;
 }>();
 
-const isMounted = ref(false);
-
-onMounted(() => {
-  isMounted.value = true;
-});
-
+const isDemographicsOpen = useLocalStorageRef("demographics-open", false);
+const isEvictionFilingsOpen = useLocalStorageRef("eviction-filings-open", false);
 
 </script>
 
 <template>
-  <Teleport to="#main-content" v-if="isMounted">
     <div
       class="
         hidden z-40 
@@ -32,22 +29,29 @@ onMounted(() => {
       <div
         class="
           flex flex-col justify-center items-start flex-shrink-0
-          rounded flex-1 w-[500px]
-          bg-white border
+          rounded flex-1 w-[424px]
+          bg-white border py-2
         "
         :class="{
           'shadow-2xl': isFloating
         }"
       >
-        <TRCDisclosure heading="Layers" >
-            <MapControlsLayers />
+        <TRCDisclosure :isOpen="isDemographicsOpen" @update:isOpen="isDemographicsOpen = $event">
+          <template #heading>
+            <h2 class="font-bold">
+              Demographics
+            </h2>
+          </template>
+          <MapControlsLayers />
         </TRCDisclosure>
-        <TRCDisclosure heading="Date Range">
-  
+        <TRCDisclosure :isOpen="isEvictionFilingsOpen">
+          <template #heading>
+            <h2 class="font-bold">
+              Eviction Filings
+            </h2>
+          </template>
           <MapControlsDateRange />
-  
         </TRCDisclosure>
       </div>
     </div>
-  </Teleport>
 </template>

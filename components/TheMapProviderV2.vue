@@ -29,6 +29,13 @@ function resizeMap() {
   map.value?.resize();
 }
 
+
+const isMounted = ref(false);
+
+onMounted(() => {
+  isMounted.value = true;
+});
+
 </script>
 
 <template>
@@ -73,7 +80,7 @@ function resizeMap() {
             id="map-container"
             class="flex-1"
           ></div>
-          <slot name="map-overlay"></slot>
+          <slot name="map-overlay" v-bind="{ isMounted }"></slot>
         </div>
         <div class="relative z-20 border-t bg-white">
           <TRCTooltip
