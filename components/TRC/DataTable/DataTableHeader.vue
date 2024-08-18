@@ -51,6 +51,7 @@ const isSelectAll = computed({
             class="h-6 w-4"
           ></div>
         </div>
+        <div style="width: 33px;"></div>
         <div
           v-for="col in colsPinned"
           :key="col.field"

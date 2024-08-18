@@ -2,24 +2,38 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import DisclosureStateTracker from "./DisclosureStateTracker.vue";
 
-defineProps<{ isOpen?: boolean, heading?: string }>();
+const props = defineProps<{ modelValue: boolean, heading?: string }>();
 
-defineEmits<{ "update:isOpen": [boolean] }>();
+const emit = defineEmits<{ "update:modelValue": [boolean] }>();
+
+const isOpen = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(isOpen) {
+    emit("update:modelValue", isOpen);
+  },
+});
 
 </script>
 
 <template>
-  <Disclosure :defaultOpen="isOpen" #="{ open }: { open: boolean }" as="div" class="w-full ">
+  <Disclosure
+    :defaultOpen="isOpen"
+    #="{ open }: { open: boolean }"
+    as="div"
+    class="w-full"
+  >
     <div
       class="flex flex-col w-full px-4 py-1 transition-all"
       :class="{
-        ' bg-transparent': !open,
-        ' bg-white pb-4': open
+        'bg-transparent': !open,
+        'bg-white pb-4': open
       }"
     >
       <DisclosureButton class="flex justify-between">
         <div
-          class="font-semibold flex-1 flex justify-between py-1"
+          class="flex-1 flex justify-between py-1"
           :class="{
             'pb-4': open,
           }"
@@ -28,19 +42,15 @@ defineEmits<{ "update:isOpen": [boolean] }>();
             <h2>{{ heading }}</h2>
           </slot>
           <div class="relative">
-            <IconMinus class="absolute right-0 w-4 h-4" />
-            <IconMinus
-              class="absolute right-0 transition-transform"
-              :class="{
-                'rotate-0': open,
-                'rotate-90': !open
-              }"
+            <IconChevronUp
+              class="transition w-4 h-4"
+              :class="{ 'rotate-0': open, 'rotate-180': !open }"
             />
           </div>
         </div>
       </DisclosureButton>
       <DisclosurePanel static>
-        <DisclosureStateTracker :isOpen="open" @update:isOpen="$emit('update:isOpen', $event)" />
+        <DisclosureStateTracker :isOpen="open" @update:isOpen="isOpen = $event" />
         <div v-if="open">
           <slot></slot>
         </div>

@@ -19,6 +19,7 @@ const emit = defineEmits<{
   "rows:select": [rowIds: string[]];
   "col:pin": [payload: { field: string, pinned: boolean }];
   "update:modelValue": [rowIds: string[]];
+  "flyTo": [featureId: string];
 }>();
 
 const featureState = useFeatureState();
@@ -111,6 +112,7 @@ function onRowSelect(rowId: string) {
           @row:mouseleave="$emit('row:mouseleave', $event)"
           @row:mouseover="$emit('row:mouseover', $event)"
           @row:select="onRowSelect"
+          @flyTo="$emit('flyTo', $event)"
           class="last:border-b-2"
         >
           <template #cell-left="{ field }">
@@ -137,6 +139,7 @@ function onRowSelect(rowId: string) {
           @row:mouseleave="$emit('row:mouseleave', $event)"
           @row:mouseover="$emit('row:mouseover', $event)"
           @row:select="onRowSelect"
+          @flyTo="$emit('flyTo', $event)"
         />
       </div>
     </div>

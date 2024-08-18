@@ -80,7 +80,7 @@ const buttonText = computed(() => {
 		</div>
 		<div class="relative">
 			<ListboxOptions
-				class="absolute p-4 rounded bg-white shadow border space-y-1"
+				class="absolute p-4 rounded bg-white shadow border space-y-1 max-h-80 overflow-auto"
 				:class="{
 					'bottom-8': dropUp,
 					'top-[2px]': !dropUp,

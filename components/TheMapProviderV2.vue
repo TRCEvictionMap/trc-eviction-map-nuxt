@@ -59,7 +59,7 @@ onMounted(() => {
           @mousedown="resizeActive = true"
           @mouseup="resizeActive = false"
         />
-        <div class="flex overflow-auto p-4 min-h-[calc(100vh-60px)] max-h-[calc(100vh-60px)]">
+        <div class="flex overflow-auto px-2 py-2 min-h-[calc(100vh-60px)] max-h-[calc(100vh-60px)]">
           <slot name="left"></slot>
         </div>
       </div>

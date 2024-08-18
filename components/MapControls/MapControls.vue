@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { useMapControlsV2 } from '~/stores/map-controls-store-v2';
-
-const controls = useMapControlsV2();
 
 defineProps<{
   position: "center" | "left";
   isFloating?: boolean;
 }>();
 
-const isDemographicsOpen = useLocalStorageRef("demographics-open", false);
-const isEvictionFilingsOpen = useLocalStorageRef("eviction-filings-open", false);
+const isDemographicsOpen = useLocalStorageRef("demographics-open", true);
+const isEvictionFilingsOpen = useLocalStorageRef("eviction-filings-open", true);
 
 </script>
 
@@ -29,26 +26,25 @@ const isEvictionFilingsOpen = useLocalStorageRef("eviction-filings-open", false)
       <div
         class="
           flex flex-col justify-center items-start flex-shrink-0
-          rounded flex-1 w-[424px]
+          rounded flex-1 w-96
           bg-white border py-2
         "
         :class="{
           'shadow-2xl': isFloating
         }"
       >
-        <TRCDisclosure :isOpen="isDemographicsOpen" @update:isOpen="isDemographicsOpen = $event">
+        <div class="px-4 py-2">
+           <h1 class="font-bold text-lg">TRC Eviction Map</h1>
+        </div>
+        <TRCDisclosure v-model="isDemographicsOpen">
           <template #heading>
-            <h2 class="font-bold">
-              Demographics
-            </h2>
+            <h2 class="font-semibold text-slate-800">Demographics</h2>
           </template>
           <MapControlsLayers />
         </TRCDisclosure>
-        <TRCDisclosure :isOpen="isEvictionFilingsOpen">
+        <TRCDisclosure v-model="isEvictionFilingsOpen" >
           <template #heading>
-            <h2 class="font-bold">
-              Eviction Filings
-            </h2>
+            <h2 class="font-semibold text-slate-800">Eviction Filings</h2>
           </template>
           <MapControlsDateRange />
         </TRCDisclosure>

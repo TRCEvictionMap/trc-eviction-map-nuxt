@@ -15,10 +15,9 @@ const controls = useMapControlsV2();
     />
     <TRCSelect
       label="Demographic Metric"
-      class="min-w-[208px] z-50"
+      class="min-w-[158px] z-50"
       :options="controls.choroplethMetricOptions"
       v-model="controls.currentChoroplethMetric"
     />
-
   </div>
 </template>
