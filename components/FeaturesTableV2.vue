@@ -231,6 +231,7 @@ function setColumnPin(field: string, pinned: boolean) {
 
 <template>
   <TRCDataTable
+    data-name="datatable"
     class="max-h-[calc(100%-140px)] rounded bg-white"
     :initalPageSize="20"
     :columns="columns"

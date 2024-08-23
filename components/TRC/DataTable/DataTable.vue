@@ -78,13 +78,13 @@ function onRowSelect(rowId: string) {
 <template>
   <div class="flex flex-col relative">
     <TRCDataTableTop
-      class="z-20"
+      class="z-20 flex-shrink"
       :columns="columns"
       :sortBy="sortBy"
       :sortDirection="sortDirection"
       @col:sort:direction="setSortState"
     />
-    <div class="h-full overflow-auto flex-1 z-10">
+    <div class="h-full w-full overflow-auto flex-1 z-10">
       <TRCDataTableHeader
         :sortBy="sortBy"
         :sortDirection="sortDirection"
