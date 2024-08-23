@@ -32,6 +32,11 @@ const flags = useFeatureFlags();
               v-model="settings.options.showLeftPanel"
               :label="`${settings.options.showLeftPanel ? 'Hide' : 'Show'} Side Panel`"
             />
+            <TRCSwitch
+              v-if="!flags.disableDataTableHeaderToggle"
+              v-model="settings.options.showBottomPanel"
+              :label="`${settings.options.showBottomPanel ? 'Hide' : 'Show'} Date Table`"
+            />
           </div>
         </ClientOnly>
         <div class="pl-4">
