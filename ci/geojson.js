@@ -52,4 +52,6 @@ async function pullGeoJSON() {
   }
 }
 
-pullGeoJSON();
+// pullGeoJSON();
+
+console.log("Skipping geojson pull")
