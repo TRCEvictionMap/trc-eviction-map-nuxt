@@ -116,7 +116,7 @@ onMounted(() => {
               direction="vertical"
               position="top"
             />
-            <div class="p-4 overflow-auto w-full flex flex-col">
+            <div class="p-4 overflow-auto w-full flex flex-col absolute">
               <slot
                 name="bottom"
                 v-bind="{ height: bottomPanelHeight }"

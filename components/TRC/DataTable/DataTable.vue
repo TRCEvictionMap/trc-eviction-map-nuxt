@@ -82,13 +82,13 @@ function onRowSelect(rowId: string) {
 <template>
   <div class="flex flex-col relative overflow-auto w-full">
     <TRCDataTableTop
-      class="z-20 flex-shrink"
+      class="z-20"
       :columns="columns"
       :sortBy="sortBy"
       :sortDirection="sortDirection"
       @col:sort:direction="setSortState"
     />
-    <div class="h-full w-full overflow-auto flex-1 z-10">
+    <div class="h-full overflow-auto flex-1 z-10">
       <TRCDataTableHeader
         :sortBy="sortBy"
         :sortDirection="sortDirection"
@@ -149,7 +149,6 @@ function onRowSelect(rowId: string) {
     </div>
 
     <TRCDataTablePagination
-      class="flex-shrink"
       :items="sortedRows"
       :initalPageSize="initalPageSize"
       v-model="pageRows"
