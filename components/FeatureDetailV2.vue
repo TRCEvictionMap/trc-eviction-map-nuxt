@@ -7,11 +7,12 @@ import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 const { featureId } = defineProps<{ featureId: string }>();
 
-const map = await useMap();
 const controls = useMapControlsV2();
 const flags = useFeatureFlags();
 const featureState = useFeatureState();
 const featureProperties = useFeaturePropertiesV2();
+
+const flyTo = await useFlyTo();
 
 const isHovered = computed(() => featureState.hoveredFeature === featureId);
 
@@ -52,24 +53,6 @@ function onMouseover() {
 
 function onMouseleave() {
   featureState.setFeatureState(featureId, "isHovered", false);
-}
-
-function flyTo() {
-  const { size, lon, lat } = featureProperties.bgPolygonCenter[featureId];
-
-  const zoom = (() => {
-    if (size > 0.2) return 10.5;
-    if (size > 0.15) return 11;
-    if (size > 0.05) return 11.5;
-    if (size > 0.01) return 13;
-    return 14;
-  })();
-
-  map.flyTo({
-    center: [lon, lat],
-    essential: true,
-    zoom,
-  });
 }
 
 </script>
@@ -114,7 +97,7 @@ function flyTo() {
       </p>
       <div class="flex justify-end gap-2">
         <button
-          @click="flyTo"
+          @click="flyTo(featureId)"
           class="button-fly-to"
         >
           Fly to on map

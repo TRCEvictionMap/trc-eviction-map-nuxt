@@ -14,6 +14,7 @@ const emit = defineEmits<{
   "row:mouseover": [rowId: string];
   "row:mouseleave": [rowId: string];
   "row:select": [rowId: string];
+  "flyTo": [featureId: string];
 }>();
 
 const { colWidths, cols, colsPinned, tableWidth } = props.columns;
@@ -42,8 +43,13 @@ const isSelected = computed({
   >
     <div class="sticky left-0 bg-white">
       <div class="flex bg-slate-100/60">
-        <div class="dt-cell ">
+        <div class="dt-cell">
           <TRCCheckbox v-model="isSelected" />
+        </div>
+        <div class="dt-cell">
+          <TRCButton @click="$emit('flyTo', data.id)" title="Fly to feature on map">
+            <IconViewfinderCircle class="h-4 w-4" />
+          </TRCButton>
         </div>
         <div
           v-for="col in colsPinned"

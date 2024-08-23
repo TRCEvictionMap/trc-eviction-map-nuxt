@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="Field extends string">
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import type { DataTableColumn } from "./data-table-types";
+import type { TRCPopover } from "#build/components";
 
 const props = defineProps<{
   data: DataTableColumn<Field>;
@@ -24,14 +25,27 @@ function onSortDirection(close: () => void, direction: SortDirection) {
   close();
 }
 
+const pinRef = ref<HTMLButtonElement>();
+const popoverRef = ref<InstanceType<typeof TRCPopover>>();
+
 const description = computed(() =>
   props.data.description?.trim().replace(/\n{3,}/g, "\n")
 );
+
+watch(popoverRef, (popover) => {
+  // console.log(popover)
+})
+
+onMounted(() => {
+  // pinRef.value?.focus();
+
+})
 
 </script>
 
 <template>
   <TRCPopover
+    ref="popoverRef"
     isFloating
     alignment="start"
     :allowedPlacements="['bottom', 'bottom-start', 'bottom-end', 'top', 'top-end', 'top-start']"
@@ -48,6 +62,7 @@ const description = computed(() =>
       <div class="flex flex-col w-52 gap-2 font-semibold text-slate-800 text-sm p-2">
         <div class="space-y-1">
           <button
+            ref="pinRef"
             @click="$emit('col:pin', { field: data.field, pinned: !data.pinned })"
             role="checkbox"
             class="menu-button"

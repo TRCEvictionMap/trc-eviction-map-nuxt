@@ -14,12 +14,13 @@ const controls = useMapControlsV2();
 const featureProperties = useFeaturePropertiesV2();
 const featureState = useFeatureState();
 
+const flyTo = await useFlyTo();
+
 const currentSourceHumanReadable = computed(() => controls.currentSourceHumanReadable?.toLowerCase())
 
 function racePercentageDescription(race: string) {
   return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table "P2: Hispanic or Latino, and not Hispanic or Latino by Race" published by the U.S. Census Bureau for the 2020 Decennial Census.`;
 }
-
 
 const { columns, rows } = dataTableRowsAndCols({
   columns: [
@@ -240,6 +241,7 @@ function setColumnPin(field: string, pinned: boolean) {
     @row:mouseleave="rowId => featureState.setFeatureState(rowId, 'isHovered', false)"
     @row:mouseover="rowId => featureState.setFeatureState(rowId, 'isHovered', 'card')"
     @rows:select="rowIds => featureState._features = rowIds"
+    @flyTo="flyTo($event)" 
   />
 </template>
 

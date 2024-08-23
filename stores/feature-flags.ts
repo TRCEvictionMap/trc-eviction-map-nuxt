@@ -7,6 +7,7 @@ const useFeatureFlags = defineStore("feature-flags", () => {
     disableDataTableHeaderToggle: config.public.disableDataTableHeaderToggle,
     disableMultiColorFeatureOutline: config.public.disableMultiColorFeatureOutline,
     disableChart: config.public.disableChart,
+    disableMapPopups: config.public.disableMapPopups,
   };
 });
 

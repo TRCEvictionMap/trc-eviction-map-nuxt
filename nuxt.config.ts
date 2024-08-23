@@ -39,6 +39,7 @@ export default defineNuxtConfig({
             disableChart: true,
             disableDataTableHeaderToggle: false,
             disableMultiColorFeatureOutline: false,
+            disableMapPopups: true,
             /* END FEATURE FLAGS */
         },
     },

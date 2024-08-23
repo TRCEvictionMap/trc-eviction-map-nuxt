@@ -72,6 +72,7 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
     if (source === "block-group") {
       bgChoropleth.value = getProperties(data, (props) => ({
         ...props,
+        tr: props.tr.replace(/^0*/, ""),
         rr: roundPercent(props.rr),
         rrm: roundPercent(props.rrm),
         pr: roundPercent(props.pr),

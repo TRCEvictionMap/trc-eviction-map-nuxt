@@ -167,15 +167,16 @@ function useMapLayersV2(map: mapboxgl.Map) {
   const featureState = useFeatureState();
   const interpolated = useInterpolatedColors();
 
+  const popup = useMapPopup();
   const { choroplethLayers, heatmapLayers } = createLayers(controls.currentSource);
 
   const { choroplethLayerId, choroplethBorderLayerId, heatmapLayerId } = useLayerIds(controls.currentSource);
 
   const loadedSources = new Set<string>();
-  let layersAdded = false;
+  let isLayersAdded = false;
 
   map.on("sourcedata", async (ev) => {
-    if (layersAdded) {
+    if (isLayersAdded) {
       return;
     }
 
@@ -190,7 +191,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
       addLayers(map, choroplethLayers);
       addLayers(map, heatmapLayers);
 
-      layersAdded = true;
+      isLayersAdded = true;
 
       updateChoroplethLayerFeatureState(featureState.selectedFeatures);
       updateChoroplethPaintProperties(controls.currentChoroplethMetric);
@@ -205,6 +206,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
     map.on("click", choroplethLayerId, handleMapClick);
     map.on("mousemove", choroplethLayerId, handleMapMousemove);
     map.on("mouseleave", choroplethLayerId, handleMapMouseleave);
+    map.on("mouseenter", choroplethLayerId, handleMapMouseenter);
   });
 
   onBeforeUnmount(() => {
@@ -217,8 +219,9 @@ function useMapLayersV2(map: mapboxgl.Map) {
     featureState.clearHoveredFeature();
 
     map.off("click", choroplethLayerId, handleMapClick);
-    map.off("mousemove", choroplethLayerId, handleMapMousemove);
+    map.off("mouseenter", choroplethLayerId, handleMapMouseenter);
     map.off("mouseleave", choroplethLayerId, handleMapMouseleave);
+    map.off("mousemove", choroplethLayerId, handleMapMousemove);
   });
 
   watch(
@@ -341,7 +344,14 @@ function useMapLayersV2(map: mapboxgl.Map) {
       });
   }
 
-  async function handleMapClick(ev: MapboxMouseEvent<true>) {
+  function setFeatureState(featureId: string, state: Record<string, any>) {
+    map.setFeatureState(
+      { source: controls.currentSource, id: featureId },
+      state
+    );
+  }
+
+  function handleMapClick(ev: MapboxMouseEvent<true>) {
     if (ev.features && ev.features.length) {
       const justClicked = ev.features[0].id?.toString() ?? "";
       featureState.setFeatureState(
@@ -352,20 +362,19 @@ function useMapLayersV2(map: mapboxgl.Map) {
     }
   }
 
-  function setFeatureState(featureId: string, state: Record<string, any>) {
-    map.setFeatureState(
-      { source: controls.currentSource, id: featureId },
-      state
-    );
+  function handleMapMouseenter(_ev: MapboxMouseEvent<true>) {
+    popup.addTo(map);
   }
 
-  function handleMapMouseleave(ev: MapboxMouseEvent<true>) {
+  function handleMapMouseleave(_ev: MapboxMouseEvent<true>) {
     featureState.clearHoveredFeature();
+    popup.remove();
   }
 
   function handleMapMousemove(ev: MapboxMouseEvent<true>) {
     if (ev.features && ev.features.length > 0) {
       const hovered = ev.features[0].id?.toString() ?? "";
+      popup.setLngLat(ev.lngLat);
       featureState.setFeatureState(hovered, "isHovered", "feature");
     }
   }

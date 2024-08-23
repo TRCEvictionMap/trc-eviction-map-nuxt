@@ -141,6 +141,12 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
 
   const currentChoroplethMetric = ref<ChoroplethMetric>("renter_count");
 
+  const choroplethMetricHumanReadable = computed(() =>
+    choroplethMetricOptions.find(
+      ({ value }) => value === currentChoroplethMetric.value
+    )?.text
+  );
+
   const availableMonthRangeValues = computed(() =>
     Object
       .entries(monthEpochMap.value)
@@ -260,6 +266,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     currentYear,
     currentMonth,
     currentChoroplethMetric,
+    choroplethMetricHumanReadable,
     currentMonthRangeHumanReadable,
     showHeatmap,
   };

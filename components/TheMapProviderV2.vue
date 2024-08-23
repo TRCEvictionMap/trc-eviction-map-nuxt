@@ -29,10 +29,17 @@ function resizeMap() {
   map.value?.resize();
 }
 
+
+const isMounted = ref(false);
+
+onMounted(() => {
+  isMounted.value = true;
+});
+
 </script>
 
 <template>
-  <div class="relative flex flex-1">
+  <div class="relative flex flex-1" id="main-content">
     <TransitionGroup
       :name="resizeActive ? 'DISABLED_TRANSITION' : 'side-drawer'"
       @afterLeave="resizeMap"
@@ -52,7 +59,7 @@ function resizeMap() {
           @mousedown="resizeActive = true"
           @mouseup="resizeActive = false"
         />
-        <div class="flex overflow-auto p-4 min-h-[calc(100vh-60px)] max-h-[calc(100vh-60px)]">
+        <div class="flex overflow-auto px-2 py-2 min-h-[calc(100vh-60px)] max-h-[calc(100vh-60px)]">
           <slot name="left"></slot>
         </div>
       </div>
@@ -73,12 +80,32 @@ function resizeMap() {
             id="map-container"
             class="flex-1"
           ></div>
-          <slot name="map-overlay"></slot>
+          <slot name="map-overlay" v-bind="{ isMounted }"></slot>
         </div>
+        <div class="relative z-20 border-t bg-white">
+          <TRCTooltip
+            #="props"
+            placement="top"
+            :text="`${settings.options.showBottomPanel ? 'Close' : 'Open'} data table.`"
+          >
+            <button
+              v-bind="props"
+              class="absolute -top-6 left-1/2 bg-white rounded-tl rounded-tr px-2 py-0 border-t border-l border-r"
+              @click="settings.options.showBottomPanel = !settings.options.showBottomPanel"
+            >
+              <IconChevronUp
+                class="transition duration-00"
+                :class="{
+                  'rotate-180': settings.options.showBottomPanel
+                }"
+              />
+
+            </button>
+          </TRCTooltip>
+
           <div
             v-if="settings.options.showBottomPanel"
             key="bottom-panel"
-            class="relative z-20 border-t bg-white"
             :style="{ height: `${bottomPanelHeight}px` }"
             @mousedown="resizeActive = true"
             @mouseup="resizeActive = false"
@@ -91,10 +118,13 @@ function resizeMap() {
               position="top"
             />
             <div class="p-4 overflow-auto w-full flex flex-col">
-  
-              <slot name="bottom" v-bind="{ height: bottomPanelHeight }"></slot>
+              <slot
+                name="bottom"
+                v-bind="{ height: bottomPanelHeight }"
+              ></slot>
             </div>
           </div>
+        </div>
         <!-- </TransitionGroup> -->
       </div>
     </TransitionGroup>
