@@ -26,6 +26,10 @@ const featureState = useFeatureState();
 
 const tableColumns = useTableColumns(props.columns);
 
+watch(() => tableColumns.colWidths, (colWidths) => {
+  console.log(Object.fromEntries(Object.entries(colWidths.value)))
+}, { immediate: true });
+
 const selectedRowIds = computed(() => props.modelValue);
 const selectedRows = computed(
   () => selectedRowIds
@@ -76,7 +80,7 @@ function onRowSelect(rowId: string) {
 </script>
 
 <template>
-  <div class="flex flex-col relative">
+  <div class="flex flex-col relative overflow-auto w-full">
     <TRCDataTableTop
       class="z-20 flex-shrink"
       :columns="columns"
@@ -145,6 +149,7 @@ function onRowSelect(rowId: string) {
     </div>
 
     <TRCDataTablePagination
+      class="flex-shrink"
       :items="sortedRows"
       :initalPageSize="initalPageSize"
       v-model="pageRows"

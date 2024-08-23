@@ -102,7 +102,6 @@ onMounted(() => {
 
             </button>
           </TRCTooltip>
-
           <div
             v-if="settings.options.showBottomPanel"
             key="bottom-panel"
