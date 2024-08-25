@@ -78,8 +78,9 @@ await useAsyncData(
             to="#main-content"
           >
             <MapControls
-              position="left"
               isFloating
+              position="left"
+              :isPopoverOnMobile="!settings.options.showLeftPanel"
             />
           </Teleport>
           <MapLayers />

@@ -29,7 +29,6 @@ function resizeMap() {
   map.value?.resize();
 }
 
-
 const isMounted = ref(false);
 
 onMounted(() => {
@@ -99,7 +98,6 @@ onMounted(() => {
                   'rotate-180': settings.options.showBottomPanel
                 }"
               />
-
             </button>
           </TRCTooltip>
           <div
