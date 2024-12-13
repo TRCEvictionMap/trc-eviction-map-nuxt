@@ -11,10 +11,12 @@ const supabase = createClient(
 );
 
 function writeGeojson(name, data) {
-  fs.writeFileSync(
-    path.resolve("./geojson", `${name}.json`),
-    JSON.stringify(data)
-  );
+  const dir = "./geojson";
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  const file = path.resolve(dir, `${name}.json`);
+  fs.writeFileSync(file, JSON.stringify(data));
 }
 
 async function rpc(fn) {
