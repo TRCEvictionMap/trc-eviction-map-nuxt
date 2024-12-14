@@ -24,3 +24,6 @@ logs
 .env.*
 !.env.example
 geojson
+
+# CI generated
+public/block-group-heatmap.json

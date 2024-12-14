@@ -7,11 +7,11 @@ const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SRVC_KEY
+  process.env.SUPABASE_SRVC_KEY,
 );
 
 function writeGeojson(name, data) {
-  const dir = "./geojson";
+  const dir = "./public";
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
@@ -46,7 +46,10 @@ function validate(data) {
 async function pullGeoJSON() {
   try {
     console.info("[pullGeoJSON] Begin");
-    writeGeojson("block-group", validate(await rpc("get_block_group_geojson")));
+    writeGeojson(
+      "block-group-heatmap",
+      validate(await rpc("get_block_group_heatmap")),
+    );
   } catch (error) {
     console.error("[pullGeoJSON]", error);
   } finally {
