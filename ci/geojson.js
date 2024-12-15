@@ -50,6 +50,10 @@ async function pullGeoJSON() {
       "block-group-heatmap",
       validate(await rpc("get_block_group_heatmap")),
     );
+    writeGeojson(
+      "block-group-choropleth",
+      validate(await rpc("get_block_group_choropleth")),
+    );
   } catch (error) {
     console.error("[pullGeoJSON]", error);
   } finally {
