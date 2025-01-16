@@ -7,14 +7,16 @@ const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY,
+  process.env.SUPABASE_SRVC_KEY,
 );
 
 function writeGeojson(name, data) {
-  fs.writeFileSync(
-    path.resolve("./geojson", `${name}.json`),
-    JSON.stringify(data)
-  );
+  const dir = "./public";
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  const file = path.resolve(dir, `${name}.json`);
+  fs.writeFileSync(file, JSON.stringify(data));
 }
 
 async function rpc(fn) {
@@ -44,7 +46,14 @@ function validate(data) {
 async function pullGeoJSON() {
   try {
     console.info("[pullGeoJSON] Begin");
-    writeGeojson("block-group", validate(await rpc("get_block_group_geojson")));
+    writeGeojson(
+      "block-group-heatmap",
+      validate(await rpc("get_block_group_heatmap")),
+    );
+    writeGeojson(
+      "block-group-choropleth",
+      validate(await rpc("get_block_group_choropleth")),
+    );
   } catch (error) {
     console.error("[pullGeoJSON]", error);
   } finally {

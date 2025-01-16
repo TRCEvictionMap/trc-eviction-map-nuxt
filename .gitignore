@@ -17,8 +17,13 @@ logs
 .DS_Store
 .fleet
 .idea
+.vim
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# CI generated
+public/block-group-heatmap.json
+public/block-group-choropleth.json
