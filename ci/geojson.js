@@ -61,4 +61,4 @@ async function pullGeoJSON() {
   }
 }
 
-await pullGeoJSON();
+pullGeoJSON();
