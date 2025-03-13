@@ -5,20 +5,22 @@ name: Deploy to GitHub Pages
       - main
   workflow_dispatch:
     inputs: {}
+  schedule: # to keep supabase alive
+    - cron: '0 13 * * 1,4' # At 13:00 on Monday and Thursday.
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: npm install && node ci/geojson.js && npm run generate
         env:
           NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT: ${{ vars.NUXT_PUBLIC_MAPBOX_STYLE_URL_LIGHT }}
           NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ vars.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
           SUPABASE_SRVC_KEY: ${{ secrets.SUPABASE_SRVC_KEY }}
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
-      - uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./.output/public
