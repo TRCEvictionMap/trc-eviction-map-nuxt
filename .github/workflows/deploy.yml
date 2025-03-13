@@ -18,7 +18,7 @@ jobs:
           NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ vars.NUXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
           SUPABASE_SRVC_KEY: ${{ secrets.SUPABASE_SRVC_KEY }}
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
-      - uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./.output/public
