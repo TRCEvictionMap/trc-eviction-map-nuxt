@@ -6,7 +6,7 @@ name: Deploy to GitHub Pages
   workflow_dispatch:
     inputs: {}
   schedule: # to keep supabase alive
-    - cron: '0 13 * * 1,4' # At 13:00 on Monday and Thursday.
+    - cron: '0 13 1-7 * 3' # At 13:00 on the first week on Wednesday.
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
