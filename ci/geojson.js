@@ -21,10 +21,10 @@ function writeGeojson(name, data) {
 
 async function rpc(fn) {
   console.info("[rpc]", fn);
-
   const { data, error } = await supabase.rpc(fn);
 
   if (error) {
+    console.log("Error!", error);
     throw error;
   }
 
@@ -53,6 +53,10 @@ async function pullGeoJSON() {
     writeGeojson(
       "block-group-choropleth",
       validate(await rpc("get_block_group_choropleth")),
+    );
+    writeGeojson(
+      "school-district-geom",
+      validate(await rpc("get_school_district_geom")),
     );
   } catch (error) {
     console.error("[pullGeoJSON]", error);

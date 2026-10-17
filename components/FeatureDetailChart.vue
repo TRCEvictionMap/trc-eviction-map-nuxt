@@ -13,7 +13,9 @@ const canvasRef = ref<HTMLCanvasElement>();
 const chartRef = ref<Chart>();
 
 const datasets = computed(
-  (): Chart["data"]["datasets"] => featureState.selectedFeatures
+  (): Chart["data"]["datasets"] => {
+    
+    if (controls.currentSource == 'block-group') {return featureState.selectedFeatures
     .filter((featureId) => Boolean(featureProperties.bgChoropleth[featureId]))
     .map((featureId) => {
       const { bg, tr, filings } = featureProperties.bgChoropleth[featureId];
@@ -24,6 +26,21 @@ const datasets = computed(
       };
     }
   )
+    }
+  else { 
+    return featureState.selectedFeatures
+    .filter((featureId) => Boolean(featureProperties.bgSchoolDistrictChoropleth[featureId]))
+    .map((featureId) => {
+      const { bg, tr, filings } = featureProperties.bgSchoolDistrictChoropleth[featureId];
+      return {
+        label: `${tr}.${bg}`,
+        data: Object.values(filings).map(({ c }) => c),
+        borderColor: featureState.selectedFeatureColors[featureId],
+      };
+    }
+  )
+  }
+  }
 );
 
 watch(datasets, updateChartDatasets, { immediate: true });

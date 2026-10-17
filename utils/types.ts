@@ -1,9 +1,10 @@
 
-type SourceId =  "block-group";
+type SourceId =  "block-group" | "school-district";
 
 const SOURCE_OPTIONS: SourceId[] = [
     // "alder-district",
     "block-group",
+    "school-district",
 ];
 
 function isSourceId(data: unknown): data is SourceId {
