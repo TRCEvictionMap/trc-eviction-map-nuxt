@@ -32,6 +32,10 @@ const CHOROPLETH_METRICS = [
   "none"
 ] as const;
 
+const SD_CHOROPLETH_METRICS = [
+  "none"
+]
+
 type ChoroplethMetric = typeof CHOROPLETH_METRICS[number];
 
 const VALID_RANGE_SIZES = [0, 6, 12] as const;
@@ -50,9 +54,15 @@ const sourceOptions: Option<SourceId>[] = [
     value: "block-group",
     description: "A statistical geographic unit used by the U.S. Census to organize data it publishes"
   },
+  {
+    text: "School District",
+    value: "school-district",
+    description: "School district borders in Dane County"
+  }
 ];
 
-const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
+
+let choroplethMetricOptions: Option<ChoroplethMetric>[] = [
   {
     text: "None",
     value: "none",
@@ -107,6 +117,12 @@ const choroplethMetricOptions: Option<ChoroplethMetric>[] = [
   },
 ];
 
+const sdChoroplethMetricOptions: any = [
+  {
+    text: "None",
+    value: "none"
+  }
+]
 const timeIntervalOptions: Option<ValidRangeSize>[] = [
   {
     text: "12 months",
@@ -269,6 +285,7 @@ const useMapControlsV2 = defineStore("map-controls-v2", () => {
     choroplethMetricHumanReadable,
     currentMonthRangeHumanReadable,
     showHeatmap,
+    sdChoroplethMetricOptions
   };
 });
 

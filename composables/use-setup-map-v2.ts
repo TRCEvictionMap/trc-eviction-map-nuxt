@@ -77,16 +77,20 @@ function useSetupMapV2(options: SetupMapOptions) {
 
     map.value.on("load", async () => {
 
-      const [bgChoroplethJson, bgHeatmapJson] = await Promise.all([
+      const [bgChoroplethJson, bgHeatmapJson, bgSDJson] = await Promise.all([
         fetchGeoJson("block-group-choropleth") as Promise<FeatureCollections.ChoroplethV2>,
-        fetchGeoJson("block-group-heatmap") as Promise<FeatureCollections.HeatmapV2>
+        fetchGeoJson("block-group-heatmap") as Promise<FeatureCollections.HeatmapV2>,
+        fetchGeoJson("school-district-geom") as Promise<FeatureCollections.ChoroplethV2>
       ]);
 
       featureProperties.loadChoropleth(
-        controls.currentSource,
+        "block-group",
         bgChoroplethJson
       );
-
+      featureProperties.loadChoropleth(
+        "school-district",
+        bgSDJson
+      );
       featureProperties.loadHeatmap(
         controls.currentSource,
         bgHeatmapJson
@@ -112,6 +116,10 @@ function useSetupMapV2(options: SetupMapOptions) {
           type: "geojson",
           promoteId: "id",
           data: bgChoroplethJson,
+        })
+        .addSource("school-district", {
+          type: "geojson",
+          data: bgSDJson
         })
         .addSource("block-group-heatmap", {
           type: "geojson",

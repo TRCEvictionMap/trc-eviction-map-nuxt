@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useFeatureFlags } from "./feature-flags";
+import { features } from "process";
 
 type HoveredFeatureKind = "feature" | "card" | "table-row" | false;
 
@@ -8,12 +9,12 @@ interface FeatureState {
   isSelected: boolean;
 }
 
-const FEATURE_COLOR = ["#ff7f00", "#4daf4a", "#984ea3"] as const;
+const FEATURE_COLOR = ["#ff7f00", "#4daf4a", "#984ea3", "#e12037", "#0e1286"] as const;
 
 type FeatureColor = typeof FEATURE_COLOR[number];
 type FeatureColors = Record<string, FeatureColor>;
 
-const MAX_SELECTED_FEATURES = 3;
+const MAX_SELECTED_FEATURES = 100;
 
 function useSelectedFeatures() {
   const flags = useFeatureFlags();
@@ -21,18 +22,7 @@ function useSelectedFeatures() {
   const _features = ref<string[]>([]);
   const _featureColors = ref<FeatureColors>({});
 
-  const selectedFeatureColors = computed(() => {
-    if (flags.disableMultiColorFeatureOutline) {
-      return {};
-    }
-    
-    return Object.fromEntries(
-      Object.entries(_featureColors.value).map(([featureId, color]) => [
-        featureId,
-        color
-      ])
-    );
-  });
+  
 
   const selectedFeatures = computed({
     get() {
@@ -43,6 +33,21 @@ function useSelectedFeatures() {
         ? features.slice(features.length - MAX_SELECTED_FEATURES)
         : features;
     }
+  });
+
+  const selectedFeatureColors = computed(() => {
+    if (flags.disableMultiColorFeatureOutline) {
+      return {};
+    }
+    if (selectedFeatures.value.length < 1) {
+      return {}
+    }
+    return Object.fromEntries(
+      Object.entries(_featureColors.value).map(([featureId, color]) => [
+        featureId,
+        color
+      ])
+    );
   });
 
   watch(selectedFeatures, (selectedFeatures) => {
@@ -61,7 +66,6 @@ function useSelectedFeatures() {
         { featureColors: {}, availableColors: Array.from(FEATURE_COLOR) } as
         { featureColors: FeatureColors; availableColors: FeatureColor[] }
       );
-
     selectedFeatures.forEach((featureId) => {
       if (!featureColors[featureId]) {
         featureColors[featureId] = availableColors.pop() as FeatureColor;

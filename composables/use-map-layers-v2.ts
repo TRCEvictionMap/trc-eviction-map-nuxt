@@ -16,8 +16,69 @@ interface Layer {
 interface Layers {
   choroplethLayers: Layer[];
   heatmapLayers: Layer[];
+  schoolDistrictLayers: Layer[];
 }
+const CMO: Option<ChoroplethMetric>[] = [
+  {
+    text: "None",
+    value: "none",
+  },
+  {
+    text: "Renter Count",
+    value: "renter_count",
+  },
+  {
+    text: "Renter Rate",
+    value: "renter_rate",
+  },
+  {
+    text: "Population",
+    value: "pop",
+  },
+  {
+    text: "Poverty Rate",
+    value: "poverty_rate",
+  },
+  {
+    text: "% American Indian",
+    value: "pct_american_indian",
+  },
+  {
+    text: "% Asian",
+    value: "pct_asian",
+  },
+  {
+    text: "% Black",
+    value: "pct_black",
+  },
+  {
+    text: "% Hispanic or Latino",
+    value: "pct_hl",
+  },
+  {
+    text: "% Multiple Races",
+    value: "pct_multi",
+  },
+  {
+    text: "% Other",
+    value: "pct_other",
+  },
+  {
+    text: "% Pacific Islander",
+    value: "pct_pacific_islander",
+  },
+  {
+    text: "% White",
+    value: "pct_white",
+  },
+];
 
+const SDCMO: any = [
+  {
+    text: "None",
+    value: "none"
+  }
+]
 function createLayers<S extends SourceId>(source: S): Layers {
   const flags = useFeatureFlags();
 
@@ -25,6 +86,8 @@ function createLayers<S extends SourceId>(source: S): Layers {
     choroplethLayerId,
     choroplethBorderLayerId,
     heatmapLayerId,
+    schoolDistrictLayerId,
+    schoolDistrictBorderId,
   } = useLayerIds(source);
 
   return {
@@ -85,6 +148,7 @@ function createLayers<S extends SourceId>(source: S): Layers {
           },
         },
       },
+      
     ],
     heatmapLayers: [
       {
@@ -131,6 +195,64 @@ function createLayers<S extends SourceId>(source: S): Layers {
         },
       },
     ],
+  schoolDistrictLayers: [
+    {
+        layer: {
+          source: 'school-district',
+          id: schoolDistrictLayerId,
+          type: "fill",
+          paint: {
+            "fill-opacity": 0.5,
+          }
+      },
+    },
+    {
+        layer: {
+          source: 'school-district',
+          id: schoolDistrictBorderId,
+          type: "line",
+          paint: {
+            "line-width": [
+              "case",
+              ["boolean", ["feature-state", "isSelected"], false],
+              4,
+              [
+                "case",
+                ["boolean", ["feature-state", "isHovered"], false],
+                2,
+                1
+              ]
+            ],
+            "line-opacity": [
+              "case",
+              ["boolean", ["feature-state", "isHovered"], false],
+              1,
+              0.8,
+            ],
+            "line-color": ["string", ["feature-state", "lineColor"], "#656565"],
+            "line-offset": flags.disableMultiColorFeatureOutline
+              ? 0
+              : [
+                  "case",
+                  [
+                    "boolean",
+                    [
+                      "==",
+                      [
+                        "typeof",
+                        ["feature-state", "lineColor"]
+                      ],
+                      "string"
+                    ],
+                    false
+                  ],
+                  2,
+                  0
+                ],
+          },
+        },
+      },
+  ]
   };
 }
 
@@ -168,9 +290,9 @@ function useMapLayersV2(map: mapboxgl.Map) {
   const interpolated = useInterpolatedColors();
 
   const popup = useMapPopup();
-  const { choroplethLayers, heatmapLayers } = createLayers(controls.currentSource);
+  const { choroplethLayers, heatmapLayers, schoolDistrictLayers } = createLayers(controls.currentSource);
 
-  const { choroplethLayerId, choroplethBorderLayerId, heatmapLayerId } = useLayerIds(controls.currentSource);
+  const { choroplethLayerId, choroplethBorderLayerId, heatmapLayerId, schoolDistrictLayerId, schoolDistrictBorderId } = useLayerIds(controls.currentSource);
 
   const loadedSources = new Set<string>();
   let isLayersAdded = false;
@@ -190,7 +312,6 @@ function useMapLayersV2(map: mapboxgl.Map) {
     ) {
       addLayers(map, choroplethLayers);
       addLayers(map, heatmapLayers);
-
       isLayersAdded = true;
 
       updateChoroplethLayerFeatureState(featureState.selectedFeatures);
@@ -204,9 +325,13 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   onMounted(() => {
     map.on("click", choroplethLayerId, handleMapClick);
+    map.on("click", schoolDistrictLayerId, handleMapClick);
     map.on("mousemove", choroplethLayerId, handleMapMousemove);
+    map.on("mousemove", schoolDistrictLayerId, handleMapMousemove);
     map.on("mouseleave", choroplethLayerId, handleMapMouseleave);
     map.on("mouseenter", choroplethLayerId, handleMapMouseenter);
+    map.on("mouseleave", schoolDistrictLayerId, handleMapMouseleave);
+    map.on("mouseenter", schoolDistrictLayerId, handleMapMouseenter);
   });
 
   onBeforeUnmount(() => {
@@ -219,6 +344,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
     featureState.clearHoveredFeature();
 
     map.off("click", choroplethLayerId, handleMapClick);
+    map.off("click", schoolDistrictLayerId, handleMapClick);
     map.off("mouseenter", choroplethLayerId, handleMapMouseenter);
     map.off("mouseleave", choroplethLayerId, handleMapMouseleave);
     map.off("mousemove", choroplethLayerId, handleMapMousemove);
@@ -262,6 +388,29 @@ function useMapLayersV2(map: mapboxgl.Map) {
       setFeatureState(current, { isHovered: true });
     }
   });
+  const handleSourceChange = () => {
+    if (controls.currentSource == "block-group") {
+      removeLayers(map, schoolDistrictLayers);
+      addLayers(map, choroplethLayers);
+      controls.choroplethMetricOptions = CMO;
+    }
+    else if (controls.currentSource == "school-district") {
+      removeLayers(map, choroplethLayers);
+      addLayers(map, schoolDistrictLayers);
+      controls.choroplethMetricOptions = SDCMO;
+      controls.currentChoroplethMetric = "none";
+    }
+    resetChoroplethBorderStyling(featureState.selectedFeatures);
+    updateChoroplethPaintProperties(controls.currentChoroplethMetric);
+    updateChoroplethLayerFeatureState([], featureState.selectedFeatures);
+    updateChoroplethBorderLayerFeatureState({}, featureState.selectedFeatureColors);
+    featureState.selectedFeatures = [];
+    updateHeatmapVisibility(controls.showHeatmap);
+    updateHeatmapTimeFilter(controls.currentMonthRange);
+  }
+  watch(() => controls.currentSource,
+  handleSourceChange,
+  {immediate: true});
 
   function updateChoroplethPaintProperties(metric: ChoroplethMetric) {
     if (map.getLayer(choroplethLayerId)) {
@@ -280,6 +429,23 @@ function useMapLayersV2(map: mapboxgl.Map) {
         map.setPaintProperty(choroplethLayerId, "fill-color", "transparent")
       }
     }
+    else if (map.getLayer(schoolDistrictLayerId)) {
+      if (metric !== "none") {
+        map.setPaintProperty(
+          schoolDistrictLayerId,
+          "fill-color",
+          [
+            "interpolate",
+            ["linear"],
+            ["number", ["get", CHOROPLETH_METRIC_GEOJSON_PROPERTY_MAP[metric], ["properties"]]],
+            ...interpolated.choropleth[metric].array
+          ]
+        );
+      }
+      else {
+        map.setPaintProperty(schoolDistrictLayerId, "fill-color", "transparent");
+      }
+    }
   }
 
   function updateHeatmapVisibility(isVisible: boolean) {
@@ -294,9 +460,9 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   function updateChoroplethBorderLayerFeatureState(
     current: FeatureColors,
-    previous?: FeatureColors
+    previous?: FeatureColors,
   ) {
-    if (map.getLayer(choroplethBorderLayerId)) {
+    if (map.getLayer(choroplethBorderLayerId) || map.getLayer(schoolDistrictBorderId)) {
       Object.entries(previous ?? []).forEach(([featureId]) => {
         setFeatureState(featureId, { lineColor: null });
       });
@@ -309,6 +475,19 @@ function useMapLayersV2(map: mapboxgl.Map) {
     }
   }
 
+  function resetChoroplethBorderStyling(selectedFeatures: FeatureId[]) {
+    const isSelected = false;
+    if (controls.currentSource == 'school-district') {
+      selectedFeatures.forEach((featureId) => {
+      map.setFeatureState({source: 'block-group', id: featureId}, {lineColor: null, isSelected});
+      })
+    }
+    else if (controls.currentSource == 'block-group') {
+      selectedFeatures.forEach((featureId) => {
+      map.setFeatureState({source: 'school-district', id: featureId}, {lineColor: null, isSelected});
+      })
+    }
+  }
   function updateHeatmapTimeFilter(monthRange: [string, string]) {
     if (map.getLayer(heatmapLayerId)) {
       const [startMonth, endMonth] = monthRange;
@@ -322,7 +501,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
   }
 
   function updateIsSelected(featureId: string, isSelected: boolean) {
-    if (map.getLayer(choroplethLayerId)) {
+    if (map.getLayer(choroplethLayerId) || map.getLayer(schoolDistrictLayerId)) {
       map.setFeatureState(
         { source: controls.currentSource, id: featureId },
         { isSelected },
@@ -353,7 +532,7 @@ function useMapLayersV2(map: mapboxgl.Map) {
 
   function handleMapClick(ev: MapboxMouseEvent<true>) {
     if (ev.features && ev.features.length) {
-      const justClicked = ev.features[0].id?.toString() ?? "";
+      const justClicked = ev.features[0].id?.toString().padStart(4, '0') ?? "";
       featureState.setFeatureState(
         justClicked,
         "isSelected",

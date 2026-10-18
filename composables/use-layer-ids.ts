@@ -8,6 +8,8 @@ function useLayerIds(source: SourceId) {
         choroplethBorderLayerId: source + "-choropleth-border",
         evictionsLayerId: source + "-evictions",
         heatmapLayerId: source + "-heatmap",
+        schoolDistrictLayerId:  "school-district-geom",
+        schoolDistrictBorderId: "school-district-border"
     };
 }
 
