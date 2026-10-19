@@ -116,7 +116,7 @@ function onMouseleave() {
           :class="`bg-[var(--dynamic-color)]`"
         ></div>
         <h2 class="font-semibold">
-          {{ controls.currentSourceHumanReadable }} {{ data.district }}
+           {{ data.district }} {{ controls.currentSourceHumanReadable }}
         </h2>
       </div>
       <p>
