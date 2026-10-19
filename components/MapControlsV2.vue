@@ -19,7 +19,7 @@ const range = computed(
 <template>
   <div
     class="
-      hidden
+      hidden z-10 
       sm:flex sm:w-auto
       sm:justify-center 
     "
@@ -41,12 +41,13 @@ const range = computed(
         'shadow-2xl': isFloating
       }"
     >
-      <div class="hidden sm:block relative z-15 space-y-4">
+      <div class="hidden sm:block relative z-10 space-y-4">
         <div class="space-y-2">
           <h2 class="text-lg font-bold">Map Layers</h2>
           <div class="flex items-center flex-wrap gap-y-4 gap-x-6">
             <TRCSelect
               label="Geography"
+              class="z-10"
               :options="controls.sourceOptions"
               v-model="controls.currentSource"
             />
@@ -72,7 +73,7 @@ const range = computed(
             Use these controls to adjust the window of time for which historical eviction filing data is presented.
           </p>
         </div>
-        <div class="flex flex-wrap gap-y-4 gap-x-6 z-5">
+        <div class="flex flex-wrap gap-y-4 gap-x-6">
           <div class="space-y-2 flex-1">
             <div class="font-mono font-bold text-sm whitespace-nowrap">
               <template v-if="range">
@@ -91,6 +92,7 @@ const range = computed(
             />
           </div>
           <TRCSelect
+            class=""
             label="Date Range Size"
             :options="controls.timeIntervalOptions"
             v-model="controls.currentMonthRangeSize"
@@ -115,7 +117,7 @@ const range = computed(
       leaveFromClass="translate-y-0 opacity-100"
       leaveToClass="translate-y-1 opacity-0"
     >
-      <PopoverPanel class="absolute z-10 max-w-sm bg-white rounded border p-4 space-y-2 shadow-xl z-12">
+      <PopoverPanel class="absolute z-10 max-w-sm bg-white rounded border p-4 space-y-2 shadow-xl">
         <TRCSelect
           label="Demographic Metric"
           :options="controls.choroplethMetricOptions"

@@ -21,11 +21,6 @@ function getProperties<
     )
   );
 }
-function getArrayDepth(arr: any): number {
-  return Array.isArray(arr) 
-    ? 1 + Math.max(0, ...arr.map(getArrayDepth)) 
-    : 0;
-}
 
 type PolygonCenterMap = Record<string, {
   lon: number;
@@ -38,17 +33,14 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
   const controls = useMapControlsV2();
 
   const bgChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
-  const bgSchoolDistrictChoropleth: Ref<Record<string, FeatureProperties.ChoroplethV2>> = ref({});
   const bgHeatmap: Ref<Record<string, FeatureProperties.HeatmapV2>> = ref({});
   const bgPolygonCenter: Ref<PolygonCenterMap> = ref({});
-  const sdPolygonCenter: Ref<PolygonCenterMap> = ref({});
-
 
   const currentMonthRangeFilingCount = computed(() => {
     const [startMonth, endMonth] = controls.currentMonthRange;
-    const fc = controls.currentSource == "block-group" ? bgChoropleth.value : bgSchoolDistrictChoropleth.value
+
     return Object.fromEntries(
-      Object.entries(fc).map(
+      Object.entries(bgChoropleth.value).map(
         ([featureId, properties]) => [
           featureId,
           Object.entries(properties.filings).reduce(
@@ -130,58 +122,6 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
         {}
       )
     }
-    else if (source === "school-district") {
-      bgSchoolDistrictChoropleth.value = getProperties(data, (props) => (
-        {
-          ...props,
-        }
-      ));
-      sdPolygonCenter.value = data.features.reduce(
-        (accum: PolygonCenterMap, feature) => {
-          const coords: any = feature.geometry.coordinates.flat();
-          const depth = getArrayDepth(coords);
-          let maxLon = 0;
-          let maxLat = 0;
-      
-          let minLon = Infinity;
-          let minLat = Infinity;
-          if (depth == 2) {
-            for (let i = 0; i < coords.length; i++) {
-            maxLon = Math.max(maxLon, Math.abs(coords[i][0]));
-            maxLat = Math.max(maxLat, coords[i][1]);
-      
-            minLon = Math.min(minLon, Math.abs(coords[i][0]));
-            minLat = Math.min(minLat, coords[i][1]);
-          }
-          }
-          else if (depth > 2) {
-            //accounts for districts with non-continuous geometries
-            for (let i = 0; i < coords.length; i++) {
-              for (let j=0; j < coords[i].length; j++) {
-                maxLon = Math.max(maxLon, Math.abs(coords[i][j][0])) ?? maxLon;
-                maxLat = Math.max(maxLat, coords[i][j][1]) ?? maxLat;
-                minLon = Math.min(minLon, Math.abs(coords[i][j][0])) ?? minLon;
-                minLat = Math.min(minLat, coords[i][j][1]) ?? minLat;
-              }
-            }
-          }
-      
-          // Do a little swapsies because we're assuming we're in
-          // the North Western hemisphere.
-          const maxLon_ = maxLon;
-          maxLon = -minLon;
-          minLon = -maxLon_;
-    
-          accum[feature.id as string] = {
-            lat: maxLat - (maxLat - minLat) / 2,
-            lon: minLon - (minLon - maxLon) / 2,
-            size: Math.max(maxLon - minLon, maxLat - minLat),
-          };
-          return accum;
-        },
-        {}
-      )
-    }
   }
 
   function loadHeatmap(source: SourceId, data: FeatureCollections.HeatmapV2) {
@@ -190,7 +130,7 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
     }
   }
 
-  return { bgChoropleth, bgHeatmap, bgPolygonCenter, sdPolygonCenter, loadChoropleth, loadHeatmap, currentMonthRangeFilingCount, bgSchoolDistrictChoropleth};
+  return { bgChoropleth, bgHeatmap, bgPolygonCenter, loadChoropleth, loadHeatmap, currentMonthRangeFilingCount };
 });
 
 export { useFeaturePropertiesV2 };
