@@ -163,7 +163,7 @@ const columns = computed( () => {
     ]
   }
 });
-const rows = computed(
+const rows: any = computed(
     () => {
       if (controls.currentSource == 'block-group') {
         return Object.keys(featureProperties.bgChoropleth)

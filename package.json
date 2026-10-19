@@ -16,10 +16,9 @@
     "@types/node": "^18.17.3",
     "autoprefixer": "^10.4.15",
     "dotenv": "^16.3.1",
-    "nuxt": "~3.11.1",
+    "nuxt": "~3.12",
     "postcss": "^8.4.28",
-    "tailwindcss": "^3.3.3",
-    "xlsx": "^0.18.5"
+    "tailwindcss": "^3.3.3"
   },
   "dependencies": {
     "@floating-ui/vue": "^1.0.5",
@@ -29,7 +28,9 @@
     "@pinia/nuxt": "^0.4.11",
     "chart.js": "^4.4.3",
     "mapbox-gl": "^2.15.0",
-    "pinia": "^2.1.6"
+    "pinia": "^2.1.6",
+    "sharp": "^0.35.5",
+    "xlsx": "^0.18.5"
   },
   "overrides": {
     "vue": "latest"

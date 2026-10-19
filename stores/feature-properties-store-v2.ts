@@ -138,7 +138,7 @@ const useFeaturePropertiesV2 = defineStore("feature-properties-v2", () => {
       ));
       sdPolygonCenter.value = data.features.reduce(
         (accum: PolygonCenterMap, feature) => {
-          const coords = feature.geometry.coordinates.flat();
+          const coords: any = feature.geometry.coordinates.flat();
           const depth = getArrayDepth(coords);
           let maxLon = 0;
           let maxLat = 0;

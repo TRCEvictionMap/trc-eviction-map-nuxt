@@ -18,7 +18,7 @@ interface Layers {
   heatmapLayers: Layer[];
   schoolDistrictLayers: Layer[];
 }
-const CMO: Option<ChoroplethMetric>[] = [
+const CMO: any = [
   {
     text: "None",
     value: "none",

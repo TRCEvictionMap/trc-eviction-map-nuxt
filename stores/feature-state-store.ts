@@ -22,7 +22,18 @@ function useSelectedFeatures() {
   const _features = ref<string[]>([]);
   const _featureColors = ref<FeatureColors>({});
 
-  
+  const selectedFeatureColors = computed(() => {
+    if (flags.disableMultiColorFeatureOutline) {
+      return {};
+    }
+    
+    return Object.fromEntries(
+      Object.entries(_featureColors.value).map(([featureId, color]) => [
+        featureId,
+        color
+      ])
+    );
+  });
 
   const selectedFeatures = computed({
     get() {
@@ -35,7 +46,7 @@ function useSelectedFeatures() {
     }
   });
 
-  const selectedFeatureColors = computed(() => {
+/*   const selectedFeatureColors = computed(() => {
     if (flags.disableMultiColorFeatureOutline) {
       return {};
     }
@@ -48,7 +59,7 @@ function useSelectedFeatures() {
         color
       ])
     );
-  });
+  }); */
 
   watch(selectedFeatures, (selectedFeatures) => {
     const { featureColors, availableColors } = Object
