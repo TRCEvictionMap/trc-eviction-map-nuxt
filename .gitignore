@@ -27,4 +27,3 @@ logs
 # CI generated
 public/block-group-heatmap.json
 public/block-group-choropleth.json
-public/school-district-geom.json

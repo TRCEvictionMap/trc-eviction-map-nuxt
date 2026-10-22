@@ -22,9 +22,8 @@ function racePercentageDescription(race: string) {
   return `The percentage of the population of a given ${currentSourceHumanReadable.value} whose race is "${race}" as reported in table "P2: Hispanic or Latino, and not Hispanic or Latino by Race" published by the U.S. Census Bureau for the 2020 Decennial Census.`;
 }
 
-const columns = computed( () => {
-    
-    if (controls.currentSource == 'block-group') {return [
+const { columns, rows } = dataTableRowsAndCols({
+  columns: [
     {
       field: "id",
       width: 120,
@@ -125,48 +124,10 @@ const columns = computed( () => {
       headerTitle: "Percent White",
       description: racePercentageDescription("White alone"),
     },
-  ]}
-  else {
-    return [
-      {
-      field: "district",
-      width: 260,
-      pinned: true,
-      headerText: "School District",
-      disableSort: true,
-      description: "Dane County School Districts"
-    },
-    {
-      field: "n_filings",
-      width: 90,
-      headerText: "Filings",
-      description: `The number of evictions filed against renters living in a given ${currentSourceHumanReadable.value}.`,
-    },
-    {
-      field: "lea_id",
-      width: 150,
-      headerText: "LEA ID",
-      description: "Local Education Agency Code"
-    },
-    {
-      field: "cesa",
-      width: 150,
-      headerText: "CESA",
-      description: "Cooperative Education Service Agency"
-    },
-    {
-      field: "district_type",
-      width: 150,
-      headerText: "District Type",
-      description: "The type of school district"
-    }
-    ]
-  }
-});
-const rows: any = computed(
+  ],
+  rows: computed(
     () => {
-      if (controls.currentSource == 'block-group') {
-        return Object.keys(featureProperties.bgChoropleth)
+      return Object.keys(featureProperties.bgChoropleth)
         .map((featureId) => {
           const {
             bg,
@@ -253,44 +214,9 @@ const rows: any = computed(
             },
           };
         })
-      }
-    else {
-      return Object.keys(featureProperties.bgSchoolDistrictChoropleth)
-      .map((featureId) => {
-        const {
-          district,
-          lea_id,
-          cesa,
-          district_type
-        } = featureProperties.bgSchoolDistrictChoropleth[featureId];
-        return {
-          id: featureId,
-          fields: {
-            district: {
-              value: district,
-              text: district
-            },
-            n_filings: {
-              value: featureProperties.currentMonthRangeFilingCount[featureId].currentWindow,
-            },
-            lea_id: {
-              value: lea_id,
-              text: lea_id
-            },
-            cesa: {
-              value: cesa,
-              text: cesa,
-            },
-            district_type: {
-              value: district_type,
-              text: district_type
-            }
-          }
-        }
-      })
     }
-    }
-  );
+  )
+});
 
 function setColumnPin(field: string, pinned: boolean) {
   for (let i = 0; i < columns.value.length; i++) {
