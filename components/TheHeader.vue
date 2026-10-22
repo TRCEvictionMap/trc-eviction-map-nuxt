@@ -19,6 +19,7 @@ const flags = useFeatureFlags();
     >
       <NuxtPicture
         format="webp"
+        legacyFormat="jpeg"
         src="/trc_logo_horizontal_color.png"
         alt="Tenant Resource Center logo"
         sizes="130px sm:150px"
