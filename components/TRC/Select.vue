@@ -78,9 +78,9 @@ const buttonText = computed(() => {
 				</slot>
 			</ListboxButton>
 		</div>
-		<div class="relative">
+		<div class="relative z-15">
 			<ListboxOptions
-				class="absolute p-4 rounded bg-white shadow border space-y-1 max-h-80 overflow-auto"
+				class="absolute p-4 rounded bg-white shadow border space-y-1 max-h-80 overflow-auto z-20"
 				:class="{
 					'bottom-8': dropUp,
 					'top-[2px]': !dropUp,
@@ -95,7 +95,7 @@ const buttonText = computed(() => {
 						<div v-if="withCheckmark" class="w-7">
 							<IconCheckmark v-if="props.selected" class="h-5" />
 						</div>
-						<div class="flex-1 whitespace-nowrap text-sm">
+						<div class="flex-1 whitespace-nowrap text-sm bg-white">
 							<slot name="option" v-bind="({ ...option, ...props } as TRCSelectOptionSlotProps)">
 								{{ option.text ?? option.value }}
 							</slot>

@@ -64,14 +64,14 @@ const isSelected = computed({
               <slot name="cell-left" v-bind="{ field: col.field }"></slot>
             </span>
             <span>
-              {{ data.fields[col.field].text || data.fields[col.field].value }}
+              {{ data.fields[col.field]?.text || data.fields[col.field]?.value }}
             </span>
           </div>
-          <span v-if="data.fields[col.field].moe" class="text-sm">
-            &plusmn;{{ data.fields[col.field].moe }}
+          <span v-if="data.fields[col.field]?.moe" class="text-sm">
+            &plusmn;{{ data.fields[col.field]?.moe }}
           </span>
-          <span v-if="data.fields[col.field].srOnly" class="sr-only">
-            {{ data.fields[col.field].srOnly }}
+          <span v-if="data.fields[col.field]?.srOnly" class="sr-only">
+            {{ data.fields[col.field]?.srOnly }}
           </span>
         </div>
       </div>
@@ -90,14 +90,14 @@ const isSelected = computed({
             <slot name="cell-left" v-bind="{ field: col.field }"></slot>
           </span>
           <span>
-            {{ data.fields[col.field].text || data.fields[col.field].value }}
+            {{ data.fields[col.field]?.text || data.fields[col.field]?.value }}
           </span>
         </div>
-        <span v-if="data.fields[col.field].moe" class="text-sm">
-          &plusmn;{{ data.fields[col.field].moe }}
+        <span v-if="data.fields[col.field]?.moe" class="text-sm">
+          &plusmn;{{ data.fields[col.field]?.moe }}
         </span>
-        <span v-if="data.fields[col.field].srOnly" class="sr-only">
-          {{ data.fields[col.field].srOnly }}
+        <span v-if="data.fields[col.field]?.srOnly" class="sr-only">
+          {{ data.fields[col.field]?.srOnly }}
         </span>
       </div>
     </div>

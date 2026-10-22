@@ -9,7 +9,7 @@ const controls = useMapControlsV2();
   <div class="flex items-center flex-wrap gap-y-4 gap-x-6">
     <TRCSelect
       label="Geography"
-      class="z-10"
+      class="z-50"
       :options="controls.sourceOptions"
       v-model="controls.currentSource"
     />

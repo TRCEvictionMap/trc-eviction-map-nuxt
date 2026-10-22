@@ -37,13 +37,13 @@ const isEvictionFilingsOpen = useLocalStorageRef("eviction-filings-open", true);
         <div class="px-4 py-2">
            <h1 class="font-bold text-lg">TRC Eviction Map</h1>
         </div>
-        <TRCDisclosure v-model="isDemographicsOpen">
+        <TRCDisclosure v-model="isDemographicsOpen" class="z-20">
           <template #heading>
             <h2 class="font-semibold text-slate-800">Demographics</h2>
           </template>
           <MapControlsLayers />
         </TRCDisclosure>
-        <TRCDisclosure v-model="isEvictionFilingsOpen" >
+        <TRCDisclosure v-model="isEvictionFilingsOpen">
           <template #heading>
             <h2 class="font-semibold text-slate-800">Eviction Filings</h2>
           </template>
@@ -72,7 +72,7 @@ const isEvictionFilingsOpen = useLocalStorageRef("eviction-filings-open", true);
           leaveFromClass="translate-y-0 opacity-100"
           leaveToClass="-translate-y-2 opacity-0"
         >
-        <PopoverPanel class="absolute  z-10 bg-white rounded border space-y-2 shadow-xl w-full min-w-[]">
+        <PopoverPanel class="absolute bg-white rounded border space-y-2 shadow-xl w-full min-w-[]">
           <TRCDisclosure v-model="isDemographicsOpen">
             <template #heading>
               <h2 class="font-semibold text-slate-800">Demographics</h2>

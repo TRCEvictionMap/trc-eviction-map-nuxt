@@ -1,16 +1,22 @@
 import { useFeaturePropertiesV2 } from "~/stores/feature-properties-store-v2";
+import { useMapControlsV2 } from "~/stores/map-controls-store-v2";
 
 async function useFlyTo() {
-  const map = await useMap();
   const featureProperties = useFeaturePropertiesV2();
-
+  const controls = useMapControlsV2();
+  const map = await useMap();
   return (featureId: string) => {
-    const properties = featureProperties.bgPolygonCenter[featureId];
+    let properties:any = undefined!;
+    if (controls.currentSource == 'block-group') {
+      properties = featureProperties.bgPolygonCenter[featureId];
+    }
+    else if (controls.currentSource == 'school-district') {
+      properties = featureProperties.sdPolygonCenter[featureId];
+    }
 
     if (!properties) {
       return;
     }
-  
     const { size, lon, lat } = properties;
   
     const zoom = (() => {
