@@ -24,12 +24,7 @@ const emit = defineEmits<{
 
 const featureState = useFeatureState();
 
-const tableColumns = useTableColumns(props.columns);
-
-watch(() => tableColumns.colWidths, (colWidths) => {
-  console.log(Object.fromEntries(Object.entries(colWidths.value)))
-}, { immediate: true });
-
+const tableColumns = computed(() => useTableColumns(props.columns));
 const selectedRowIds = computed(() => props.modelValue);
 const selectedRows = computed(
   () => selectedRowIds
@@ -86,6 +81,8 @@ function onRowSelect(rowId: string) {
       :columns="columns"
       :sortBy="sortBy"
       :sortDirection="sortDirection"
+      :selectedRows="selectedRows"
+      :selectedRowIds="selectedRowIds"
       @col:sort:direction="setSortState"
     />
     <div class="h-full overflow-auto flex-1 z-10">
@@ -132,7 +129,7 @@ function onRowSelect(rowId: string) {
           </template>
         </TRCDataTableRow>
       </div>
-      <div role="rowgroup">
+      <div role="rowgroup" v-if="pageRows.length">
         <TRCDataTableRow
           v-for="row in pageRows"
           :key="row.id"
