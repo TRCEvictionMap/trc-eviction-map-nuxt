@@ -20,7 +20,10 @@ const featureState = useFeatureState();
         :featureId="featureId"
       />
       <div key="placeholders" v-if="featureState.selectedFeatures.length > 0" class="space-y-6">
-        <div class="bg-slate-100 p-4 rounded border">
+        <div
+          v-for="_ in 3 - featureState.selectedFeatures.length"
+          class="bg-slate-100 p-4 rounded border"
+        >
           <p>Select another {{ controls.currentSourceHumanReadable }}</p>
         </div>
       </div>

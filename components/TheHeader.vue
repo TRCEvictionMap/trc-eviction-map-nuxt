@@ -17,11 +17,12 @@ const flags = useFeatureFlags();
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img
+      <NuxtPicture
+        format="webp"
+        legacyFormat="jpeg"
         src="/trc_logo_horizontal_color.png"
         alt="Tenant Resource Center logo"
-        height="48px"
-        width="150px"
+        sizes="130px sm:150px"
       />
     </NuxtLink>
     <div class="flex py-1 sm:py-3">

@@ -1,10 +1,9 @@
 
-type SourceId =  "block-group" | "school-district";
+type SourceId =  "block-group";
 
 const SOURCE_OPTIONS: SourceId[] = [
     // "alder-district",
     "block-group",
-    "school-district",
 ];
 
 function isSourceId(data: unknown): data is SourceId {
@@ -146,14 +145,7 @@ namespace FeatureProperties {
             c: number;
             /** filing rate */
             r: number;
-        }>
-        district: string;
-
-        cesa: string | number;
-
-        lea_id: string | number;
-
-        district_type: string;
+        }>,
     }
 
     export interface HeatmapV2 {

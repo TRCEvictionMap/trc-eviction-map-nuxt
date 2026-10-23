@@ -17,11 +17,7 @@ const emit = defineEmits<{
   "col:sort:direction": [{ field: Field, direction: SortDirection }];
 }>();
 
-//const reactiveColumns = reactive(props.columns);
-const colWidths = computed(() => props.columns.colWidths.value);
-const cols = computed(() => props.columns.cols.value);
-const colsPinned = computed(() => props.columns.colsPinned.value);
-const tableWidth = computed(() => props.columns.tableWidth.value); 
+const { colWidths, cols, colsPinned, tableWidth } = props.columns;
 
 const isSelectAll = computed({
   get() {
