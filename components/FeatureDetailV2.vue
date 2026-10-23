@@ -22,8 +22,14 @@ const featureColor = computed(() => {
   }
 });
 
-const data = computed(() => featureProperties.bgChoropleth[featureId]);
-
+const data = computed(() => {
+  if (controls.currentSource == "block-group") {
+    return featureProperties.bgChoropleth[featureId];
+  }
+  else {
+    return featureProperties.bgSchoolDistrictChoropleth[featureId];
+  }
+  });
 const filingCount = computed(
   () => featureProperties.currentMonthRangeFilingCount[featureId]
 );
@@ -71,16 +77,13 @@ function onMouseleave() {
         <IconXMark class="text-slate-500" />
       </TRCButton>
     </div>
-    <div v-if="data" class="space-y-2">
+    <div v-if="data && (controls.currentSource == 'block-group')" class="space-y-2">
       <div class="flex items-center gap-2">
         <div
+          :style="`--dynamic-color: ${featureColor ? featureColor : '#ccc'};`"
           v-if="featureColor"
           class="h-4 w-4 rounded-full"
-          :class="{
-            'bg-[#ff7f00]': featureColor === '#ff7f00',
-            'bg-[#4daf4a]': featureColor === '#4daf4a',
-            'bg-[#984ea3]': featureColor === '#984ea3',
-          }"
+          :class="`bg-[var(--dynamic-color)]`"
         ></div>
         <h2 class="font-semibold">
           {{ controls.currentSourceHumanReadable }} {{ data.tr }}.{{ data.bg }}
@@ -94,6 +97,36 @@ function onMouseleave() {
             current date range.
           </span>
         </TRCTooltip>
+      </p>
+      <div class="flex justify-end gap-2">
+        <button
+          @click="flyTo(featureId)"
+          class="button-fly-to"
+        >
+          Fly to on map
+        </button>
+      </div>
+    </div>
+    <div v-else-if="data && (controls.currentSource == 'school-district')" class="space-y-2">
+      <div class="flex items-center gap-2">
+        <div
+          :style="`--dynamic-color: ${featureColor ? featureColor : '#ccc'};`"
+          v-if="featureColor"
+          class="h-4 w-4 rounded-full"
+          :class="`bg-[var(--dynamic-color)]`"
+        ></div>
+        <h2 class="font-semibold">
+           {{ data.district }} {{ controls.currentSourceHumanReadable }}
+        </h2>
+      </div>
+      <p>
+      <span class="font-semibold">{{ filingCount.currentWindow }}</span> evictions were
+      filed in this {{ controls.currentSourceHumanReadable }} within the
+      <TRCTooltip #="props" :text="rangeDescription">
+        <span v-bind="props">
+          current date range.
+        </span>
+      </TRCTooltip>
       </p>
       <div class="flex justify-end gap-2">
         <button
