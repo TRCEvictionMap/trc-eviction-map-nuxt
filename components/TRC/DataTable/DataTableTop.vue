@@ -2,7 +2,7 @@
 import { useMapControls } from "~/stores/map-controls-store";
 import type { TRCSelectOption } from "../Select.vue";
 import type { DataTableColumn } from "./data-table-types";
-//import DownloadButton from "./DownloadButton.vue";
+import DownloadButton from "./DownloadButton.vue";
 
 const controls = useMapControls();
 
@@ -74,8 +74,8 @@ const _sortDirection = computed({
           <span class="font-bold">{{ buttonText }}</span>
         </template>
       </TRCSelect>
-      <!--<DownloadButton
-        :selectedRows="selectedRows"></DownloadButton>-->
+      <DownloadButton
+        :selectedRows="selectedRows"></DownloadButton>
       <Transition name="fade">
         <div
           v-if="_sortBy"
